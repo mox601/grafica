@@ -1,0 +1,20 @@
+#ifndef TEXTURES_DEFINED
+#define TEXTURES_DEFINED
+#define TEXTURE_SAND 0
+#define TEXTURE_MOON 1
+#define TEXTURE_GOLD 2
+#define TEXTURE_MARMO 3
+#define TEXTURE_TOVAGLIA 4
+#define TEXTURE_MARMO_BIANCO 5
+#define TEXTURE_LEGNO_MASSICCIO 6
+#define TEXTURE_CASSETTONE 7
+#define TEXTURE_MARMO_MACCHIATO 8
+#define TEXTURE_MARMO_FEASIBLE 9
+#define TEXTURE_CARAVAGGIO 10
+#define TEXTURE_CREAZIONE 11
+#define TEXTURE_VENERE 12
+#define TEXTURE_CENA 13
+#endif
+
+void loadTextures();
+void setTexture(int texturename);

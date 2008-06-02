@@ -1,0 +1,47 @@
+appunti superbible
+
+
+
+proiezione ortografica (parallela)
+si definisce un volume di vista cubico o rettangolare. 
+tutto quello che è fuori dal volume, non è disegnato. 
+tutti gli oggetti che hanno le stesse dimensioni avranno 
+le stesse dimensioni anche sullo schermo, indipendentemente 
+dalla distanza dall'osservatore
+
+proiezione prospettica
+gli oggetti più lontani appaiono più piccoli di quelli vicini
+il volume di vista è una piramide senza punta, il frustum. 
+
+
+
+struttura programma OpenGL
+main: 
+
+glutInit serve a passare i parametri
+glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA); 
+finestra single-buffered; specifica dei colori in RGBA
+glutCreateWindow("")... 
+glutDisplayFunc(RenderScene)
+specifica la funzione di callback per il display è chiamata ogni volta che 
+si deve disegnare la finestra. 
+
+setupRC()
+per fare tutte le inizializzazioni che vanno fatte una volta sola, 
+per esempio glClearColor()
+il parametro 4 serve per il blending e la trasparenza
+glutMainLoop() fa partire il framework
+
+
+
+nella funzione RenderScene
+glClear(COLOR_BUFFER_BIT) cancella il contenuto del color buffer, 
+cioé cancella l'ultimo disegno dalla finestra
+e poi glFlush() che serve a far eseguire la coda di comandi opengl
+
+cambiamentodi dimensione della finestra
+glutReshapeFunc()
+
+
+
+

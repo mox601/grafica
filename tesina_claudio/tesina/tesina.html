@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Tesina di Informatica Grafica</title>
+	</head>
+<body>
+
+	<div>
+		<h1>
+			Tesina di Informatica Grafica
+    		</h1>
+		<h4>
+			Alberto Roscani (matricola 252757)<br />
+			Claudio Squarcella (matricola 257320)<br />
+			Nicola Vollono (matricola 256065)<br />
+    		</h4>
+	</div>
+
+	<div>
+		<h3>
+			Introduzione
+    		</h3>
+
+La tesina &egrave; consistita nella realizzazione di un ambiente tridimensionale navigabile in prima persona (in stile DOOM), contenente un edificio religioso circondato dal deserto e sovrastato dal cielo notturno. <br />
+L'<i>intero progetto</i> &egrave; stato realizzato in OpenGL, senza l'ausilio di strumenti avanzati (eccettuato Gimp per l'editing delle immagini da utilizzare per le textures). Per la realizzazione degli aspetti pi&ugrave; avanzati abbiamo coniugato intuizioni personali e spunti tratti dalle dispense del corso e da Internet (di solito senza andare oltre <a href="http://en.wikipedia.org/wiki/Diamond-square_algorithm">wikipedia.org</a>...).
+
+	</div>
+
+	<div>
+		<h3>
+			Introduzione
+    		</h3>
+
+L'osservatore si muove nella scena con i tasti A-W-S-D, salta con la barra spaziatrice e si accuccia con C. <br />
+A causa della nebbia inizialmente la chiesa non &egrave; visibile: bisogna camminare in avanti per raggiungerla.
+
+	</div>
+
+	<div>
+		<h3>
+			Le Basi
+    		</h3>
+
+In una prima fase abbiamo definito due funzioni basilari utilizzate massicciamente nelle fasi successive: <i>verTex()</i> e <i>poliTex()</i> (nel file <i>utils.c</i>). <br />
+<i>verTex()</i> prende come parametri le coordinate di 4 vertici consecutivi (insieme a una stringa identificativa, utile nelle sessioni di debug) e genera normali, vertici e coordinate texture richiamando <i>glNormal3f()</i>, <i>glVertex3f()</i> e <i>glTexCoord2f()</i>, a condizione che il poligono individuato sia relativamente semplice (in generale, coppie di vertici appartenenti ad uno stesso piano perpendicolare a uno degli assi cartesiani). La funzione si &egrave; rivelata molto comoda soprattutto per la gestione automatica dello scalamento da adottare per le coordinate texture (grazie alla funzione ausiliaria <i>setTextureScaling()</i> che serve a specificare il rapporto numerico tra coordinate mondo e coordinate texture). <br />
+<i>poliTex()</i>, appoggiandosi a <i>verTex()</i>, permette di specificare le 6 facce (insieme a normali e coordinate texture) generate dalle otto terne (X,Y,Z) passate come parametri. Anche in questo caso ci sono limitazioni (le due facce passate come parametro devono essere parallele tra loro e perpendicolari allo stesso asse cartesiano) che tuttavia nella maggior parte dei casi non rappresentano ostacoli. <br />
+Altre funzioni molto importanti (sempre in <i>utils.c</i>) servono per elementi geometrici di base (sfere, semisfere, quarti di sfera, semitori...).
+
+	</div>
+
+	<div>
+		<h3>
+			L'Ambiente: Colline, Cielo e Luna <br />
+    		</h3>
+    		<h3>
+			<img src="screenshots/s01.gif" /> <br />
+    		</h3>
+
+
+
+Il deserto che circonda la chiesa &egrave; stato realizzato con una variante semplificata dell'algoritmo <i>diamond square</i> (funzione <i>subdivide()</i> in <i>ambiente.c</i>): in sostanza, il passo ricorsivo consiste nel trovare il centro di un quadrato, assegnare ad esso un'altezza randomica e richiamare il metodo quattro volte con i quadrati generati suddividendo quello originale. La massima variazione di altezza &egrave; direttamente proporzionale a <i>pointDistance(centro,terrainCentre)</i> (per impedire di generare dislivelli troppo pronunciati al centro, in corrispondenza della chiesa) e inversamente proporzionale a <i>exp(normalizer-precision)</i> (valore che aumenta esponenzialmente man mano che aumentano le chiamate ricorsive, in modo tale da smussare le variazioni minori). <br />
+Il cielo stellato consiste semplicemente in uno sfondo di colore uniforme, con l'aggiunta delle stelle (una serie di punti casuali appartenenti a una calotta sferica che sovrasta la scena: funzione <i>getPointOnSky()</i> di <i>ambiente.c</i>). La luna, infine, &egrave; una sfera posizionata sulla stessa calotta.
+
+	</div>
+
+	<div>
+		<h3>
+			L'Esterno della Chiesa
+    		</h3>
+    		<h3>
+			<img src="screenshots/s02.gif" /> <br />
+    		</h3>
+    		<h3>
+			<img src="screenshots/s03.gif" /> <br />
+    		</h3>
+
+Le mura esterne della chiesa sono illuminate dalla luce della luna e dalle torce accese. Per evitare effetti innaturali, abbiamo suddiviso le parti da disegnare in diverse display lists in modo tale da raggruppare tutti gli oggetti illuminati dallo stesso insieme di luci (ad esempio il retro della chiesa viene spezzato in pi&ugrave; liste per simulare le parti in ombra rispetto alla luce lunare). L'effetto <i>fiamma</i> si ottiene facendo variare randomicamente intensit&agrave; e posizione delle luci entro un range contenuto. Il rosone trasparente (grazie al <i>blending</i>) consente di vedere l'interno della chiesa.
+
+	</div>
+
+	<div>
+		<h3>
+			L'Interno della Chiesa
+    		</h3>
+    		<h3>
+			<img src="screenshots/s04.gif" /> <br />
+    		</h3>
+    		<h3>
+			<img src="screenshots/s05.gif" /> <br />
+    		</h3>
+    		<h3>
+			<img src="screenshots/s06.gif" /> <br />
+    		</h3>
+
+L'interno della chiesa &egrave; contenuto in un'unica display list, poich&eacute; tutti gli oggetti sono illuminati dalle stesse luci. Il numero di luci utilizzate &egrave; ovviamente inferiore rispetto al numero totale di candele presenti nella chiesa: in particolare, ad ogni gruppo di candele contigue viene assegnata esattamente una luce (quindi una luce al lampadario, una luce per ogni candelabro, etc). <br />
+La riflessione sul pavimento &egrave; ottenuta abilitando il <i>blending</i> e ridisegnando gli interni specularmente rispetto all'asse Y. La posizione dei pipistrelli stilizzati viene calcolata con due angoli, uno per la traiettoria curvilinea e uno per il movimento a onda (che influenza anche l'apertura delle ali).
+
+	</div>
+
+	<div>
+		<h3>
+			<i>Collision Detection</i> e Posizione dell'Osservatore su Y
+    		</h3>
+
+I due aspetti pi&ugrave; difficili del progetto sono stati affrontati nei modi seguenti. <br />
+L'altezza del punto di osservazione dipende dal modo in cui viene generato il terreno (oltre che dalla scalinata per accedere alla chiesa, che ha dimensioni fisse). Per mantenere una rappresentazione del terreno, al momento della creazione generiamo una mappa (<i>terrainHeight</i>) con le altezze di tutti i vertici determinati nei primi 4 livelli di ricorsione: in tal modo i dati da tenere in memoria restano contenuti e l'approssimazione sull'altezza di ogni vertice &egrave; accettabile. A questo punto, per calcolare l'altezza di un punto qualunque (funzione <i>getHeight</i> in <i>ambiente.c</i>), si trova il piano individuato dai tre vertici pi&ugrave; vicini appartenenti a <i>terrainHeight</i> (mediante risoluzione di un sistema lineare, grazie alle funzioni contenute in <i>sistemilineari.c</i>); l'altezza ignota si calcola sostituendo le due coordinate note nell'equazione del piano. <br />
+Anche per quanto riguarda la <i>Collision Detection</i> c'&egrave; bisogno di salvare informazioni sull'ambiente creato, in modo da consentire una gestione per quanto possibile semplificata. Assumendo per semplicit&agrave; che non si possa superare un ostacolo con un salto, la <i>collisionMap</i> pu&ograve; essere rappresentata con due sole dimensioni (X e Z). Pertanto con la funzione <i>addCollisionLine()</i> costruiamo una rappresentazione 2D della chiesa mediante una matrice booleana (realizzata con caratteri per non occupare troppo spazio in memoria!). La gestione della collisione (estremamente semplificata) consiste dunque nel verificare ad ogni aggiornamento della posizione se lo spostamento fa ricadere l'osservatore in una zona invalicabile, permettendo eventualmente lo <i>scorrimento</i> sull'ostacolo (separando le componenti in X e Z del movimento).
+
+	</div>
+
+	<div>
+		<h3>
+			Conclusioni
+    		</h3>
+
+Il progetto ci ha impegnato molto: siamo partiti da zero, abbiamo effettuato numerosi tentativi (alcuni dei quali decisamente fallimentari...) e aggiunto diversi accorgimenti (sicuramente qualcuno ci &egrave; sfuggito in questa descrizione...) cercando di ottenere un risultato per quanto possibile realistico e gradevole. <br /><br />
+
+5 maggio 2008
+	</div>
+
+
+	</body>
+</html>
+

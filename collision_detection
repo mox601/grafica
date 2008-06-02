@@ -1,0 +1,8 @@
+You model each wall and floor as a plane 
+and then just take the dot product of the camera position with the normal of the plane. 
+If this comes out negative you are behind the wall, 
+and then you move the camera back out so it isn't penetrating. 
+The problem with this method though is that if you are already behind a wall 
+and touch it, you will pop through it. 
+A certain amount of fudging is required to get it to work properly!
+
