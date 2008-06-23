@@ -4,7 +4,7 @@
 da migliorare la differenza di altezza tra le due parti di muro frontale
 disegna i contorni dei muri fatto
 drawwall high deve usare drawwalloblique
-problema con drawwallhigh, non combacia con il muro successivo
+migliora il valora compensazione_inclinazione
 si può migliorare la griglia esterna
 
 

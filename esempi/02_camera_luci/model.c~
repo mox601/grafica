@@ -715,7 +715,6 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 
 	GLfloat differenza = 0.6f;
 
-
 	/*altezza da cui parte il muro */
 	GLfloat altezzaL = 0.4f;
 
@@ -725,7 +724,19 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 	/* riscrivo la draw wall high */
 	drawWallHighNew(&a2, &b2, &c2, &d2, spessore, spigolo_laterale_front_w2_high, spigolo_laterale_back_w2_high, incl_frontale_w2, dettaglio, differenza_w2_high, altezzaL);
 
-	glPopMatrix(); /* parte alta */
+/* parte alta laterale */
+
+
+
+
+
+
+
+/* end parte alta laterale */
+
+
+
+	glPopMatrix(); /* parte alta del muro */
 
 
 
@@ -754,6 +765,7 @@ Point3d v1;
 Point3d v2; 
 Point3d v3; 
 Point3d v4; 
+ 
 
 init_point(a, &v1);
 init_point(b, &v2);
@@ -768,28 +780,68 @@ point_translate(&v2, &trasl_v2);
 point_translate(&v3, &trasl_v3);
 point_translate(&v4, &trasl_v4);
 
-printf("v1: %f %f %f\n", v1.x, v1.y, v1.z);
-printf("v2: %f %f %f\n", v2.x, v2.y, v2.z);
-printf("v3: %f %f %f\n", v3.x, v3.y, v3.z);
-printf("v4: %f %f %f\n", v4.x, v4.y, v4.z);
+//printf("v1: %f %f %f\n", v1.x, v1.y, v1.z);
+//printf("v2: %f %f %f\n", v2.x, v2.y, v2.z);
+//printf("v3: %f %f %f\n", v3.x, v3.y, v3.z);
+//printf("v4: %f %f %f\n", v4.x, v4.y, v4.z);
 
 
 /* fino alla fine del muro */
 
 	glPushMatrix();
+
 	glTranslatef(b->x, b->y, b->z);
+
+	Vector3d normale; 
+	Vector3d v1_2;
+	Vector3d v2_3;
+
+	vector_diff(&v1_2, &v1, &v2);
+	vector_diff(&v2_3, &v2, &v3);
+	
+//	printf("v1_2: %f %f %f\n", v1_2.x, v1_2.y, v1_2.z);
+//	printf("v2_3: %f %f %f\n", v2_3.x, v2_3.y, v2_3.z);
+
+	vector_cross_product(&normale, &v1_2, &v2_3);
+
+//	printf("normale: %f %f %f\n", normale.x, normale.y, normale.z);
+
+	glNormal3f(normale.x, normale.y, normale.z);
+
+	// è disegnato in senso antiorario. giusto?
+	// si illumina ugualmente sia che la luce sia davanti, che dietro. 
 	glBegin(GL_QUADS);
-		glVertex3f(v1.x, v1.y, v1.z);
-		glVertex3f(v2.x, v2.y, v2.z);
-		glVertex3f(v3.x, v3.y, v3.z);
 		glVertex3f(v4.x, v4.y, v4.z);
+		glVertex3f(v3.x, v3.y, v3.z);
+		glVertex3f(v2.x, v2.y, v2.z);
+		glVertex3f(v1.x, v1.y, v1.z);		
 	glEnd();
 
 /* altro vetro, fino a metà del muro laterale */
 
+/* 2,3,5,6 */
+
+Point3d v5 = {8.0f, v3.y, v3.z}; 
+Point3d v6 = {8.0f, v2.y, 0.0f}; 
 
 
-glPopMatrix();
+	glBegin(GL_QUADS);
+		glVertex3f(v2.x, v2.y, v2.z);
+		glVertex3f(v3.x, v3.y, v3.z);
+		glVertex3f(v5.x, v5.y, v5.z);
+		glVertex3f(v6.x, v6.y, v6.z);
+	glEnd();
+
+
+	/* spigolo */
+
+	setMaterial(1,1,1); 
+	glBegin(GL_LINES);
+		glVertex3f(v2.x, v2.y, v2.z);
+		glVertex3f(v3.x, v3.y, v3.z);
+	glEnd();
+
+	glPopMatrix();
 
 
 
