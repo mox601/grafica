@@ -20,8 +20,8 @@ int moving_on_plane = 0;
 
 
 
-Point3d  position ={5,0,0};
-Point3d  target   ={0,0,0};
+Point3d  position ={-50,20,0};
+Point3d  target   ={-5,20,0};
 Vector3d vup      ={0,0,1};
 
 /* dettaglio dei triangoli disegnati */
@@ -34,18 +34,51 @@ GLfloat stepDetail = 0.5f;
 
 enum {M_NONE,M_LOCAL_LIGHT,M_DIRECTIONAL_LIGHT,M_WIREFRAME};
 
+
+/* colori */
+GLfloat color_black     []  = {0.0f, 0.0f, 0.0f, 1.0f}; 
+GLfloat color_white     []  = {1.0f, 1.0f, 1.0f, 1.0f}; 
+GLfloat color_red       []  = {1.0f, 0.0f, 0.0f, 1.0f};
+GLfloat color_green     []  = {0.0f, 1.0f, 0.0f, 1.0f};
+GLfloat color_blue      []  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow[]  = {1.0f, 1.0f, 0.0f, 1.0f};
 
-int enable_light_directional=0;
+/* materiali */
+GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
+GLfloat mat_ambient_color[] = { 0.8, 0.8, 0.2, 1.0 };
+GLfloat mat_diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat no_shininess[] = { 0.0 };
+GLfloat low_shininess[] = { 5.0 };
+GLfloat high_shininess[] = { 100.0 };
+GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
+
+
+
+int enable_light_directional = 0;
 /* faretto */
-int enable_light_local      =1;
-int draw_wireframe          =0;
+int enable_light_local = 1;
+int draw_wireframe = 0;
 
 
-/* posizione luce */
+/* angolo per animazione luce */
 float lightAngle = 0.0;
+/* posizione luce 0 */
+GLfloat light_position_local[4]={
+		-10.0f,
+		1.0f,
+		1.0f,
+		1.0f
+	};
 
-GLfloat l_position[] = { 1.0, 1.0, 1.0, 0.0 };
+/* posizione luce 1 direzionale */
+GLfloat light_position_directional[4]={
+		10.0f,
+		1.0f,
+		1.0f,
+		1.0f
+};
 
 /* ---------------------------------------------------------- */
 
@@ -53,47 +86,75 @@ GLfloat l_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
 void init(void) {
 
- 	/* init parametri per la luce */
-	GLfloat ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	
-	GLfloat lmodel_ambient[] = { 0.4, 0.4, 0.4, 1.0 };
-	GLfloat local_view[] = { 0.0 };
+	/* da sol esame */
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
+	glDepthFunc(GL_LESS);
+	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
-//	glClearColor(0.0, 0.1, 0.1, 0.0);
+
+//??
+//	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+
+	/* luce numero 0 locale */
+	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_white);
+	glLightfv(GL_LIGHT0, GL_SPECULAR , color_white);
+	glLightfv(GL_LIGHT0, GL_POSITION , light_position_local);
+
+	/* luce numero 1 direzionale */
+	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_white);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_white);
+	glLightfv(GL_LIGHT1, GL_SPECULAR , color_white);
+	glLightfv(GL_LIGHT1, GL_POSITION , light_position_directional);
+
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHTING);
 	
 	/* smooth shading */
 	glShadeModel(GL_SMOOTH);
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-	glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, local_view);
-
-//	glEnable(GL_LIGHTING);
-//	glEnable(GL_LIGHT0);
+	/* antialiasing sulle linee */
+	glEnable(GL_LINE_SMOOTH);
 
 }
 
+void reshape(int W,int H)
+{
+	glutPostRedisplay();
+}
+
+
+void idle(void)
+{
+/* movimento luce */
+	lightAngle += 0.01f;
+	if (lightAngle > 360.f) {
+		lightAngle = 0.0f;
+		}
+//	printf("angolo luce: %f\n", lightAngle);
+	glutPostRedisplay();
+}
 
 
 
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE );
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(800,800);
-	glutCreateWindow("OpenGl application");
+	glutCreateWindow("Palazzo");
 
 	init();
 	
 	/* Register GLUT callbacks. */
+	glutReshapeFunc (reshape);
 	glutDisplayFunc(redraw);
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
 	glutKeyboardFunc(key);
+	glutIdleFunc(idle);
 
 	/* creazione del menu per il tasto DX */
 	glutCreateMenu(controlMenu);
@@ -108,20 +169,6 @@ int main(int argc, char **argv)
 
 	/* occlusione facce? */
 	glEnable(GL_DEPTH_TEST);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective( 
@@ -138,18 +185,43 @@ int main(int argc, char **argv)
 
 /* ---------------------------------------------------------- */
 
+/* ---------------------------------------------------------- */
+
+
+void aumentaDettaglio() {
+	if (dettaglio > (dettaglioMax + stepDetail)) { 
+		dettaglio = dettaglio - stepDetail;
+	} else {
+		dettaglio = dettaglioMax;
+		}
+}
+void diminuisciDettaglio() {
+	if (dettaglio < (dettaglioMin - stepDetail)) { 
+		dettaglio = dettaglio + stepDetail;
+	} else {
+		dettaglio = dettaglioMin;
+		}
+}
+
+
+
+
 /* --------------------gestione della tastiera------------------------------ */
 void key(unsigned char c, int x, int y)
 {
  	
-	Vector3d direction_forward,direction_right,direction_up, direction_backward, direction_left;
+	Vector3d direction_forward,direction_right,direction_up, direction_backward, direction_left, direction_down;
 
 	vector_diff(&direction_forward,&target,&position);
 	vector_diff(&direction_backward,&position,&target);
 
 	vector_cross_product(&direction_left,&vup,&direction_forward);
 	vector_cross_product(&direction_right,&vup,&direction_backward);
+
 	direction_up=vup;
+	direction_down=vup;
+	vector_scale(&direction_down, -1);
+
 
 switch(c) 
 	{
@@ -175,18 +247,18 @@ switch(c)
 
 /* girati a dx o sx */
 	case 'a':
-		vector_scale(&direction_left, 0.100f);
+		vector_scale(&direction_left, 0.250f);
 		point_translate(&target, &direction_left);
 		glutPostRedisplay();
 		break;
 
 	case 'd': 
-		vector_scale(&direction_right, 0.100f);
+		vector_scale(&direction_right, 0.250f);
 		point_translate(&target, &direction_right);
 		glutPostRedisplay();	
 		break; 
 
-/* reset della componente z del target*/
+/* reset della componente z del target */
 	case 'r': 
 		target.z = 0.0f;
 		glutPostRedisplay();	
@@ -227,6 +299,24 @@ switch(c)
 		break;
 
 
+
+/* volo */
+	case '1':
+		vector_scale(&direction_up,1.0f);
+		point_translate(&position, &direction_up);
+		point_translate(&target, &direction_up);
+		glutPostRedisplay();
+		break;
+	
+	case '2':
+		vector_scale(&direction_down,1.0f);
+		point_translate(&position, &direction_down);
+		point_translate(&target, &direction_down);
+		glutPostRedisplay();
+		break;
+
+
+
 /* aumento o diminuisco il dettaglio dei triangoli */
 
 
@@ -241,9 +331,6 @@ switch(c)
 		diminuisciDettaglio();
 //		printf("0: dettaglio attuale %f\n", dettaglio);
 		break; 
-
-
-
 
 	case 27:
 		exit(0);
@@ -265,11 +352,13 @@ void controlMenu(int value)
 	case M_LOCAL_LIGHT:
 		enable_light_local=1-enable_light_local;
 		printf("switch luce locale\n");
+		printf("luce locale = %d\n", enable_light_local);
 	break;
 
 	case M_DIRECTIONAL_LIGHT:
 		enable_light_directional=1-enable_light_directional;
 		printf("switch luce direzionale\n");
+		printf("luce direzionale = %d\n", enable_light_directional);
 	break;
 
 	case M_WIREFRAME:draw_wireframe=1-draw_wireframe;
@@ -285,64 +374,27 @@ void controlMenu(int value)
 
 
 
-
-/* ---------------------------------------------------------- */
-
-
-aumentaDettaglio() {
-	if (dettaglio > (dettaglioMax + stepDetail)) { 
-		dettaglio = dettaglio - stepDetail;
-	} else {
-		dettaglio = dettaglioMax;
-		}
-}
-diminuisciDettaglio() {
-	if (dettaglio < (dettaglioMin - stepDetail)) { 
-		dettaglio = dettaglio + stepDetail;
-	} else {
-		dettaglio = dettaglioMin;
-		}
-}
-
-
-
 /* ---------------------------------------------------------- */
 void redraw(void)
 {
 
-	GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
-	GLfloat mat_ambient_color[] = { 0.8, 0.8, 0.2, 1.0 };
-	GLfloat mat_diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat no_shininess[] = { 0.0 };
-	GLfloat low_shininess[] = { 5.0 };
-	GLfloat high_shininess[] = { 100.0 };
-	GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
-
-
-
-
-	GLfloat light_position_local[4]={
-		1.0f,
-		1.0f,
-		1.0f,
-		1.0f /* local light! */
-	};
-
-
-
-
-	glClear(GL_COLOR_BUFFER_BIT);
-
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-
+	/* clear the screen and the depth buffer */
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
+	glLoadIdentity();
 
+	gluLookAt(
+		position.x, position.y ,  position.z,		   
+		target.x  , target.y   ,  target.z,       
+		vup.x     , vup.y      ,  vup.z);
 
-	/* per fare update della posizione e stato della luce */
+	/* movimento luce 0 local */
+	light_position_local[0]= -10.0f + sin(lightAngle)*5;
+	light_position_local[1]= 1.0f + cos(lightAngle)*5;
+//	light_position_local[2]= 1.0f + cos(lightAngle)*5;
+
+	/* per fare update della posizione e stato della luce 0 */
 	if (enable_light_local)
 	{
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position_local);
@@ -360,21 +412,45 @@ void redraw(void)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
 
 		if (!draw_wireframe)
-			glutSolidSphere(0.3, 30, 30);
+			glutSolidSphere(0.3, 10, 10);
 		else
-			glutWireSphere(0.3, 30, 30);
+			glutWireSphere(0.3, 10, 10);
+
+	glPopMatrix();
+
+
+
+	/* luce 1, una luce direzionale */
+
+
+if (enable_light_directional)
+	{
+		glLightfv(GL_LIGHT1, GL_POSITION, light_position_directional);
+
+		glEnable(GL_LIGHT1);
+	}
+	else
+	{
+		glDisable(GL_LIGHT1);
+	}
+
+
+	/* disegna sfera dove si trova la luce direzionale */
+	glPushMatrix();
+	glTranslatef(light_position_directional[0],light_position_directional[1],light_position_directional[2]);
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
+
+		if (!draw_wireframe)
+			glutSolidSphere(0.3, 10, 10);
+		else
+			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
 
 
 	glPushMatrix();
 	
-	gluLookAt(
-		position.x, position.y ,  position.z,		   
-		target.x  , target.y   ,  target.z,       
-		vup.x     , vup.y      ,  vup.z);
-
-
 	/* assi di riferimento */
 
 	glLineWidth(8);
@@ -383,38 +459,11 @@ void redraw(void)
 	glColor3f(0,1,0);glVertex3f(0,0,0);glVertex3f(0,1,0);
 	glColor3f(0,0,1);glVertex3f(0,0,0);glVertex3f(0,0,1);
 	glEnd();
-	glLineWidth(1);
 
 
-	/* sfera */
-	/*
-	glColor3f(0.3f,0.3f,0.3f);
-	if (!draw_wireframe)
-		glutSolidSphere(1.0, 30, 30);
-	else
-		glutWireSphere(1.0, 30, 30);
-	*/
+	glLineWidth(3);
 
-	/* drawWall */
-
-	
-	Point3d  a = {0,0,0};
-	Point3d  b = {0,40,0};
-	Point3d  c = {0,40,20};
-	Point3d  d = {0,0,20};
-
-
-	GLfloat spessore = 0.4f;
-	GLfloat sp_laterale = 8.0f;
-	GLfloat incl_frontale = 3.0f;
-
-
-
-	/* drawWall parametrica, prende la dimensione del lato lungo e 
-	il senso dell'inclinazione (+1 o -1)*/
-	 
-//	drawWallSize(lunghezza, dettaglio, inclinazione);
-
+	/* disegna la struttura esterna */
 	drawEsterni();
 
 	/* disegna muro frontale */
@@ -425,8 +474,6 @@ void redraw(void)
 	/* drawWall che disegna un muro a partire da una certa altezza, 
 	senza partire dalla base */
 
-	glTranslatef(-10.0f, 0.0f, 0.0f);
-
 //	drawWallSizeHigh(lunghezza, dettaglio, segno_inclinazione, altezza);
 
 	
@@ -436,19 +483,6 @@ void redraw(void)
 
 	//drawWall(&a, &b, &c, &d, spessore, sp_laterale, -incl_frontale, dettaglio);
 
-	
-	/* triangolo */
-		
-//	GLfloat dettaglio = 0.05;
-
-
-	Point3d  x = {2,0,0};
-	Point3d  y = {0,2,0};
-	Point3d  z = {0,0,2};
-	
-	/* do i punti in senso antiorario */
-//	drawTriangle(&z, &y, &x, dettaglio);
-	
 	glPopMatrix();
 	
 	glutSwapBuffers();
@@ -494,8 +528,8 @@ void motion(int x, int y)
 	}
 	else if (moving_on_plane)
 	{		
-		vector_scale(&direction_right, 0.003f*deltax);
-		vector_scale(&direction_up, 0.005f*deltay);
+		vector_scale(&direction_right, 0.03f*deltax);
+		vector_scale(&direction_up, 0.05f*deltay);
 		
 		point_translate(&target, &direction_up);
 		point_translate(&target, &direction_right);
@@ -504,8 +538,6 @@ void motion(int x, int y)
 		glutPostRedisplay();
 	}
 }
-
-
 
 
 

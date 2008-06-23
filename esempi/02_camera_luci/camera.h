@@ -17,12 +17,13 @@ GLfloat dettaglioMin;
 GLfloat stepDetail;
 int draw_wireframe;
 
-
 void redraw(void);
 void mouse(int button, int state, int x, int y);
 void motion(int x, int y);
 void key(unsigned char c, int x, int y);
 void controlMenu(int value);
-
+void aumentaDettaglio();
+void diminuisciDettaglio();
+void reshape(int W,int H);
 
 #endif

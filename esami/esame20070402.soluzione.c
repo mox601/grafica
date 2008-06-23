@@ -315,8 +315,10 @@ void motion(GLint x, GLint y)
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-int main(int narg,char** args)
+int main(int argc, char **argv)
 {
+
+	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_RGB | GLUT_DOUBLE );
 	glutInitWindowSize(800,800);
 	glutCreateWindow("EsameGL");

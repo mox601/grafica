@@ -10,19 +10,33 @@
 
 GLfloat lunghezza;
 GLfloat altezza;
+GLfloat profondita_lunghezza_ratio;
 
 void drawTriangle(Point3d* point1, Point3d* point2, Point3d* point3, GLfloat dettaglio);
+
 void drawWall(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale, GLfloat incl_frontale, GLfloat dettaglio);
+
 void drawWallSize(GLfloat lunghezza, GLfloat dettaglio, GLfloat inclinazione); 
-void drawWallSizeHigh(GLfloat lunghezza, GLfloat altezza, GLfloat inclinazione,  GLfloat spessore, GLfloat dettaglio, GLfloat lambda); 
+
+void drawWallSizeHigh(GLfloat lunghezza, GLfloat altezza, GLfloat inclinazione,  GLfloat spessore, GLfloat dettaglio, GLfloat lambda, GLfloat sp_laterale_front, GLfloat sp_laterale_rear, GLfloat differenza); 
 
 void drawWallOblique(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza); 
 
 void drawFrontWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza);
-void drawGriglia(GLfloat dim_larghezza, GLfloat dim_altezza, GLfloat dim_spessore, int n_strisce, GLfloat inclinazione); 
+
+void drawGriglia(GLfloat dim_larghezza, GLfloat dim_altezza, GLfloat altezzaMax, GLfloat dim_spessore, int n_strisce, GLfloat inclinazione);
 
 void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfloat inclinazione);
 
+void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza);
+
+void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front);
+
+void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza, GLfloat altezza);
+
+
+void setMaterial(GLfloat R,GLfloat G,GLfloat B);
+void setMaterial(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 
 #endif
 
