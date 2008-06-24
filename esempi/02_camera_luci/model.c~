@@ -588,8 +588,6 @@ void drawFrontWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazi
 	drawGriglia(larghezza_porta, altezza_porta, altezza_Max, spessore, 6, incl_frontale);
 
 	
-
-
 	GLfloat sp_laterale_front = 0.0f;
 	GLfloat sp_laterale_rear = 0.0f;
 	GLfloat differenza = 0.0f;
@@ -671,7 +669,13 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 	GLfloat lunghezza_w1 = lunghezza * 0.5f; 
 
 	GLfloat lunghezza_w2_high = lunghezza * (0.5f + lunghezza_larghezzaporta_ratio);
+
+	GLfloat lunghezza_w3_high = lunghezza_w2_high * 0.75f;
+
+
 	GLfloat altezza_w2_high = lunghezza * lunghezza_altezza_ratio;
+
+	GLfloat altezza_w3_high = altezza_w2_high * 0.9f; 
 
 
 	/* differenza di altezza tra point3 e point4 di w1 */
@@ -694,6 +698,11 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 	Point3d  b2 = {0,lunghezza_w2_high,0};
 	Point3d  c2 = {0,lunghezza_w2_high, altezza_w2_high};
 	Point3d  d2 = {0,0,altezza_w2_high};
+
+
+	
+
+
 
 	GLfloat spessore = lunghezza * 0.02f;
 	GLfloat spigolo_laterale_front_w1 = 0.0f;
@@ -726,9 +735,30 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 
 /* parte alta laterale */
 
+GLfloat profondita = lunghezza * profondita_lunghezza_ratio; 
 
 
 
+/* punti per muro laterale, altrimenti vengono modificati dalla drawWall */
+	Point3d  a3 = {0,0,0};
+	Point3d  b3 = {0,profondita,0};
+	Point3d  c3 = {0,profondita, altezza_w3_high};
+	Point3d  d3 = {0,0,altezza_w3_high};
+
+
+glPushMatrix();
+glTranslatef(profondita, lunghezza_w2_high, 0.0f); 
+glRotatef(-90.0f, 0.0f, 0.0f, 90.0f);
+
+glutSolidSphere(0.5f, 10.0f, 10.0f);
+
+GLfloat spigolo_laterale_back_w3_high = -1.1f;
+GLfloat spigolo_laterale_front_w3_high = 1.1f;
+GLfloat differenza_w3_high = 0.0f;
+
+drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
+
+glPopMatrix();
 
 
 

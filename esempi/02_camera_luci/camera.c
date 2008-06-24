@@ -20,7 +20,7 @@ int moving_on_plane = 0;
 
 
 
-Point3d  position ={-50,20,0};
+Point3d  position ={-5,60,0};
 Point3d  target   ={-5,20,0};
 Vector3d vup      ={0,0,1};
 

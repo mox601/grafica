@@ -20,7 +20,7 @@ int moving_on_plane = 0;
 
 
 
-Point3d  position ={-50,20,0};
+Point3d  position ={-10,40,0};
 Point3d  target   ={-5,20,0};
 Vector3d vup      ={0,0,1};
 
@@ -91,8 +91,6 @@ void init(void) {
 	glEnable(GL_NORMALIZE);
 	glDepthFunc(GL_LESS);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
-
-
 //??
 //	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
