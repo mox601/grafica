@@ -675,7 +675,7 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 
 	GLfloat altezza_w2_high = lunghezza * lunghezza_altezza_ratio;
 
-	GLfloat altezza_w3_high = altezza_w2_high * 0.9f; 
+	GLfloat altezza_w3_high = altezza_w2_high * 0.999f; 
 
 
 	/* differenza di altezza tra point3 e point4 di w1 */
@@ -735,7 +735,7 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 
 /* parte alta laterale */
 
-GLfloat profondita = lunghezza * profondita_lunghezza_ratio; 
+GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f; 
 
 
 
@@ -747,13 +747,15 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio;
 
 
 glPushMatrix();
-glTranslatef(profondita, lunghezza_w2_high, 0.0f); 
+glTranslatef(-spessore, lunghezza_w2_high, 0.0f); 
 glRotatef(-90.0f, 0.0f, 0.0f, 90.0f);
 
-glutSolidSphere(0.5f, 10.0f, 10.0f);
+setMaterial(1, 0, 0);
 
-GLfloat spigolo_laterale_back_w3_high = -1.1f;
-GLfloat spigolo_laterale_front_w3_high = 1.1f;
+//glutSolidSphere(0.5f, 10.0f, 10.0f);
+
+GLfloat spigolo_laterale_back_w3_high = -1.21f;
+GLfloat spigolo_laterale_front_w3_high = 1.23f;
 GLfloat differenza_w3_high = 0.0f;
 
 drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
