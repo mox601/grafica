@@ -4,10 +4,10 @@ git commit -a
 git push
 
 da migliorare la differenza di altezza tra le due parti di muro frontale
-disegna i contorni dei muri fatto
-drawwall high deve usare drawwalloblique
-migliora il valora compensazione_inclinazione
+disegna i contorni dei muri OK
+drawwall high deve usare drawwalloblique OK
 si può migliorare la griglia esterna
+allineamento del muro laterale
 
 
 costruire la struttura esterna

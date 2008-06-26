@@ -30,11 +30,11 @@ void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfl
 
 void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza);
 
-void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front);
+void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front, GLfloat profondita);
 
 void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza, GLfloat altezza);
 
-
+void drawCircle(GLfloat radius, GLint dettaglio, GLfloat angolo);
 void setMaterial(GLfloat R,GLfloat G,GLfloat B);
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 

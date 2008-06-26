@@ -642,6 +642,43 @@ void drawGriglia(GLfloat dim_larghezza, GLfloat dim_altezza, GLfloat altezzaMax,
 
 }
 
+/* disegna un cerchio approssimandolo con tanti lati quanti indicati in dettaglio */
+void drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo) 
+{
+
+/* TERMINA !!!! */
+
+	/* angolo tra end e start */
+
+	GLfloat misura_angolo = End_angolo - Start_angolo;
+
+	/* la coordinata y non cambia, è un cerchio verticale */
+	Point3d punto;
+	int i; 
+	
+	GLfloat incremento = misura_angolo / dettaglio; 
+
+	/* poi userò radius */
+	GLfloat raggio = 1;
+
+	for (i = 0; i <= dettaglio; i++) {
+		GLdouble valore_angolo = incremento * i;
+		GLdouble coseno = cos(valore_angolo);
+		GLdouble seno = sin(valore_angolo);
+		punto.x = raggio * coseno;
+		punto.z = raggio * seno;
+		printf("%d-esimo passo, valore %f. coordinate (%f, %f) - %f %f\n", i, valore_angolo, punto.x, punto.z, seno, coseno);
+	}
+
+
+}
+
+
+
+
+
+
+
 
 void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfloat inclinazione){
 
@@ -700,10 +737,6 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 	Point3d  d2 = {0,0,altezza_w2_high};
 
 
-	
-
-
-
 	GLfloat spessore = lunghezza * 0.02f;
 	GLfloat spigolo_laterale_front_w1 = 0.0f;
 	GLfloat spigolo_laterale_back_w1 = lunghezza * -0.05f;
@@ -745,20 +778,35 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	Point3d  c3 = {0,profondita, altezza_w3_high};
 	Point3d  d3 = {0,0,altezza_w3_high};
 
+/* punti per muro laterale basso, altrimenti vengono modificati dalla drawWall */
+	Point3d  a4 = {0,0,0};
+	Point3d  b4 = {0,profondita/2,0};
+	Point3d  c4 = {0,profondita/2, altezza_w3_high * (1-altezzaL)};
+	Point3d  d4 = {0,0,altezza_w3_high * (1-altezzaL)};
+
 
 glPushMatrix();
 glTranslatef(-spessore, lunghezza_w2_high, 0.0f); 
-glRotatef(-90.0f, 0.0f, 0.0f, 90.0f);
+glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 
 setMaterial(1, 0, 0);
 
-//glutSolidSphere(0.5f, 10.0f, 10.0f);
+
 
 GLfloat spigolo_laterale_back_w3_high = -1.21f;
 GLfloat spigolo_laterale_front_w3_high = 1.23f;
 GLfloat differenza_w3_high = 0.0f;
 
 drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
+
+
+glTranslatef(0.0f , profondita/2, 0.0f); 
+setMaterial(0, 1, 0.5);
+glutSolidSphere(0.5f, 10.0f, 10.0f);
+/* parte bassa */
+//migliorare l'allineamento del muro
+drawWallOblique(&a4, &b4, &c4, &d4, spessore, 0.0, 0.0, incl_frontale, dettaglio, differenza_w3_high);
+
 
 glPopMatrix();
 
@@ -771,12 +819,9 @@ glPopMatrix();
 	glPopMatrix(); /* parte alta del muro */
 
 
-
-
 	/* disegno il quadrilatero che sarà il vetro */
 	GLfloat rapporto = altezzaL; 
-	drawGlass(&a1, &b1, &c1, &d1, spessore, rapporto, spigolo_laterale_front_w1);
-
+	drawGlass(&a1, &b1, &c1, &d1, spessore, rapporto, spigolo_laterale_front_w1,  profondita);
 
 
 	glPopMatrix(); /* profondità palazzo */
@@ -786,7 +831,7 @@ glPopMatrix();
 
 
 
-void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front) {
+void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front, GLfloat profondita) {
 
 
 setMaterial(1,0,1);
@@ -853,8 +898,10 @@ point_translate(&v4, &trasl_v4);
 
 /* 2,3,5,6 */
 
-Point3d v5 = {8.0f, v3.y, v3.z}; 
-Point3d v6 = {8.0f, v2.y, 0.0f}; 
+GLfloat lunghezza_glass = profondita/2;
+
+Point3d v5 = {lunghezza_glass, v3.y, v3.z}; 
+Point3d v6 = {lunghezza_glass, v2.y, 0.0f}; 
 
 
 	glBegin(GL_QUADS);
@@ -865,7 +912,7 @@ Point3d v6 = {8.0f, v2.y, 0.0f};
 	glEnd();
 
 
-	/* spigolo */
+	/* disegno lo spigolo */
 
 	setMaterial(1,1,1); 
 	glBegin(GL_LINES);
@@ -940,12 +987,14 @@ void drawEsterni(){
 	/* chiamate per settare i materiali */
 //	setMaterialType(1,1,0, 'p');
 	drawFrontWall(lunghezza, dettaglio, segno_inclinazione, altezza);
+
 	setMaterial(1,1,1);
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
 
 
-	//drawGriglia(1.5f, 5.0f, 0.5, 6);
+	drawCircle(5.0f, 10, 90.0f);
 
+	//drawGriglia(1.5f, 5.0f, 0.5, 6);
 }
 
 
