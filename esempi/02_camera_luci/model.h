@@ -34,7 +34,7 @@ void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore,
 
 void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza, GLfloat altezza);
 
-void drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo);
+GLdouble* drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo);
 void setMaterial(GLfloat R,GLfloat G,GLfloat B);
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 

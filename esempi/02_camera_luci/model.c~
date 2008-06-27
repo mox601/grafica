@@ -640,13 +640,12 @@ void drawGriglia(GLfloat dim_larghezza, GLfloat dim_altezza, GLfloat altezzaMax,
 }
 
 /* disegna un cerchio in senso orario approssimandolo con tanti lati quanti indicati in dettaglio */
-void drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo) 
+GLdouble* drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo) 
 {
 
+//dettaglio è il numero di lati, per i punti mi serve un punto in più 
 
-GLdouble* coordinate = malloc(2 * dettaglio * sizeof(GLdouble));
-
-
+GLdouble* coordinate = malloc(2 * (dettaglio + 1) * sizeof(GLdouble));
 
 glPushMatrix();
 
@@ -676,18 +675,17 @@ glPushMatrix();
 		GLdouble coseno = cos(valore_angolo_rad);
 		GLdouble seno = sin(valore_angolo_rad);
 
-		printf("indici: %d %d\n", 2*i, (2*i)+1);
-/*
-		coordinate[2 * i] = 0;
-		coordinate[2 * i + 1] = 0;
-*/
+		coordinate[2 * i] = coseno;
+		coordinate[2 * i + 1] = seno;
+
+		printf("coord: %f %f\n", coordinate[2*i], coordinate[(2*i) + 1]);
 
 /*	
 		printf("%d-esimo passo, valore %f = rad %f;  coordinate %f %f\n", i, valore_angolo, valore_angolo_rad, coseno, seno);
 */		
-	// disegno i punti della lineStrip
+			// disegno i punti della lineStrip
 			glVertex3f(radius * coseno, 0.0f, radius * seno); 
-
+			printf("cos %f sen %f\n", coseno, seno); 
 
 
 /* sfere per vedere l'orientamento 
@@ -698,12 +696,16 @@ glPushMatrix();
 */
 
 
-		valore_angolo = valore_angolo - incremento;
+		//valore_angolo = valore_angolo - incremento;
 
-		//valore_angolo_rad = valore_angolo_rad - incremento_rad;
+		valore_angolo_rad = valore_angolo_rad - incremento_rad;
 	}
 
 	glEnd();
+
+
+
+	return coordinate;
 
 
 glPopMatrix();
@@ -1030,10 +1032,15 @@ void drawEsterni(){
 	setMaterial(1,1,1);
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
 
-	drawCircle(5.0f, 5, 90.0f, 0.0f);
-	drawCircle(5.0f, 5, 180.0f, 90.0f);
-	drawCircle(5.0f, 5, 270.0f, 180.0f);
-	drawCircle(5.0f, 5, 360.0f, 270.0f);
+
+/* funzione per disegnare archi */
+	GLdouble* firstArc = drawCircle(5.0f, 5, 90.0f, 0.0f);
+
+	int i;
+	for (i = 0; i < (5 + 1)*2; i++) {
+		printf("punto: %f %f\n", firstArc[2*i], firstArc[(2*i) + 1]);
+	}
+/* --- funzione per disegnare archi --- */
 
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
 }
