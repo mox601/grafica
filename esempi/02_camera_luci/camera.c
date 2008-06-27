@@ -92,7 +92,16 @@ void init(void) {
 	glDepthFunc(GL_LESS);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 //??
-//	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+
+/*
+da fare: 
+luce0 - luce ambientale, il sole. viene dall'alto. da abbinare ad un'altra luce
+luce1 - accoppiata alla luce ambientale. 
+luce2 - luce di un lampione
+
+*/
+
 
 	/* luce numero 0 locale */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
@@ -115,6 +124,13 @@ void init(void) {
 
 	/* antialiasing sulle linee */
 	glEnable(GL_LINE_SMOOTH);
+
+
+
+
+
+
+
 
 }
 

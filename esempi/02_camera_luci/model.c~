@@ -658,7 +658,7 @@ glPushMatrix();
 
 	GLfloat misura_angolo = abs(End_angolo - Start_angolo);
 
-	printf("start %f  end %f misura %f\n", Start_angolo, End_angolo, misura_angolo); 
+//	printf("start %f  end %f misura %f\n", Start_angolo, End_angolo, misura_angolo); 
 
 
 	GLfloat incremento = misura_angolo / dettaglio; 
@@ -678,21 +678,23 @@ glPushMatrix();
 		coordinate[2 * i] = coseno;
 		coordinate[2 * i + 1] = seno;
 
-		printf("coord: %f %f\n", coordinate[2*i], coordinate[(2*i) + 1]);
+//		printf("coord: %f %f\n", coordinate[2*i], coordinate[(2*i) + 1]);
 
 /*	
 		printf("%d-esimo passo, valore %f = rad %f;  coordinate %f %f\n", i, valore_angolo, valore_angolo_rad, coseno, seno);
 */		
 			// disegno i punti della lineStrip
 			glVertex3f(radius * coseno, 0.0f, radius * seno); 
-			printf("cos %f sen %f\n", coseno, seno); 
+//			printf("cos %f sen %f\n", coseno, seno); 
 
 
 /* sfere per vedere l'orientamento 
+
 			glPushMatrix();
 				glTranslatef(radius * coseno, 0.0f, radius * seno);
 				glutSolidSphere(0.2f + i/4 + 0.2f , 5.0f, 5.0f);
 			glPopMatrix();
+
 */
 
 
@@ -883,7 +885,6 @@ Point3d v1;
 Point3d v2; 
 Point3d v3; 
 Point3d v4; 
- 
 
 init_point(a, &v1);
 init_point(b, &v2);
@@ -990,8 +991,6 @@ void setMaterial(GLfloat R,GLfloat G,GLfloat B)
 /* funzione per impostare i materiali */
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo)
 {
-
-
 switch(tipo) {
 	case 'p':
 		printf("materiale porcellana\n");
@@ -1032,13 +1031,13 @@ void drawEsterni(){
 	setMaterial(1,1,1);
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
 
-
-/* funzione per disegnare archi */
+/* funzione per disegnare archi (SI PUÒ METTERE NELL'INIT?)*/
 	GLdouble* firstArc = drawCircle(5.0f, 5, 90.0f, 0.0f);
 
 	int i;
+
 	for (i = 0; i < (5 + 1)*2; i++) {
-		printf("punto: %f %f\n", firstArc[2*i], firstArc[(2*i) + 1]);
+		//printf("punto: %f %f\n", firstArc[2*i], firstArc[(2*i) + 1]);
 	}
 /* --- funzione per disegnare archi --- */
 

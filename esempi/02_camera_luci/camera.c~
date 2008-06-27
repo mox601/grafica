@@ -20,8 +20,8 @@ int moving_on_plane = 0;
 
 
 
-Point3d  position ={-5,-20,0};
-Point3d  target   ={-5,20,0};
+Point3d  position ={0,-20,0};
+Point3d  target   ={0,20,0};
 Vector3d vup      ={0,0,1};
 
 /* dettaglio dei triangoli disegnati */
@@ -94,6 +94,15 @@ void init(void) {
 //??
 //	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
+/*
+da fare: 
+luce0 - luce ambientale, il sole. viene dall'alto. da abbinare ad un'altra luce
+luce1 - accoppiata alla luce ambientale. 
+luce2 - luce di un lampione
+
+*/
+
+
 	/* luce numero 0 locale */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_white);
@@ -115,6 +124,13 @@ void init(void) {
 
 	/* antialiasing sulle linee */
 	glEnable(GL_LINE_SMOOTH);
+
+
+
+
+
+
+
 
 }
 
