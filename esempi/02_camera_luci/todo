@@ -1,18 +1,15 @@
-
-
+comandi per git: 
 git commit -a
 git push
 
-da migliorare la differenza di altezza tra le due parti di muro frontale
-disegna i contorni dei muri OK
+fatto
 drawwall high deve usare drawwalloblique OK
+disegna i contorni dei muri OK
+fatta funzione che crea dei punti su una circonferenza da un angolo di partenza a uno di arrivo
+
+da fare
+da migliorare la differenza di altezza tra le due parti di muro frontale
 si può migliorare la griglia esterna
-allineamento del muro laterale
-
-
-costruire la struttura esterna
-scrivere primitive per fare superfici curve
-trovare soluzione per collisioni
-imparare a gestire le luci e le texture
-
+allineamento del muro laterale verde
+creazione diverse luci dinamiche (giorno che cambia in notte?)
 

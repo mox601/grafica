@@ -1,0 +1,19 @@
+##!smake
+
+## include /usr/include/make/commondefs
+
+LLDLIBS = -L ../glut -lglut -lGLU -lGL -lXmu -lXext -lX11 -lm
+LCFLAGS = -fullwarn -I../glut
+TARGETS = accumaa csg decal dissolve nthsurfdemo multiaccumaa zcomposite \
+          billboard bubble cloud cloudl explode fire fog lightp projtex smoke tess texgen texmovie texpage textile underwater vapor warp water \
+          accconvolve alphablend alphablendnosort chromakey chromakey_fancy genspheremap interp multialphablend multialphablendnosort multimirror multiscreendoor multispheremap paint sbias screendoor usespheremap \
+	  bump highlight lightmap line volume \
+          noise softshadow2 spectral
+
+default		: $(TARGETS)
+
+include $(COMMONRULES)
+
+$(TARGETS)	: $$@.o texture.o d.o sm.o sphere.o
+	$(CCF) -o $@ $@.o texture.o d.o sm.o sphere.o $(LDFLAGS)
+

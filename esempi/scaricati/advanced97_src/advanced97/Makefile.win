@@ -1,0 +1,62 @@
+##!nmake
+
+!include <win32.mak>
+
+# define OPENGL to be "glut32.lib glu32.lib opengl32.lib" if you 
+# don't want to use SGI's OpenGL for Windows.  (For example,
+# if you have OEM specific accelerated opengl libraries.)
+
+!if "$(OPENGL)" == ""
+OPENGL = glut.lib glu.lib opengl.lib
+!endif
+
+CFILES  = accconvolve.c accumaa.c alphablend.c alphablendnosort.c billboard.c bubble.c        chromakey.c chromakey_fancy.c cloud.c cloudl.c csg.c decal.c dissolve.c explode.c fire.c genspheremap.c highlight.c interp.c lightmap.c lightp.c line.c multiaccumaa.c multialphablend.c multialphablendnosort.c multimirror.c multiscreendoor.c multispheremap.c noise.c nthsurfdemo.c paint.c projtex.c sbias.c screendoor.c smoke.c softshadow2.c spectral.c tess.c texgen.c texmovie.c texpage.c textile.c underwater.c usespheremap.c vapor.c          warp.c water.c zcomposite.c
+#bump.c volume.c
+TARGETS	= $(CFILES:.c=.exe)
+LCFLAGS	= $(cflags) $(cdebug)
+LLDLIBS	= $(lflags) $(ldebug) $(OPENGL) $(guilibs)
+
+default	: $(TARGETS)
+
+clean	:
+	@del *.obj
+
+clobber	: clean
+	@del *.exe
+
+$(TARGETS): $*.obj
+        $(link) -out:$@ $** $(LLDLIBS)
+
+.c.obj	: 
+	$(CC) $(LCFLAGS) $<
+
+# dependencies (must come AFTER inference rules)
+accconvolve.exe	\
+billboard.exe	\
+bubble.exe	\
+chromakey.exe	\
+chromakey_fancy.exe \
+cloud.exe	\
+cloudl.exe	\
+explode.exe	\
+genspheremap.exe \
+highlight.exe	\
+interp.exe	\
+lightmap.exe	\
+lightp.exe	\
+multispheremap.exe \
+paint.exe	\
+projtex.exe	\
+sbias.exe	\
+smoke.exe	\
+texmovie.exe	\
+texpage.exe	\
+textile.exe	\
+underwater.exe	\
+usespheremap.exe \
+vapor.exe	\
+warp.exe	\
+water.exe	\
+		: texture.obj
+fire.exe	: dino.obj sm.obj texture.obj
+tess.exe	: sphere.obj

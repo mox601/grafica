@@ -1,0 +1,41 @@
+
+light tutorial
+http://www.falloutsoftware.com/tutorials/gl/gl8.htm
+http://www.sjbaker.org/steve/omniv/opengl_lighting.html
+
+depth testing and lighting
+http://www.codecolony.de/docs/depthlight.htm
+
+esempi avanzati siggraph
+http://www.opengl.org/resources/code/samples/advanced/advanced97/programs/programs.html
+
+vertex arrays
+http://www.codecolony.de/docs/VertexArrays.htm
+
+opengl tutorial lighting, rendering, shading
+http://www.opengl.org/code/category/C18
+
+tutorial video
+http://www.videotutorialsrock.com/opengl_tutorial/improving/home.php
+
+vari tutorial
+http://www.codesampler.com/oglsrc.htm
+
+opengl lights and shadows
+http://www.opengl.org/resources/faq/technical/lights.htm
+
+riflessioni
+http://www.opengl.org/resources/code/samples/mjktips/TexShadowReflectLight.html
+
+estensioni opengl
+http://www.opengl.org/registry/
+
+opengl projects
+http://www.paulsprojects.net/opengl/projects1.html
+
+real time shadows
+http://www.opengl.org/resources/code/samples/mjktips/rts/index.html
+
+glslang cloth simulation
+http://linuz.sns.it/~monge/cloth/index.htm
+http://www.paulsprojects.net/opengl/cloth/cloth.html
