@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #include "vectors.h"
 #include "model.h"
+#include "lights.h"
 
 /* prototype */
 void redraw(void);
@@ -35,14 +36,6 @@ GLfloat stepDetail = 0.5f;
 enum {M_NONE,M_LOCAL_LIGHT,M_DIRECTIONAL_LIGHT,M_WIREFRAME};
 
 
-/* colori */
-GLfloat color_black     []  = {0.0f, 0.0f, 0.0f, 1.0f}; 
-GLfloat color_white     []  = {1.0f, 1.0f, 1.0f, 1.0f}; 
-GLfloat color_red       []  = {1.0f, 0.0f, 0.0f, 1.0f};
-GLfloat color_green     []  = {0.0f, 1.0f, 0.0f, 1.0f};
-GLfloat color_blue      []  = {0.0f, 0.0f, 1.0f, 1.0f};
-GLfloat coloryellow[]  = {1.0f, 1.0f, 0.0f, 1.0f};
-
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
@@ -55,30 +48,16 @@ GLfloat high_shininess[] = { 100.0 };
 GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
 
 
+/* angolo per animazione luce */
+float lightAngle = 0.0;
+
+
 
 int enable_light_directional = 0;
 /* faretto */
 int enable_light_local = 1;
 int draw_wireframe = 0;
 
-
-/* angolo per animazione luce */
-float lightAngle = 0.0;
-/* posizione luce 0 */
-GLfloat light_position_local[4]={
-		-10.0f,
-		1.0f,
-		1.0f,
-		1.0f
-	};
-
-/* posizione luce 1 direzionale */
-GLfloat light_position_directional[4]={
-		10.0f,
-		1.0f,
-		1.0f,
-		1.0f
-};
 
 /* ---------------------------------------------------------- */
 
@@ -91,46 +70,16 @@ void init(void) {
 	glEnable(GL_NORMALIZE);
 	glDepthFunc(GL_LESS);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
-//??
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
-
-/*
-da fare: 
-luce0 - luce ambientale, il sole. viene dall'alto. da abbinare ad un'altra luce
-luce1 - accoppiata alla luce ambientale. 
-luce2 - luce di un lampione
-
-*/
 
 
-	/* luce numero 0 locale */
-	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_white);
-	glLightfv(GL_LIGHT0, GL_SPECULAR , color_white);
-	glLightfv(GL_LIGHT0, GL_POSITION , light_position_local);
+	/* spostato nel file lights.c */
+	setupLights();
 
-	/* luce numero 1 direzionale */
-	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_white);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_white);
-	glLightfv(GL_LIGHT1, GL_SPECULAR , color_white);
-	glLightfv(GL_LIGHT1, GL_POSITION , light_position_directional);
-
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHTING);
-	
 	/* smooth shading */
 	glShadeModel(GL_SMOOTH);
 
 	/* antialiasing sulle linee */
 	glEnable(GL_LINE_SMOOTH);
-
-
-
-
-
-
-
 
 }
 
