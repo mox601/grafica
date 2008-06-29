@@ -705,23 +705,11 @@ glPushMatrix();
 
 	glEnd();
 
-
+	glPopMatrix();
 
 	return coordinate;
 
-
-glPopMatrix();
-
-
-
 }
-
-
-
-
-
-
-
 
 void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfloat inclinazione){
 
@@ -822,42 +810,34 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	Point3d  d3 = {0,0,altezza_w3_high};
 
 /* punti per muro laterale basso, altrimenti vengono modificati dalla drawWall */
-	Point3d  a4 = {0,0,0};
-	Point3d  b4 = {0,profondita/2,0};
+	Point3d  a4 = {spessore/2,0,0};
+	Point3d  b4 = {spessore/2,profondita/2,0};
 	Point3d  c4 = {0,profondita/2, altezza_w3_high * (1-altezzaL)};
 	Point3d  d4 = {0,0,altezza_w3_high * (1-altezzaL)};
 
 
-glPushMatrix();
-glTranslatef(-spessore, lunghezza_w2_high, 0.0f); 
-glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
+	glPushMatrix();
+	glTranslatef(-spessore, lunghezza_w2_high, 0.0f); 
+	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 
-setMaterial(1, 0, 0);
+	setMaterial(1, 0, 0);
 
+	GLfloat spigolo_laterale_back_w3_high = -1.21f;
+	GLfloat spigolo_laterale_front_w3_high = 1.23f;
+	GLfloat differenza_w3_high = 0.0f;
 
+	drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
 
-GLfloat spigolo_laterale_back_w3_high = -1.21f;
-GLfloat spigolo_laterale_front_w3_high = 1.23f;
-GLfloat differenza_w3_high = 0.0f;
+	glTranslatef(0.0f , profondita/2, 0.0f); 
+	setMaterial(0, 1, 0.5);
+	//glutSolidSphere(0.5f, 10.0f, 10.0f);
+	/* parte bassa */
+	drawWallOblique(&a4, &b4, &c4, &d4, spessore, 0.74f, 0.0, incl_frontale+0.17f, dettaglio, differenza_w3_high);
 
-drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
-
-
-glTranslatef(0.0f , profondita/2, 0.0f); 
-setMaterial(0, 1, 0.5);
-glutSolidSphere(0.5f, 10.0f, 10.0f);
-/* parte bassa */
-//migliorare l'allineamento del muro
-drawWallOblique(&a4, &b4, &c4, &d4, spessore, 0.0, 0.0, incl_frontale, dettaglio, differenza_w3_high);
+	glPopMatrix();
 
 
-glPopMatrix();
-
-
-
-/* end parte alta laterale */
-
-
+	/* end parte alta laterale */
 
 	glPopMatrix(); /* parte alta del muro */
 
@@ -865,7 +845,6 @@ glPopMatrix();
 	/* disegno il quadrilatero che sarà il vetro */
 	GLfloat rapporto = altezzaL; 
 	drawGlass(&a1, &b1, &c1, &d1, spessore, rapporto, spigolo_laterale_front_w1,  profondita);
-
 
 	glPopMatrix(); /* profondità palazzo */
 
@@ -969,6 +948,44 @@ Point3d v6 = {lunghezza_glass, v2.y, 0.0f};
 }
 
 
+/* tetto e muro curvo */
+void drawBackCurveAndRoof() {
+
+
+	GLfloat inclinazione = 9.0f; 
+
+	GLint dettaglio = 5;
+
+	setMaterial(0.1,1,1); 
+
+
+
+
+	glPushMatrix();
+	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
+	glTranslatef(1.0f, 0.0f, 4.5f);
+
+	glPushMatrix();
+		glRotatef(-inclinazione, 1.0f, 0.0f, 0.0f);
+		GLdouble* circle1 = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(0, -5.0f, 0);
+		glRotatef(inclinazione, 1.0f, 0.0f, 0.0f);
+		GLdouble* circle2 = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
+	glPopMatrix();
+
+	glPopMatrix();
+
+
+}
+
+
+
+
+
+
 /* funzione per impostare i materiali */
 void setMaterial(GLfloat R,GLfloat G,GLfloat B)
 {
@@ -1033,7 +1050,8 @@ void drawEsterni(){
 
 /* funzione per disegnare archi (SI PUÒ METTERE NELL'INIT?)
 crea problemi alla creazione del vetro viola */
-	GLdouble* firstArc = drawCircle(5.0f, 5, 90.0f, 0.0f);
+
+	//GLdouble* firstArc = drawCircle(5.0f, 5, 90.0f, 0.0f);
 
 	int i;
 
@@ -1043,6 +1061,13 @@ crea problemi alla creazione del vetro viola */
 /* --- funzione per disegnare archi --- */
 
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
+
+
+/* copertura tetto e muro laterale */
+
+	drawBackCurveAndRoof(); 
+
+
 }
 
 

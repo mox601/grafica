@@ -19,10 +19,8 @@ int startx,starty;
 int going_forward   = 0;
 int moving_on_plane = 0;
 
-
-
-Point3d  position ={0,-20,0};
-Point3d  target   ={0,20,0};
+Point3d  position ={15,0,0};
+Point3d  target   ={-56,0,12};
 Vector3d vup      ={0,0,1};
 
 /* dettaglio dei triangoli disegnati */
@@ -53,9 +51,9 @@ float lightAngle = 0.0;
 
 
 
-int enable_light_directional = 0;
+int enable_light_directional = 1;
 /* faretto */
-int enable_light_local = 1;
+int enable_light_local = 0;
 int draw_wireframe = 0;
 
 
@@ -329,6 +327,9 @@ void controlMenu(int value)
 	break;
 
 	}
+
+
+
 	glutPostRedisplay();
 }
 
@@ -447,6 +448,18 @@ if (enable_light_directional)
 	//drawWall(&a, &b, &c, &d, spessore, sp_laterale, -incl_frontale, dettaglio);
 
 	glPopMatrix();
+
+
+
+
+/* per conoscere la posizione */
+/*
+	printf("position: %f %f %f\n", position.x, position.y, position.z); 
+	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+*/
+
+
+
 	
 	glutSwapBuffers();
 }

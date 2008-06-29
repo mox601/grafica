@@ -6,10 +6,11 @@ fatto
 drawwall high deve usare drawwalloblique OK
 disegna i contorni dei muri OK
 fatta funzione che crea dei punti su una circonferenza da un angolo di partenza a uno di arrivo
+spostata la definizione di luci in lights.c e .h
+allineamento del muro laterale verde
 
 da fare
 da migliorare la differenza di altezza tra le due parti di muro frontale
 si può migliorare la griglia esterna
-allineamento del muro laterale verde
 creazione diverse luci dinamiche (giorno che cambia in notte?)
 
