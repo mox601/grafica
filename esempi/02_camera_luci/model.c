@@ -958,30 +958,29 @@ void drawBackCurveAndRoof() {
 
 	setMaterial(0.1,1,1); 
 
-
-
-
+	
 	glPushMatrix();
 	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 	glTranslatef(1.0f, 0.0f, 4.5f);
 
-	glPushMatrix();
-		glRotatef(-inclinazione, 1.0f, 0.0f, 0.0f);
-		GLdouble* circle1 = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
-	glPopMatrix();
+	GLint i = 0; 
+	GLfloat profondita = 5.0f;
 
-	glPushMatrix();
-		glTranslatef(0, -5.0f, 0);
-		glRotatef(inclinazione, 1.0f, 0.0f, 0.0f);
-		GLdouble* circle2 = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
-	glPopMatrix();
+	GLdouble* circle = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
 
+
+	drawShell(circle, dettaglio, profondita);
+
+
+	
 	glPopMatrix();
 
 
 }
 
+void drawShell(GLdouble* circle, GLint dettaglio, GLfloat profondita) {
 
+}
 
 
 

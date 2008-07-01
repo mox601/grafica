@@ -38,5 +38,7 @@ GLdouble* drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfl
 void setMaterial(GLfloat R,GLfloat G,GLfloat B);
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 
+void drawShell(GLdouble* circle, GLint dettaglio, GLfloat profondita);
+
 #endif
 
