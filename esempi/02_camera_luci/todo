@@ -10,6 +10,8 @@ spostata la definizione di luci in lights.c e .h
 allineamento del muro laterale verde
 
 da fare
+decidere dove impostare la normale nella drawTriangle per migliorare l'illuminazione
+inclinare i punti del guscio mano mano che vengono disegnati
 disegnare la chiusura dell'edificio
 da migliorare la differenza di altezza tra le due parti di muro frontale
 si può migliorare la griglia esterna

@@ -36,12 +36,14 @@ void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dett
 	/* sbagliato!! */
 //	vector_cross_product(&destNormal, &diff2_3, &diff1_2); 
 	/* giusto!! */
+
 	vector_cross_product(&destNormal, &diff1_2, &diff2_3); 
 
 
 	/* devo impostare la normale del triangolo che sto costruendo: */
 	/* verifica!! */
 
+	/* la normale la imposto qui ? */
 	glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 
 //	printf("normale: %f %f %f\n", destNormal.x,destNormal.y,destNormal.z); 
@@ -58,6 +60,9 @@ void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dett
 	if (distanza_minima <= dettaglio) {
 		/* disegno triangoli oppure line loops */
 		glBegin(draw_wireframe?GL_LINE_LOOP:GL_TRIANGLES);
+		
+/* imposto qui la normale? */
+	//	glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 			glVertex3f(point1->x, point1->y, point1->z);
 			glVertex3f(point2->x, point2->y, point2->z);
 			glVertex3f(point3->x, point3->y, point3->z);
@@ -675,8 +680,8 @@ glPushMatrix();
 		GLdouble coseno = cos(valore_angolo_rad);
 		GLdouble seno = sin(valore_angolo_rad);
 
-		coordinate[2 * i] = coseno;
-		coordinate[2 * i + 1] = seno;
+		coordinate[2 * i] = radius * coseno;
+		coordinate[2 * i + 1] = radius * seno;
 
 //		printf("coord: %f %f\n", coordinate[2*i], coordinate[(2*i) + 1]);
 
@@ -954,23 +959,23 @@ void drawBackCurveAndRoof() {
 
 	GLfloat inclinazione = 9.0f; 
 
-	GLint dettaglio = 5;
+	GLint numPoints = 7 / dettaglio;
 
 	setMaterial(0.1,1,1); 
 
 	
 	glPushMatrix();
 	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-	glTranslatef(1.0f, 0.0f, 4.5f);
+	glTranslatef(0.0f, 0.0f, 4.5f);
+	glTranslatef(0.0f, -profondita_lunghezza_ratio * lunghezza, 0.0f);
 
 	GLint i = 0; 
-	GLfloat profondita = 5.0f;
+	GLfloat profondita = 8.0f - (0.02 * lunghezza);
 
-	GLdouble* circle = drawCircle(3.0f, dettaglio, 90.0f, 210.0f);
+	GLdouble* circle = drawCircle(3.0f, numPoints, 90.0f, 210.0f);
 
 
-	drawShell(circle, dettaglio, profondita);
-
+	drawShell(circle, numPoints, profondita+4);
 
 	
 	glPopMatrix();
@@ -978,7 +983,142 @@ void drawBackCurveAndRoof() {
 
 }
 
-void drawShell(GLdouble* circle, GLint dettaglio, GLfloat profondita) {
+void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
+
+	Point3d a; 
+	Point3d b; 
+	Point3d c; 
+	Point3d d; 
+	
+	int i = 0;
+
+
+	/* posso inclinare i punti mano mano che li disegno */
+
+	for (i = 0; i < numPoints; i++) {
+	
+		/* primo */
+		a.x = circle[2 * i];
+		a.y = 0.0f; 
+		a.z = circle[(2 * i)  + 1];
+		/* secondo */
+		b.x = circle[(2 * i) + 2];
+		b.y = 0.0f; 
+		b.z = circle[(2 * i) + 3];
+	
+		/* punti distanti a profondita */
+		/* terzo */
+		c.x = circle[2 * i];
+		c.y = profondita; 
+		c.z = circle[(2 * i)  + 1];
+		/* quarto */
+		d.x = circle[(2 * i) + 2];
+		d.y = profondita; 
+		d.z = circle[(2 * i) + 3];
+	
+	
+		/* come mi organizzo per le normali? */
+	
+		/* il dettaglio è un pò cambiato */
+	
+		drawTriangle(&a, &c, &b, dettaglio * 0.7f);
+		drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+
+	}//for
+
+
+	Point3d e;
+	Point3d f;
+	GLfloat altezza = 4.5f; 
+
+	/* punto d, in alto a dx */
+	/* punto b, in alto a sx */
+
+
+	/* punto e, in basso a sx */
+	e.x = circle[0]; 
+	e.y = 0.0f;
+	e.z = - altezza; 
+
+	/* punto f, in basso a dx */
+	f.x = circle[0]; 
+	f.y = profondita;
+	f.z = - altezza;
+	
+	/* normali ? */
+	/* muro obliquo retrostante */
+	drawTriangle(&d, &b, &e, dettaglio);
+	drawTriangle(&e, &f, &d, dettaglio);
+
+
+	/* da e ed f traccio dei triangoli con ogni punto del cerchio */
+
+
+	/* centro faccia profondita */
+
+	Point3d h; 
+	h.x = 0.0f;
+	h.y = profondita; 
+	h.z = 0.0f; 
+	drawTriangle(&h, &d, &f, dettaglio);
+
+	Point3d temp1; 
+	Point3d temp2; 
+
+	/* centro faccia 0.0f */
+	Point3d j; 
+	j.x = 0.0f;
+	j.y = 0.0f; 
+	j.z = 0.0f; 
+	drawTriangle(&j, &e, &b, dettaglio);
+
+	/* disegno i triangolini laterali */
+
+	for (i = 0; i < numPoints; i++) {
+		temp1.x = circle[2 * i]; 
+		temp1.y = profondita;
+		temp1.z = circle[(2 * i) + 1]; 
+
+		temp2.x = circle[(2 * i) + 2]; 
+		temp2.y = profondita;
+		temp2.z = circle[(2 * i) + 3]; 
+
+		drawTriangle(&h, &temp1, &temp2, dettaglio);
+
+		/* e poi li disegno sull'altra faccia */
+		temp1.y = 0.0f;
+		temp2.y = 0.0f;
+
+		drawTriangle(&j, &temp2, &temp1, dettaglio);
+	}
+
+	Point3d start1; 
+	start1.x = circle[0];
+	start1.y = profondita; 
+	start1.z = circle[1];
+
+	Point3d start2; 
+	start2.x = circle[0];
+	start2.y = 0.0f; 
+	start2.z = circle[1];
+
+	GLfloat adjust = 3.8f; 
+
+	Point3d front1 = {circle[0] - lunghezza - adjust, profondita, circle[1]};
+	Point3d front2 = {circle[0] - lunghezza - adjust, 0.0f, circle[1]};
+
+
+	/* normali!! */
+	drawTriangle(&front1, &front2, &start1, dettaglio);
+	drawTriangle(&start1, &front2, &start2, dettaglio);
+
+
+	
+	drawTriangle(&front1, &start1, &h, dettaglio);
+	drawTriangle(&front2, &j, &start2, dettaglio);
+
+
+
 
 }
 
@@ -1047,22 +1187,9 @@ void drawEsterni(){
 	setMaterial(1,1,1);
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
 
-/* funzione per disegnare archi (SI PUÒ METTERE NELL'INIT?)
-crea problemi alla creazione del vetro viola */
-
-	//GLdouble* firstArc = drawCircle(5.0f, 5, 90.0f, 0.0f);
-
-	int i;
-
-	for (i = 0; i < (5 + 1)*2; i++) {
-		//printf("punto: %f %f\n", firstArc[2*i], firstArc[(2*i) + 1]);
-	}
-/* --- funzione per disegnare archi --- */
-
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
 
-
-/* copertura tetto e muro laterale */
+	/* copertura tetto e muro laterale */
 
 	drawBackCurveAndRoof(); 
 
