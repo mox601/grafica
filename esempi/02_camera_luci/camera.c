@@ -133,10 +133,10 @@ int main(int argc, char **argv)
 
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective( 
-		40.0,  /* field of view in degree */ 
+		60.0,  /* field of view in degree */ 
 		1.0,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		100.0  /* Z far */ 
+		200.0  /* Z far */ 
 	);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -429,6 +429,10 @@ if (enable_light_directional)
 
 	/* disegna la struttura esterna */
 	drawEsterni();
+
+
+	/* disegna struttura interna */
+	drawInterni();
 
 	/* disegna muro frontale */
 

@@ -992,8 +992,10 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	
 	int i = 0;
 
+	GLfloat deltaInclinazione = 0.2f;
 
-	/* posso inclinare i punti mano mano che li disegno */
+
+	/* posso inclinare i punti mano mano che li disegno ?*/
 
 	for (i = 0; i < numPoints; i++) {
 	
@@ -1112,7 +1114,6 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	drawTriangle(&front1, &front2, &start1, dettaglio);
 	drawTriangle(&start1, &front2, &start2, dettaglio);
 
-
 	
 	drawTriangle(&front1, &start1, &h, dettaglio);
 	drawTriangle(&front2, &j, &start2, dettaglio);
@@ -1176,8 +1177,78 @@ switch(tipo) {
 }
 
 
+void drawPlane() {
+
+//	glutSolidSphere(0.2f, 5.0f, 5.0f);
+	
+	GLfloat altezza = 0.2f; 
+	GLfloat lunghezza = 24.0f; 
+	GLfloat profondita = 22.0f; 
+
+
+/* base di sotto */
+	Point3d a = {0.0f, 0.0f, 0.0f};
+	Point3d b = {-profondita, 0.0f, 0.0f};
+	Point3d c = {-profondita, lunghezza, 0.0f};
+	Point3d d = {0.0f, lunghezza, 0.0f};
+
+
+/* base di sopra */
+	Point3d a1 = {0.0f, 0.0f, altezza};
+	Point3d b1 = {-profondita, 0.0f, altezza};
+	Point3d c1 = {-profondita, lunghezza, altezza};
+	Point3d d1 = {0.0f, lunghezza, altezza};
+
+
+/* base di sotto */
+	drawTriangle(&a, &b, &d, dettaglio);
+	drawTriangle(&d, &b, &c, dettaglio);
+/* base di sopra */
+	drawTriangle(&a1, &d1, &b1, dettaglio);
+	drawTriangle(&b1, &d1, &c1, dettaglio);
+/* facce laterali */
+	drawTriangle(&d, &c1, &d1, dettaglio);
+	drawTriangle(&c1, &d, &c, dettaglio);
+
+	drawTriangle(&a1, &a, &d1, dettaglio);
+	drawTriangle(&d1, &a, &d, dettaglio);
+
+	drawTriangle(&b1, &b, &a1, dettaglio);
+	drawTriangle(&b, &a, &a1, dettaglio);
+
+	drawTriangle(&c1, &c, &b1, dettaglio);
+	drawTriangle(&b1, &c, &b, dettaglio);
+
+
+}
+
+
+void drawPlanes(GLint npiani) {
+	glPushMatrix();
+	glTranslatef(-1.5f, 40.0f, 3.0f);
+	int i; 
+	for(i = 1; i<=npiani; i++) {
+		drawPlane();
+		glTranslatef(0.0f, 0.0f, 3.0f);
+		//printf("%d piani disegnati\n", i);
+		
+	}
+
+	glPopMatrix();
+
+//	drawColumns(); 
+
+}
+
+
+
 
 void drawEsterni(){
+	
+	glPushMatrix();
+
+	/* ingrandisce la dimensione della struttura */
+	glScalef(2.0f, 2.0f, 2.0f); 
 
 	setMaterial(1,1,0);
 	/* chiamate per settare i materiali */
@@ -1193,8 +1264,18 @@ void drawEsterni(){
 
 	drawBackCurveAndRoof(); 
 
+	glPopMatrix();
+}
+
+
+
+void drawInterni()
+{
+	setMaterial(1,0,0);
+	drawPlanes(3);
 
 }
+
 
 
 
