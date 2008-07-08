@@ -1128,18 +1128,31 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
 /* funzione per impostare i materiali */
 void setMaterial(GLfloat R,GLfloat G,GLfloat B)
+
 {
+
 	GLfloat material_ambient      []  = {0.1f*R, 0.1f*G, 0.1f*B, 1.0f}; 
+
 	GLfloat material_diffuse      []  = {0.3f*R, 0.3f*G, 0.3f*B, 1.0f}; 
+
 	GLfloat material_specular     []  = {0.5f*R, 0.5f*G, 0.5f*B, 1.0f}; 
+
 	GLfloat material_emission     []  = {0.0f*R, 0.0f*G, 0.0f*B, 1.0f}; 
+
 	GLfloat material_shininess    []  = {30};
+
 	
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT  , material_ambient);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+
 }
 
 
@@ -1147,33 +1160,50 @@ void setMaterial(GLfloat R,GLfloat G,GLfloat B)
 
 /* funzione per impostare i materiali */
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo)
+
 {
 switch(tipo) {
 	case 'p':
+
 		printf("materiale porcellana\n");
 /* set delle variabili con glMaterial... */
 		break; 
+
 	
 
 	case 'o':
+
 		printf("materiale opaco\n");		
 /* set delle variabili con glMaterial... */
 		break; 
+
 }
 
 	printf("comincia set material\n");		
 
+
 	GLfloat material_ambient      []  = {0.1f*R, 0.1f*G, 0.1f*B, 1.0f}; 
+
 	GLfloat material_diffuse      []  = {0.3f*R, 0.3f*G, 0.3f*B, 1.0f}; 
+
 	GLfloat material_specular     []  = {0.5f*R, 0.5f*G, 0.5f*B, 1.0f}; 
+
 	GLfloat material_emission     []  = {0.0f*R, 0.0f*G, 0.0f*B, 1.0f}; 
+
 	GLfloat material_shininess    []  = {30};
+
 	
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT  , material_ambient);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+
 }
 
 
@@ -1198,6 +1228,11 @@ void drawPlane() {
 	Point3d b1 = {-profondita, 0.0f, altezza};
 	Point3d c1 = {-profondita, lunghezza, altezza};
 	Point3d d1 = {0.0f, lunghezza, altezza};
+
+
+/**/
+
+
 
 
 /* base di sotto */

@@ -2,10 +2,32 @@
 #define __MODEL_H
 
 #include <stdio.h>
+
 #include <stdlib.h>
+
 #include <string.h>
+
 #include <math.h>
+
+
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
+
+
+//#include <GL/glut.h>
+
+
+
+
+
 #include "vectors.h"
 
 GLfloat lunghezza;

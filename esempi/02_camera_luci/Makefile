@@ -1,6 +1,7 @@
 CFLAGS=
 INCDIR=
-LINKLIBS=-lglut -lGLU -lGL -lm
+#linux#LINKLIBS=-lglut -lGLU -lGL -lm
+LINKLIBS=-framework OpenGL -framework Glut -lm
 
 OBJECTS=camera clipping lighting subdivision vectors model lights
 

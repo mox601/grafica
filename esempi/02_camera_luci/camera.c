@@ -2,7 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>     
+
+
+
+
+//#include <GL/glut.h>
+
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
+
+
+
 #include "vectors.h"
 #include "model.h"
 #include "lights.h"
@@ -19,8 +37,8 @@ int startx,starty;
 int going_forward   = 0;
 int moving_on_plane = 0;
 
-Point3d  position ={15,0,0};
-Point3d  target   ={-56,0,12};
+Point3d  position ={-14,18,0};
+Point3d  target   ={-13,90,0};
 Vector3d vup      ={0,0,1};
 
 /* dettaglio dei triangoli disegnati */
@@ -417,7 +435,7 @@ if (enable_light_directional)
 	
 	/* assi di riferimento */
 
-	glLineWidth(8);
+	glLineWidth(4);
 	glBegin(GL_LINES);
 	glColor3f(1,0,0);glVertex3f(0,0,0);glVertex3f(1,0,0);
 	glColor3f(0,1,0);glVertex3f(0,0,0);glVertex3f(0,1,0);
@@ -425,7 +443,7 @@ if (enable_light_directional)
 	glEnd();
 
 
-	glLineWidth(3);
+	glLineWidth(1);
 
 	/* disegna la struttura esterna */
 	drawEsterni();
