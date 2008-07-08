@@ -1214,14 +1214,28 @@ void drawPlane() {
 	GLfloat altezza = 0.2f; 
 	GLfloat lunghezza = 24.0f; 
 	GLfloat profondita = 22.0f; 
-
-
+	
+	
+	GLfloat distanzaY = 10.0f;
+	GLfloat distanzaX = 8.0f;
+	GLfloat larghezzaBuco = 4.0f;
+	GLfloat profonditaBuco = 6.0f;
+	
 /* base di sotto */
 	Point3d a = {0.0f, 0.0f, 0.0f};
 	Point3d b = {-profondita, 0.0f, 0.0f};
 	Point3d c = {-profondita, lunghezza, 0.0f};
 	Point3d d = {0.0f, lunghezza, 0.0f};
 
+	Point3d e = {0.0f, distanzaY + distanzaX, 0.0f};
+	Point3d f = {0.0f, distanzaY + distanzaX + profonditaBuco, 0.0f};
+	Point3d g = {0.0f, distanzaY + larghezzaBuco + distanzaX + profonditaBuco, 0.0f};
+	Point3d h = {0.0f, distanzaY + larghezzaBuco + distanzaX, 0.0f};
+	Point3d i = {-profondita, distanzaY, 0.0f};
+	Point3d j = {-profondita, distanzaY + larghezzaBuco, 0.0f};
+	Point3d k = {0.0f, distanzaY + larghezzaBuco, 0.0f};
+	Point3d l = {0.0f, distanzaY, 0.0f};
+	
 
 /* base di sopra */
 	Point3d a1 = {0.0f, 0.0f, altezza};
@@ -1235,12 +1249,20 @@ void drawPlane() {
 
 
 
-/* base di sotto */
-	drawTriangle(&a, &b, &d, dettaglio);
-	drawTriangle(&d, &b, &c, dettaglio);
+/* base di sotto con buco */
+//	drawTriangle(&a, &b, &d, dettaglio);
+//	drawTriangle(&d, &b, &c, dettaglio);
+	
+	drawTriangle(&a, &b, &l, dettaglio);
+	drawTriangle(&b, &i, &l, dettaglio);
+	drawTriangle(&j, &d, &k, dettaglio);
+	drawTriangle(&j, &c, &d, dettaglio);
+	
+	
+	
 /* base di sopra */
-	drawTriangle(&a1, &d1, &b1, dettaglio);
-	drawTriangle(&b1, &d1, &c1, dettaglio);
+	//drawTriangle(&a1, &d1, &b1, dettaglio);
+	//drawTriangle(&b1, &d1, &c1, dettaglio);
 /* facce laterali */
 	drawTriangle(&d, &c1, &d1, dettaglio);
 	drawTriangle(&c1, &d, &c, dettaglio);
