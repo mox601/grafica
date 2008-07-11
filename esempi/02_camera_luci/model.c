@@ -689,7 +689,7 @@ glPushMatrix();
 		printf("%d-esimo passo, valore %f = rad %f;  coordinate %f %f\n", i, valore_angolo, valore_angolo_rad, coseno, seno);
 */		
 			// disegno i punti della lineStrip
-			glVertex3f(radius * coseno, 0.0f, radius * seno); 
+//			glVertex3f(radius * coseno, 0.0f, radius * seno); 
 //			printf("cos %f sen %f\n", coseno, seno); 
 
 
@@ -825,7 +825,9 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	glTranslatef(-spessore, lunghezza_w2_high, 0.0f); 
 	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 
-	setMaterial(1, 0, 0);
+
+/* levo tutte le chiamate ai materiali, le metto esterne */
+//	setMaterial(1, 0, 0);
 
 	GLfloat spigolo_laterale_back_w3_high = -1.21f;
 	GLfloat spigolo_laterale_front_w3_high = 1.23f;
@@ -834,7 +836,9 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	drawWallHighNew(&a3, &b3, &c3, &d3, spessore, spigolo_laterale_front_w3_high, spigolo_laterale_back_w3_high, incl_frontale_w2, dettaglio, differenza_w3_high, altezzaL);
 
 	glTranslatef(0.0f , profondita/2, 0.0f); 
-	setMaterial(0, 1, 0.5);
+	
+	
+//	setMaterial(0, 1, 0.5);
 	//glutSolidSphere(0.5f, 10.0f, 10.0f);
 	/* parte bassa */
 	drawWallOblique(&a4, &b4, &c4, &d4, spessore, 0.74f, 0.0, incl_frontale+0.17f, dettaglio, differenza_w3_high);
@@ -861,8 +865,9 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front, GLfloat profondita) {
 
 
-setMaterial(1,0,1);
+/* set materiale trasparente */
 
+//setMaterial(1,0,1);
 
 /* punti locali */
 Point3d v1; 
@@ -940,7 +945,9 @@ Point3d v6 = {lunghezza_glass, v2.y, 0.0f};
 
 	/* disegno lo spigolo */
 
-	setMaterial(1,1,1); 
+//	setMaterial(1,1,1); 
+
+
 	glBegin(GL_LINES);
 		glVertex3f(v2.x, v2.y, v2.z);
 		glVertex3f(v3.x, v3.y, v3.z);
@@ -961,16 +968,16 @@ void drawBackCurveAndRoof() {
 
 	GLint numPoints = 7 / dettaglio;
 
-	setMaterial(0.1,1,1); 
 
-	
+//	setMaterial(0.1,1,1); 
+
 	glPushMatrix();
 	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 	glTranslatef(0.0f, 0.0f, 4.5f);
-	glTranslatef(0.0f, -profondita_lunghezza_ratio * lunghezza, 0.0f);
+	glTranslatef(0.0f, -profondita_lunghezza_ratio * lunghezza - 1.10f, 0.0f);
 
 	GLint i = 0; 
-	GLfloat profondita = 8.0f - (0.02 * lunghezza);
+	GLfloat profondita = 10.35f - (0.02 * lunghezza);
 
 	GLdouble* circle = drawCircle(3.0f, numPoints, 90.0f, 210.0f);
 
@@ -992,39 +999,59 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	
 	int i = 0;
 
-	GLfloat deltaInclinazione = 0.2f;
+	GLfloat deltaInclinazione = 0.8f;
 
+	GLfloat deltaY = deltaInclinazione/numPoints;
 
-	/* posso inclinare i punti mano mano che li disegno ?*/
+	/* posso inclinare i punti mano mano che li disegno */
 
 	for (i = 0; i < numPoints; i++) {
 	
 		/* primo */
 		a.x = circle[2 * i];
-		a.y = 0.0f; 
+		if (i == 0 ) { 
+			a.y = 0.0f;
+			c.y = profondita;
+		}
+			else {
+				a.y = (deltaY * (i-1)); 
+				c.y = profondita - (deltaY * (i-1));
+			}
 		a.z = circle[(2 * i)  + 1];
 		/* secondo */
 		b.x = circle[(2 * i) + 2];
-		b.y = 0.0f; 
+		b.y = 0.0f + (deltaY * i); 
 		b.z = circle[(2 * i) + 3];
 	
 		/* punti distanti a profondita */
 		/* terzo */
 		c.x = circle[2 * i];
-		c.y = profondita; 
+	// c.y	 
 		c.z = circle[(2 * i)  + 1];
 		/* quarto */
 		d.x = circle[(2 * i) + 2];
-		d.y = profondita; 
+		d.y = profondita - (deltaY * i); 
 		d.z = circle[(2 * i) + 3];
 	
 	
 		/* come mi organizzo per le normali? */
 	
 		/* il dettaglio è un pò cambiato */
-	
+
+/*
 		drawTriangle(&a, &c, &b, dettaglio * 0.7f);
 		drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+*/
+/* oriento in modo diverso le facce della parte curva */
+		drawTriangle(&a, &b, &c, dettaglio * 0.7f);
+		drawTriangle(&b, &d, &c, dettaglio * 0.7f);
+
+
+/* ma le disegno anche nell' altro senso, per fare l'illuminazione anche all'esterno */
+/*
+		drawTriangle(&a, &c, &b, dettaglio * 0.7f);
+		drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+*/
 
 	}//for
 
@@ -1036,15 +1063,14 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	/* punto d, in alto a dx */
 	/* punto b, in alto a sx */
 
-
 	/* punto e, in basso a sx */
 	e.x = circle[0]; 
-	e.y = 0.0f;
+	e.y = 0.0f + (deltaY * numPoints + 0.3f);
 	e.z = - altezza; 
 
 	/* punto f, in basso a dx */
 	f.x = circle[0]; 
-	f.y = profondita;
+	f.y = profondita - (deltaY * numPoints + 0.3f);
 	f.z = - altezza;
 	
 	/* normali ? */
@@ -1060,38 +1086,65 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
 	Point3d h; 
 	h.x = 0.0f;
-	h.y = profondita; 
+	h.y = profondita - (deltaY * numPoints / 2); 
 	h.z = 0.0f; 
 	drawTriangle(&h, &d, &f, dettaglio);
 
 	Point3d temp1; 
 	Point3d temp2; 
+	Point3d temp3; 
+	Point3d temp4;
 
 	/* centro faccia 0.0f */
 	Point3d j; 
 	j.x = 0.0f;
-	j.y = 0.0f; 
+	j.y = 0.0f + (deltaY * numPoints / 2); 
 	j.z = 0.0f; 
 	drawTriangle(&j, &e, &b, dettaglio);
 
 	/* disegno i triangolini laterali */
 
 	for (i = 0; i < numPoints; i++) {
+	
+	if (i == 0 ) { 
+				temp1.y = profondita;
+		}
+			else {
+				temp1.y = profondita - (deltaY * (i-1));				;
+			}
+
 		temp1.x = circle[2 * i]; 
-		temp1.y = profondita;
+
 		temp1.z = circle[(2 * i) + 1]; 
 
 		temp2.x = circle[(2 * i) + 2]; 
-		temp2.y = profondita;
+		temp2.y = profondita - (deltaY * (i));
 		temp2.z = circle[(2 * i) + 3]; 
 
 		drawTriangle(&h, &temp1, &temp2, dettaglio);
 
 		/* e poi li disegno sull'altra faccia */
-		temp1.y = 0.0f;
-		temp2.y = 0.0f;
+		/*
+		temp3.x = circle[2 * i]; 
+		temp3.y = profondita - (deltaY * (i-1));
+		temp3.z = circle[(2 * i) + 1]; 
+
+		temp4.x = circle[(2 * i) + 2]; 
+		temp4.y = profondita - (deltaY * (i));
+		temp4.z = circle[(2 * i) + 3]; 
+		*/
+		
+		if ( i == 0 ) {
+			temp1.y = 0.0f;
+		}
+		else {
+			temp1.y = 0.0f + (deltaY * (i-1));
+		}
+
+		temp2.y = 0.0f + (deltaY * (i));		
 
 		drawTriangle(&j, &temp2, &temp1, dettaglio);
+
 	}
 
 	Point3d start1; 
@@ -1110,7 +1163,8 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	Point3d front2 = {circle[0] - lunghezza - adjust, 0.0f, circle[1]};
 
 
-	/* normali!! */
+	/* normali!! 
+	é il piano superiore */
 	drawTriangle(&front1, &front2, &start1, dettaglio);
 	drawTriangle(&start1, &front2, &start2, dettaglio);
 
@@ -1207,86 +1261,213 @@ switch(tipo) {
 }
 
 
-void drawPlane() {
+
+void drawCuboid() {
 
 //	glutSolidSphere(0.2f, 5.0f, 5.0f);
 	
 	GLfloat altezza = 0.2f; 
 	GLfloat lunghezza = 24.0f; 
-	GLfloat profondita = 22.0f; 
+	GLfloat profondita = 24.0f; 
 	
 	
-	GLfloat distanzaY = 10.0f;
-	GLfloat distanzaX = 8.0f;
-	GLfloat larghezzaBuco = 4.0f;
-	GLfloat profonditaBuco = 6.0f;
 	
 /* base di sotto */
-	Point3d a = {0.0f, 0.0f, 0.0f};
-	Point3d b = {-profondita, 0.0f, 0.0f};
-	Point3d c = {-profondita, lunghezza, 0.0f};
-	Point3d d = {0.0f, lunghezza, 0.0f};
-
-	Point3d e = {0.0f, distanzaY + distanzaX, 0.0f};
-	Point3d f = {0.0f, distanzaY + distanzaX + profonditaBuco, 0.0f};
-	Point3d g = {0.0f, distanzaY + larghezzaBuco + distanzaX + profonditaBuco, 0.0f};
-	Point3d h = {0.0f, distanzaY + larghezzaBuco + distanzaX, 0.0f};
-	Point3d i = {-profondita, distanzaY, 0.0f};
-	Point3d j = {-profondita, distanzaY + larghezzaBuco, 0.0f};
-	Point3d k = {0.0f, distanzaY + larghezzaBuco, 0.0f};
-	Point3d l = {0.0f, distanzaY, 0.0f};
-	
-
-/* base di sopra */
-	Point3d a1 = {0.0f, 0.0f, altezza};
-	Point3d b1 = {-profondita, 0.0f, altezza};
-	Point3d c1 = {-profondita, lunghezza, altezza};
-	Point3d d1 = {0.0f, lunghezza, altezza};
-
-
-/**/
-
-
-
-
-/* base di sotto con buco */
-//	drawTriangle(&a, &b, &d, dettaglio);
-//	drawTriangle(&d, &b, &c, dettaglio);
-	
-	drawTriangle(&a, &b, &l, dettaglio);
-	drawTriangle(&b, &i, &l, dettaglio);
-	drawTriangle(&j, &d, &k, dettaglio);
-	drawTriangle(&j, &c, &d, dettaglio);
+	Point3d a = {0, 0, 0};
+	Point3d b = {0, profondita, 0};
+	Point3d c = {lunghezza, profondita, 0};
+	Point3d d = {lunghezza, 0, 0};
 	
 	
 	
-/* base di sopra */
-	//drawTriangle(&a1, &d1, &b1, dettaglio);
-	//drawTriangle(&b1, &d1, &c1, dettaglio);
-/* facce laterali */
-	drawTriangle(&d, &c1, &d1, dettaglio);
-	drawTriangle(&c1, &d, &c, dettaglio);
+	Point3d a1 = {0, 0, altezza};
+	Point3d b1 = {0, profondita, altezza};
+	Point3d c1 = {lunghezza, profondita, altezza};
+	Point3d d1 = {lunghezza, 0, altezza};
+	
+	
+	
+	
+	/* faccia di sotto */
+	
+	drawTriangle(&a, &b, &c, dettaglio);
+	drawTriangle(&a, &c, &d, dettaglio);	
 
-	drawTriangle(&a1, &a, &d1, dettaglio);
-	drawTriangle(&d1, &a, &d, dettaglio);
-
-	drawTriangle(&b1, &b, &a1, dettaglio);
+	
+	/* faccia di sopra */
+	
+	drawTriangle(&a1, &c1, &b1, dettaglio);
+	drawTriangle(&a1, &d1, &c1, dettaglio);	
+	
+	/* facce laterali */
+		
+	drawTriangle(&b, &a1, &b1, dettaglio);
 	drawTriangle(&b, &a, &a1, dettaglio);
+	
+	drawTriangle(&a, &d1, &a1, dettaglio);
+	drawTriangle(&a, &d, &d1, dettaglio);
+	
+	drawTriangle(&d, &c1, &d1, dettaglio);
+	drawTriangle(&d, &c, &c1, dettaglio);
+	
+	drawTriangle(&c, &b1, &c1, dettaglio);
+	drawTriangle(&c, &b, &b1, dettaglio);
+	
+}	
 
-	drawTriangle(&c1, &c, &b1, dettaglio);
-	drawTriangle(&b1, &c, &b, dettaglio);
 
+
+
+
+
+
+
+
+
+
+
+
+void drawPlane() {
+
+//	glutSolidSphere(0.2f, 5.0f, 5.0f);
+	
+	GLfloat altezza = 0.2f; 
+	GLfloat lunghezza = 23.0f; 
+	GLfloat profondita = 23.0f; 
+	
+	
+	GLfloat distanzaY = 11.0f;
+	GLfloat distanzaX = 9.0f;
+	GLfloat larghezzaBuco = 2.0f;
+	GLfloat lunghezzaBuco = 6.0f;
+	
+/* base di sotto */
+	Point3d a = {0, 0, 0};
+	Point3d b = {0, profondita, 0};
+	Point3d c = {lunghezza, profondita, 0};
+	Point3d d = {lunghezza, 0, 0};
+	Point3d e = {distanzaX, distanzaY, 0};
+	Point3d f = {distanzaX, distanzaY + larghezzaBuco, 0};
+	Point3d g = {distanzaX + lunghezzaBuco, distanzaY + larghezzaBuco, 0};
+	Point3d h = {distanzaX + lunghezzaBuco, distanzaY, 0};
+	Point3d i = {distanzaX, profondita, 0};
+	Point3d j = {distanzaX + lunghezzaBuco, profondita, 0};
+	Point3d k = {distanzaX + lunghezzaBuco, 0, 0};
+	Point3d l = {distanzaX, 0, 0};
+	
+	
+	
+	Point3d a1 = {0, 0, altezza};
+	Point3d b1 = {0, profondita, altezza};
+	Point3d c1 = {lunghezza, profondita, altezza};
+	Point3d d1 = {lunghezza, 0, altezza};
+	Point3d e1 = {distanzaX, distanzaY, altezza};
+	Point3d f1 = {distanzaX, distanzaY + larghezzaBuco, altezza};
+	Point3d g1 = {distanzaX + lunghezzaBuco, distanzaY + larghezzaBuco, altezza};
+	Point3d h1 = {distanzaX + lunghezzaBuco, distanzaY, altezza};
+	Point3d i1 = {distanzaX, profondita, altezza};
+	Point3d j1 = {distanzaX + lunghezzaBuco, profondita, altezza};
+	Point3d k1 = {distanzaX + lunghezzaBuco, 0, altezza};
+	Point3d l1 = {distanzaX, 0, altezza};
+	
+	
+	
+	/* faccia di sotto con buco */
+	
+	drawTriangle(&a, &b, &i, dettaglio);
+	drawTriangle(&a, &i, &l, dettaglio);	
+	drawTriangle(&k, &j, &c, dettaglio);
+	drawTriangle(&k, &c, &d, dettaglio);
+
+	drawTriangle(&f, &i, &j, dettaglio);
+	drawTriangle(&f, &j, &g, dettaglio);
+	
+	drawTriangle(&l, &e, &h, dettaglio);	
+	drawTriangle(&l, &h, &k, dettaglio);
+
+
+	
+	
+	/* faccia di sopra con buco */
+	
+	drawTriangle(&a1, &i1, &b1, dettaglio);
+	drawTriangle(&a1, &l1, &i1, dettaglio);	
+	drawTriangle(&k1, &c1, &j1, dettaglio);
+	drawTriangle(&k1, &d1, &c1, dettaglio);
+
+	drawTriangle(&f1, &j1, &i1, dettaglio);
+	drawTriangle(&f1, &g1, &j1, dettaglio);
+	
+	drawTriangle(&l1, &h1, &e1, dettaglio);	
+	drawTriangle(&l1, &k1, &h1, dettaglio);
+	
+	/* facce laterali */
+	
+	
+	drawTriangle(&b, &a1, &b1, dettaglio);
+	drawTriangle(&b, &a, &a1, dettaglio);
+	
+	drawTriangle(&a, &d1, &a1, dettaglio);
+	drawTriangle(&a, &d, &d1, dettaglio);
+	
+	drawTriangle(&d, &c1, &d1, dettaglio);
+	drawTriangle(&d, &c, &c1, dettaglio);
+	
+	drawTriangle(&c, &b1, &c1, dettaglio);
+	drawTriangle(&c, &b, &b1, dettaglio);
+	
+	/* facce interne */
+	
+	drawTriangle(&f, &g1, &f1, dettaglio);
+	drawTriangle(&f, &g, &g1, dettaglio);
+	
+	drawTriangle(&g, &h1, &g1, dettaglio);
+	drawTriangle(&g, &h, &h1, dettaglio);
+	
+	drawTriangle(&h, &e1, &h1, dettaglio);
+	drawTriangle(&h, &e, &e1, dettaglio);
+	
+	drawTriangle(&e, &f1, &e1, dettaglio);
+	drawTriangle(&e, &f, &f1, dettaglio);
+	
+	
+	
+	
+
+}	
+
+
+void drawFloor() {
+
+	GLfloat length = lunghezza + (lunghezza * lunghezza_larghezzaporta_ratio);
+	GLfloat height = profondita_lunghezza_ratio * lunghezza;
+
+	Point3d a = {0, 0, 0};
+	Point3d b = {length, 0, 0};
+	Point3d c = {length, height, 0};
+	Point3d d = {0, height, 0};
+	
+	
+	drawTriangle(&a, &b, &c, dettaglio);
+	drawTriangle(&a, &c, &d, dettaglio);	
+	
+	
+	
 
 }
 
-
 void drawPlanes(GLint npiani) {
 	glPushMatrix();
-	glTranslatef(-1.5f, 40.0f, 3.0f);
+	glTranslatef(-24.0f, 0.0f, 0.0f);
+		glPushMatrix();
+			glTranslatef(22.8f, 0.0f, 0.0f);
+			
+		glPopMatrix();
+	glTranslatef(0.0f, 40.0f, 4.0f);
 	int i; 
 	for(i = 1; i<=npiani; i++) {
 		drawPlane();
-		glTranslatef(0.0f, 0.0f, 3.0f);
+		glTranslatef(0.0f, 0.0f, 4.0f);
 		//printf("%d piani disegnati\n", i);
 		
 	}
@@ -1302,17 +1483,29 @@ void drawPlanes(GLint npiani) {
 
 void drawEsterni(){
 	
+	/* materiale per gli esterni */
+	setMaterial(1, 1, 1);
+	
+	
+	
 	glPushMatrix();
 
 	/* ingrandisce la dimensione della struttura */
 	glScalef(2.0f, 2.0f, 2.0f); 
+	
+	glPushMatrix();
+		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+		
+		drawFloor();
+	glPopMatrix();
 
-	setMaterial(1,1,0);
+
+	//setMaterial(1,1,0);
 	/* chiamate per settare i materiali */
 //	setMaterialType(1,1,0, 'p');
 	drawFrontWall(lunghezza, dettaglio, segno_inclinazione, altezza);
 
-	setMaterial(1,1,1);
+	//setMaterial(1,1,1);
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
 
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
@@ -1328,8 +1521,8 @@ void drawEsterni(){
 
 void drawInterni()
 {
-	setMaterial(1,0,0);
-	drawPlanes(3);
+	//setMaterial(1,1,1);
+	drawPlanes(2);
 
 }
 

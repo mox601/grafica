@@ -37,9 +37,18 @@ int startx,starty;
 int going_forward   = 0;
 int moving_on_plane = 0;
 
-Point3d  position ={-14,18,0};
-Point3d  target   ={-13,90,0};
+
+GLfloat spostamentoX;
+GLfloat spostamentoY;
+GLfloat spostamentoZ = 0.8f;
+GLfloat quotaMinimaZ = 0.8f;
+
+
+Point3d  position ={-14,18,0.8f};
+Point3d  target   ={-13,90,0.8f};
 Vector3d vup      ={0,0,1};
+
+
 
 /* dettaglio dei triangoli disegnati */
 /* influisce sulla performance */
@@ -226,13 +235,13 @@ switch(c)
 
 /* girati a dx o sx */
 	case 'a':
-		vector_scale(&direction_left, 0.250f);
+		vector_scale(&direction_left, 0.50f);
 		point_translate(&target, &direction_left);
 		glutPostRedisplay();
 		break;
 
 	case 'd': 
-		vector_scale(&direction_right, 0.250f);
+		vector_scale(&direction_right, 0.50f);
 		point_translate(&target, &direction_right);
 		glutPostRedisplay();	
 		break; 
@@ -276,21 +285,33 @@ switch(c)
 		point_translate(&target, &direction_right_y);
 		glutPostRedisplay();
 		break;
-
+		
+	
 
 
 /* volo */
 	case '1':
-		vector_scale(&direction_up,1.0f);
+		vector_scale(&direction_up,spostamentoZ);
 		point_translate(&position, &direction_up);
 		point_translate(&target, &direction_up);
 		glutPostRedisplay();
 		break;
 	
 	case '2':
-		vector_scale(&direction_down,1.0f);
-		point_translate(&position, &direction_down);
-		point_translate(&target, &direction_down);
+	
+	
+		
+		if((position.z - spostamentoZ) < quotaMinimaZ) {
+			position.z = quotaMinimaZ;
+		}
+		
+		else {
+			vector_scale(&direction_down,spostamentoZ);
+			point_translate(&position, &direction_down);
+			point_translate(&target, &direction_down);
+		}
+		
+		
 		glutPostRedisplay();
 		break;
 
@@ -372,8 +393,8 @@ void redraw(void)
 		vup.x     , vup.y      ,  vup.z);
 
 	/* movimento luce 0 local */
-	light_position_local[0]= -10.0f + sin(lightAngle)*5;
-	light_position_local[1]= 1.0f + cos(lightAngle)*5;
+	light_position_local[0]= -30.0f + sin(lightAngle)*5;
+	light_position_local[1]= -1.0f + cos(lightAngle)*5;
 //	light_position_local[2]= 1.0f + cos(lightAngle)*5;
 
 	/* per fare update della posizione e stato della luce 0 */

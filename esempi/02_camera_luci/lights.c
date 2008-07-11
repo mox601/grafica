@@ -5,12 +5,12 @@
 /* posizione luce 0 */
 GLfloat light_position_local[4]={
 		-10.0f,
-		1.0f,
+		-25.0f,
 		1.0f,
 		1.0f
 	};
 
-/* posizione luce 1 direzionale */
+/* posizione luce 1 direzionale - Ž sempre locale */
 GLfloat light_position_directional[4]={
 		10.0f,
 		1.0f,
@@ -20,12 +20,18 @@ GLfloat light_position_directional[4]={
 
 
 
+
 /* colori */
 
+
 GLfloat color_black     [4]  = {0.0f, 0.0f, 0.0f, 1.0f}; 
+
 GLfloat color_white     [4]  = {1.0f, 1.0f, 1.0f, 1.0f}; 
+
 GLfloat color_red       [4]  = {1.0f, 0.0f, 0.0f, 1.0f};
+
 GLfloat color_green     [4]  = {0.0f, 1.0f, 0.0f, 1.0f};
+
 GLfloat color_blue      [4]  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow[4]  = {1.0f, 1.0f, 0.0f, 1.0f};
 
@@ -48,20 +54,26 @@ void setupLights() {
 	*/
 
 
+
 	/* luce numero 0 locale */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
+
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_white);
+
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_white);
 	glLightfv(GL_LIGHT0, GL_POSITION , light_position_local);
 
 	/* luce numero 1 direzionale */
 	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_white);
+
 	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_white);
+
 	glLightfv(GL_LIGHT1, GL_SPECULAR , color_white);
 	glLightfv(GL_LIGHT1, GL_POSITION , light_position_directional);
 
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
+
 	glEnable(GL_LIGHTING);
 }
 

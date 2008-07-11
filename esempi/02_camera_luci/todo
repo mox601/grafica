@@ -3,17 +3,110 @@ git commit -a
 git push
 
 fatto
+disegnati i piani interni con le zone per le scale
 drawwall high deve usare drawwalloblique OK
 disegna i contorni dei muri OK
 fatta funzione che crea dei punti su una circonferenza da un angolo di partenza a uno di arrivo
 spostata la definizione di luci in lights.c e .h
 allineamento del muro laterale verde
+disegnare la chiusura dell'edificio
+pavimento interno
+inclinare i punti del guscio mano mano che vengono disegnati
+
 
 da fare
+
+bloccare l'altezza dell'osservatore ad un minimo
+gestione delle altezze nei piani
+
+disegnare le scale
+
+arredare gli interni
+
+aggiungere luci
+
+i punti si inclinano di piú o di meno a seconda del dettaglio. scorretto
+
+problema nell'illuminazione del guscio, si illumina dentro e fuori e la parte curva invece al contrario
+il guscio, essendo "piatto" e avendo solo le normali in un senso, non si illumina quando la luce é dentro. come si fa? 
+posso ridisegnare il guscio facendo un glScale e cambiando l'orientamento dei triangoli con il GL_CW?
+
 decidere dove impostare la normale nella drawTriangle per migliorare l'illuminazione
-inclinare i punti del guscio mano mano che vengono disegnati
-disegnare la chiusura dell'edificio
+
 da migliorare la differenza di altezza tra le due parti di muro frontale
+
 si può migliorare la griglia esterna
+
 creazione diverse luci dinamiche (giorno che cambia in notte?)
 
+
+leggendo le slide: 
+glut double + glutswapbuffers
+glut_rgb
+
+glut_depth z buffer: 
+glutinitdisplaymode(GLUT_DEPTH)
+nel redraw
+glClear(GL_DEPTH_BUFFER_BIT)
+glEnable(GLDEPTHTEST)
+
+lEnable GL_DEPTH TEST per attivarlo
+gl_cullface per rimuovere le facce posteriori basandosi sulle normali
+utilizzo il modello pin-hole (glperspective e gllookat)
+glfrontface orientamento delle facce: default é CCW
+
+per la camera: 
+nel main si mette glmatrixmode(projection)
+gluperspetctive()
+glMatrixMode(glMODELVIEW)
+glutMainLoop()
+e poi nel redraw si mette la posizione della camera
+glmatrixmode(G:L_MODELVIEW)
+glLoadIdentity()
+e poi glulookat() per avere la camera mobile
+
+
+nella funzione resize() per la finestra: 
+glViewport(0,0,w,h)
+glMatrixmode(PROJECTION)
+glLoad identity
+gluPerspective(..., w/h,.. )
+glMatrixMode(gl_modelview)
+glLoad identity
+gluLookat(...)
+
+
+normalizzazione delle normali 
+glEnable(GL_NORMALIZE)
+
+
+creazione di luci direzionali e posizionali: 
+locali, sono in posizione .....
+lightpos[] = {....., 1}
+
+direzionali, imposto la direzione .....
+lightpos[] = {......., 0}
+
+e poi glLightfv(GL_LIGHT0, GL_POSITION, lightpos)
+
+
+una luce che funziona da torcia? 
+la mettiamo nelle coordinate eye: 
+glMatrixMode(GL_MODELVIEW)
+glLoad identity
+glLightfv(...)
+
+altrimenti nelle coordinate mondo: 
+(dopo la viewing transformations)
+gluLookat(..)
+glLightfv(...)
+
+
+modello di illuminazione: 
+gl light model two side: due materiali differenti per front e back
+gl light model ambient: illuminaz globale della scena
+gl light model local viewer: + qualitá
+gl light model color control: migliori riflessioni e texture mapping
+
+
+poi si settano i materiali
