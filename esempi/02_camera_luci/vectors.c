@@ -1,19 +1,30 @@
 #include "vectors.h"
 
 void point_translate(Point3d* point, const Vector3d* v)
+
 {
+
 	point->x+=v->x;
+
 	point->y+=v->y;
+
 	point->z+=v->z;
+
 }
 
 
 void point_sum(Point3d* dest, Point3d* point1, Point3d* point2)
+
 {
+
 	dest->x = point1->x + point2->x;
+
 	dest->y = point1->y + point2->y;
+
 	dest->z = point1->z + point2->z;
+
 }
+
 
 void init_point(Point3d* source, Point3d* dest) 
 {
@@ -23,12 +34,24 @@ void init_point(Point3d* source, Point3d* dest)
 }
 
 
+
+
+
+
+
+
 void vector_normalize(Vector3d* v)
+
 {
+
 	GLfloat m=(GLfloat)sqrt(v->x*v->x + v->y*v->y + v->z*v->z);
+
 	v->x/=m;
+
 	v->y/=m;
+
 	v->z/=m;
+
 }
 
 GLfloat vector_modulo(Vector3d* v) 
@@ -38,35 +61,62 @@ GLfloat vector_modulo(Vector3d* v)
 }
 
 
+
+
 void vector_scale(Vector3d* v,GLfloat coeff)
+
 {
+
 	v->x *= coeff;
+
 	v->y *= coeff;
+
 	v->z *= coeff;
+
 }
 
 
 void point_scale(Point3d* v,GLfloat coeff)
+
 {
+
 	v->x *= coeff;
+
 	v->y *= coeff;
+
 	v->z *= coeff;
+
 }
+
 
 /* vettore risultato di punto u - punto v */
+
 void vector_diff(Vector3d* dest,const Point3d* u,const Point3d* v)
+
 {
+
 	dest->x=u->x-v->x;
+
 	dest->y=u->y-v->y;
+
 	dest->z=u->z-v->z;
+
 }
 
+
+
 void vector_cross_product(Vector3d* dest,const Vector3d* u,const Vector3d* v)
+
 {
+
 	dest->x=(u->y*v->z) - (u->z*v->y);
+
 	dest->y=(u->z*v->x) - (u->x*v->z);
+
 	dest->z=(u->x*v->y) - (u->y*v->x);
+
 	vector_normalize(dest);
+
 }
 
 
@@ -146,6 +196,7 @@ GLfloat minDistance(Point3d* point1, Point3d* point2, Point3d* point3)
 
 	return minimo;
 }
+
 
 
 

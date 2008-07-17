@@ -62,5 +62,11 @@ void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 
 void drawShell(GLdouble* circle, GLint dettaglio, GLfloat profondita);
 
+void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne);
+
+void drawColumns(GLfloat raggio, GLfloat altezzaColonne);
+
+
+
 #endif
 

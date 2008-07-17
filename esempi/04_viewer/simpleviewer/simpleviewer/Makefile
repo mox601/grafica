@@ -12,7 +12,11 @@ INCDIR=
 INCLIB= 
 
 #librerie da linkare 
-LIBS = -lglut -lGLU -lGL
+#LIBS = -lglut -lGLU -lGL
+LIBS=-framework OpenGL -framework Glut -lm
+
+
+
 
 #gli obj file da compilare
 OBJS=mesh2d.o ply.o simpleviewer.o trackball.o

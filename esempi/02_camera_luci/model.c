@@ -328,26 +328,28 @@ void drawWallOblique(Point3d* point1, Point3d* point2, Point3d* point3, Point3d*
 
 	/* faccia frontale */
 
-	glColor3f(0.0f, 0.0f, 1.0f);
+	//glColor3f(0.0f, 0.0f, 1.0f);
 
+
+/*
 	glBegin(GL_LINE_LOOP);
 		glVertex3f(point1->x, point1->y, point1->z);
 		glVertex3f(point2->x, point2->y, point2->z);
 		glVertex3f(point3->x, point3->y, point3->z);
 		glVertex3f(point4->x, point4->y, point4->z);
 	glEnd();
-
+*/
 	/* faccia posteriore */	
-
+/*
 	glBegin(GL_LINE_LOOP);
 		glVertex3f(point1t.x, point1t.y, point1t.z);
 		glVertex3f(point2t.x, point2t.y, point2t.z);
 		glVertex3f(point3t.x, point3t.y, point3t.z);
 		glVertex3f(point4t.x, point4t.y, point4t.z);
 	glEnd();
-
+*/
 	/* spigoli */
-
+/*
 	glBegin(GL_LINES);
 		glVertex3f(point1->x, point1->y, point1->z);
 		glVertex3f(point1t.x, point1t.y, point1t.z);
@@ -358,7 +360,7 @@ void drawWallOblique(Point3d* point1, Point3d* point2, Point3d* point3, Point3d*
 		glVertex3f(point4->x, point4->y, point4->z);
 		glVertex3f(point4t.x, point4t.y, point4t.z);
 	glEnd();
-
+*/
 
 
 
@@ -471,26 +473,26 @@ void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d*
 
 	/* faccia frontale */
 
-	glColor3f(0.0f, 0.0f, 1.0f);
-
+//	glColor3f(0.0f, 0.0f, 1.0f);
+/*
 	glBegin(GL_LINE_LOOP);
 		glVertex3f(point1->x, point1->y, point1->z);
 		glVertex3f(point2->x, point2->y, point2->z);
 		glVertex3f(point3->x, point3->y, point3->z);
 		glVertex3f(point4->x, point4->y, point4->z);
 	glEnd();
-
+*/
 	/* faccia posteriore */	
-
+/*
 	glBegin(GL_LINE_LOOP);
 		glVertex3f(point1t.x, point1t.y, point1t.z);
 		glVertex3f(point2t.x, point2t.y, point2t.z);
 		glVertex3f(point3t.x, point3t.y, point3t.z);
 		glVertex3f(point4t.x, point4t.y, point4t.z);
 	glEnd();
-
+*/
 	/* spigoli */
-
+/*
 	glBegin(GL_LINES);
 		glVertex3f(point1->x, point1->y, point1->z);
 		glVertex3f(point1t.x, point1t.y, point1t.z);
@@ -501,7 +503,7 @@ void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d*
 		glVertex3f(point4->x, point4->y, point4->z);
 		glVertex3f(point4t.x, point4t.y, point4t.z);
 	glEnd();
-
+*/
 
 
 
@@ -959,6 +961,26 @@ Point3d v6 = {lunghezza_glass, v2.y, 0.0f};
 
 }
 
+/* piano continuo */
+void plane(Point3d *coordinate, GLfloat riduzioneDettaglio) {
+
+//	int i;			
+//	printf("stampa coordinate: \n"); 
+//		setMaterial(1, 0, 0);
+		drawTriangle(&coordinate[0], &coordinate[1], &coordinate[2], dettaglio * riduzioneDettaglio);
+		drawTriangle(&coordinate[0], &coordinate[2], &coordinate[3], dettaglio * riduzioneDettaglio);
+/*
+	for (i = 0; i<=3; i++) {
+		printf("punto %d: %f %f %f\n", 
+		i, coordinate[i].x, coordinate[i].y, coordinate[i].z);
+	} 
+*/
+
+
+} 
+
+
+
 
 /* tetto e muro curvo */
 void drawBackCurveAndRoof() {
@@ -1104,6 +1126,8 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
 	/* disegno i triangolini laterali */
 
+
+
 	for (i = 0; i < numPoints; i++) {
 	
 	if (i == 0 ) { 
@@ -1120,6 +1144,9 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 		temp2.x = circle[(2 * i) + 2]; 
 		temp2.y = profondita - (deltaY * (i));
 		temp2.z = circle[(2 * i) + 3]; 
+
+		
+
 
 		drawTriangle(&h, &temp1, &temp2, dettaglio);
 
@@ -1146,6 +1173,8 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 		drawTriangle(&j, &temp2, &temp1, dettaglio);
 
 	}
+
+
 
 	Point3d start1; 
 	start1.x = circle[0];
@@ -1316,17 +1345,6 @@ void drawCuboid() {
 }	
 
 
-
-
-
-
-
-
-
-
-
-
-
 void drawPlane() {
 
 //	glutSolidSphere(0.2f, 5.0f, 5.0f);
@@ -1437,6 +1455,77 @@ void drawPlane() {
 }	
 
 
+
+
+
+
+void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
+
+	Point3d e;
+	Point3d f;
+	Point3d g; 
+	Point3d h; 
+	Point3d i; 
+	Point3d j;
+	Point3d k; 
+	Point3d l;
+	
+	init_point(&coordinate[0], &e);
+	init_point(&coordinate[1], &f);
+	init_point(&coordinate[2], &g);
+	init_point(&coordinate[3], &h);
+	e.y = e.y - estensione;
+	f.y = f.y - estensione;
+	g.y = g.y + estensione; 
+	h.y = h.y + estensione;
+	
+	
+	
+	init_point(&e, &i);
+	init_point(&f, &j);
+	init_point(&h, &l);
+	init_point(&g, &k);
+	
+	i.x = i.x - estensione;
+	j.x = j.x + estensione;
+	l.x = l.x - estensione;
+	k.x = k.x + estensione;
+	
+	
+	drawTriangle(&e, &l, &i, dettaglio);
+	drawTriangle(&e, &h, &l, dettaglio);
+	
+	drawTriangle(&f, &coordinate[0], &e, dettaglio);
+	drawTriangle(&f, &coordinate[1], &coordinate[0], dettaglio);
+
+	drawTriangle(&coordinate[2], &h, &coordinate[3], dettaglio);	
+	drawTriangle(&coordinate[2], &g, &h, dettaglio);	
+	
+	drawTriangle(&j, &g, &f, dettaglio);	
+	drawTriangle(&j, &k, &g, dettaglio);	
+
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void drawFloor() {
 
 	GLfloat length = lunghezza + (lunghezza * lunghezza_larghezzaporta_ratio);
@@ -1450,9 +1539,6 @@ void drawFloor() {
 	
 	drawTriangle(&a, &b, &c, dettaglio);
 	drawTriangle(&a, &c, &d, dettaglio);	
-	
-	
-	
 
 }
 
@@ -1466,6 +1552,17 @@ void drawPlanes(GLint npiani) {
 	glTranslatef(0.0f, 40.0f, 4.0f);
 	int i; 
 	for(i = 1; i<=npiani; i++) {
+	
+	
+		glPushMatrix();
+			glScalef(0.5f, 0.5f, 0.5f);
+			glTranslatef(0.0f, 0.0f, 1.0f);
+			/* disegno il ply importato */
+			
+			//setMaterial(1,0,0);
+			displayPly();
+		glPopMatrix();
+	
 		drawPlane();
 		glTranslatef(0.0f, 0.0f, 4.0f);
 		//printf("%d piani disegnati\n", i);
@@ -1474,8 +1571,6 @@ void drawPlanes(GLint npiani) {
 
 	glPopMatrix();
 
-//	drawColumns(); 
-
 }
 
 
@@ -1483,21 +1578,53 @@ void drawPlanes(GLint npiani) {
 
 void drawEsterni(){
 	
-	/* materiale per gli esterni */
-	setMaterial(1, 1, 1);
-	
-	
 	
 	glPushMatrix();
 
 	/* ingrandisce la dimensione della struttura */
 	glScalef(2.0f, 2.0f, 2.0f); 
 	
+	
+	/* pavimento all'esterno */
+	Point3d *coordinate4= malloc(4 * 3 * sizeof(GLfloat));
+	
+	GLfloat lunghezza1 = 32.50f;
+	GLfloat profondita1 = 12.0f;
+	GLfloat estensione = 40.0f;
+	/* piano semplice */
+	Point3d a = {0.0f, 0.0f, 0.0f};
+	Point3d b = {profondita1, 0.0f, 0.0f};
+	Point3d c = {profondita1, lunghezza1, 0.0f};
+	Point3d d = {0.0f, lunghezza1, 0.0f};
+	
+	
+	coordinate4[0] = a;
+	coordinate4[1] = b;
+	coordinate4[2] = c;
+	coordinate4[3] = d;
+	
+	
+	glPushMatrix();
+
+	glTranslatef(-12.0f, 0.0f, 0.0f);
+	setMaterial(0.0f, 1.0f, 0.0f);
+	drawPlaneEsterni(coordinate4, estensione);
+
+	glPopMatrix();
+
+
+	
+	
 	glPushMatrix();
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-		
+		setMaterial(1.0, 0.0, 0.0);
 		drawFloor();
 	glPopMatrix();
+
+
+/* materiale per gli esterni del palazzo*/
+	setMaterial(1, 1, 1);
+
 
 
 	//setMaterial(1,1,0);
@@ -1519,14 +1646,79 @@ void drawEsterni(){
 
 
 
-void drawInterni()
-{
-	//setMaterial(1,1,1);
-	drawPlanes(2);
+void poligono(int n){
+
+	GLint lati = 20;
+	GLfloat alpha = 2.0 * M_PI / lati;
+	int i;
+	
+	glBegin(draw_wireframe?GL_LINE_LOOP:GL_POLYGON);
+	glNormal3f(0.0f, 0.0f, 1.0f); //normale
+	for (i = 0; i < 20; i++) {
+		glTexCoord2f(cos(alpha * i), sin(alpha * i));
+		glVertex3f(cos(alpha * i), sin(alpha * i), 0.0f);
+	}
+	glEnd();
+
+
+}
+
+void cilindro(int n) {
+
+
+}
+
+
+
+void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne) {
+
+
+	glPushMatrix();
+
+	glTranslatef(2.0f, 0.0f, 5.0f);
+	glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+
+	
+	poligono(20);
+	
+	cilindro(20);
+	
+	
+	
+	
+	
+	//faccia di sopra
+	//glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);
+
+	//poligono(20);
+	
+	
+	
+	
+	
+	
+	
+	glPopMatrix();
 
 }
 
 
 
 
+void drawColumns(GLfloat raggio, GLfloat altezzaColonne) {
+	drawSingleColumn(raggio, altezzaColonne);
+}
+
+void drawInterni()
+{
+	//setMaterial(1,1,1);
+	drawPlanes(2);
+	
+	GLfloat raggio = 1.0f;
+	GLfloat altezzaColonne = 20.0f;
+	drawColumns(raggio, altezzaColonne);
+	
+	
+	
+}
 

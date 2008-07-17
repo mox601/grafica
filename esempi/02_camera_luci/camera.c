@@ -24,6 +24,10 @@
 #include "vectors.h"
 #include "model.h"
 #include "lights.h"
+#include "simpleviewer.h"
+
+
+
 
 /* prototype */
 void redraw(void);
@@ -110,6 +114,26 @@ void init(void) {
 
 void reshape(int W,int H)
 {
+	glViewport(0, 0, W, H);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective( 
+		60.0,  /* field of view in degree */ 
+		W/H,   /* aspect ratio */ 
+		1.0,   /* Z near */ 
+		200.0  /* Z far */ 
+	);
+	
+	
+	
+	glMatrixMode(GL_MODELVIEW);		
+	glLoadIdentity();
+	gluLookAt(
+		position.x, position.y ,  position.z,		   
+		target.x  , target.y   ,  target.z,       
+		vup.x     , vup.y      ,  vup.z);
+
+
 	glutPostRedisplay();
 }
 
@@ -155,7 +179,14 @@ int main(int argc, char **argv)
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 
-	/* occlusione facce? */
+	/* caricamento dei .ply */
+	loadPlyModels();
+	
+	
+	
+	
+	
+	
 	glEnable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);

@@ -1,4 +1,19 @@
+//#include <GL/glut.h>
+
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
+
+
+
+
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
@@ -199,7 +214,14 @@ int main(int narg,char** args)
 	add_quats(lastquat, curquat, curquat);
 	build_rotmatrix(curmat, curquat);
 
+
+/* gli do il nome del file in una stringa */
+
+char* filenameToOpen = "plymodels/sediaCuscino.ply";
+
+
 	if (!open_ply(args[1]))
+//	if (!open_ply(filenameToOpen))
 	{
 		fprintf(stderr,"Error opening %s file\n",args[1]);
 		return -1;
@@ -214,6 +236,19 @@ int main(int narg,char** args)
 	glutMainLoop();
 	return 0;
 }
+
+
+
+void loadPlyModels() {
+
+	printf("loading ply models...\n");
+
+}
+
+
+
+
+
 
 
 /* -------------------------------------------------------------------------- */
