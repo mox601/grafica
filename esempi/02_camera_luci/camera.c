@@ -48,8 +48,8 @@ GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
 
-Point3d  position ={-14,18,0.8f};
-Point3d  target   ={-13,90,0.8f};
+Point3d  position ={-45.538731f, 77.591087f, 0.800000f};
+Point3d  target   ={10.063024f, 30.954882f, 0.800000f};
 Vector3d vup      ={0,0,1};
 
 
@@ -88,6 +88,8 @@ int enable_light_local = 0;
 int draw_wireframe = 0;
 
 
+
+
 /* ---------------------------------------------------------- */
 
 /* inizializza parametri di opengl */
@@ -95,20 +97,33 @@ int draw_wireframe = 0;
 void init(void) {
 
 	/* da sol esame */
+	glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
+	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
-	glDepthFunc(GL_LESS);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
-
 
 	/* spostato nel file lights.c */
 	setupLights();
 
 	/* smooth shading */
 	glShadeModel(GL_SMOOTH);
-
 	/* antialiasing sulle linee */
 	glEnable(GL_LINE_SMOOTH);
+
+	/* blending per i vetri */
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+	//glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
+	
+	//fog?
+	
+	
+	
+	
+
+
 
 }
 
@@ -154,7 +169,7 @@ void idle(void)
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);
 	glutInitWindowSize(800,800);
 	glutCreateWindow("Palazzo");
 
@@ -181,13 +196,10 @@ int main(int argc, char **argv)
 
 	/* caricamento dei .ply */
 	loadPlyModels();
-	
-	
-	
-	
-	
-	
-	glEnable(GL_DEPTH_TEST);
+
+
+
+
 
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective( 
@@ -342,7 +354,6 @@ switch(c)
 			point_translate(&target, &direction_down);
 		}
 		
-		
 		glutPostRedisplay();
 		break;
 
@@ -363,10 +374,21 @@ switch(c)
 //		printf("0: dettaglio attuale %f\n", dettaglio);
 		break; 
 
+	case 'b': // switch the blending.
+		printf("B/b pressed; blending is: %d\n", blend);
+		blend = blend ? 0 : 1;
+		printf("Blend is now: %d\n", blend);
+		glutPostRedisplay();
+		break;
+
 	case 27:
 		exit(0);
 		break;
 	}
+	
+	
+	
+	
 
   glutPostRedisplay();
 }
@@ -486,14 +508,14 @@ if (enable_light_directional)
 	glPushMatrix();
 	
 	/* assi di riferimento */
-
+/*
 	glLineWidth(4);
 	glBegin(GL_LINES);
 	glColor3f(1,0,0);glVertex3f(0,0,0);glVertex3f(1,0,0);
 	glColor3f(0,1,0);glVertex3f(0,0,0);glVertex3f(0,1,0);
 	glColor3f(0,0,1);glVertex3f(0,0,0);glVertex3f(0,0,1);
 	glEnd();
-
+*/
 
 	glLineWidth(1);
 
@@ -503,6 +525,19 @@ if (enable_light_directional)
 
 	/* disegna struttura interna */
 	drawInterni();
+	
+	
+	
+	
+	  
+	
+
+	
+	
+	
+	
+	
+	
 
 	/* disegna muro frontale */
 
@@ -525,12 +560,34 @@ if (enable_light_directional)
 
 
 
+	setGlassMaterial();
+	
+	Point3d a1 = {0, 0, 0}; 
+	Point3d b1 = {0, 0, 10}; 
+	Point3d c1 = {-10, 0, 10}; 
+	Point3d d1 = {-10, 0, 0}; 
+	
+	
+	drawGlass(&a1, &b1, &c1, &d1);
+	
+	/* dopo aver disegnato il vetro, riabilita depth test e spegni il blending */
+	glDisable(GL_BLEND);              // Turn Blending Off
+	glEnable(GL_DEPTH_TEST);      
+
+
+
+
+
+
+
+
+
 
 /* per conoscere la posizione */
-/*
+
 	printf("position: %f %f %f\n", position.x, position.y, position.z); 
 	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-*/
+
 
 
 

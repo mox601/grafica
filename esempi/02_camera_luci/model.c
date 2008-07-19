@@ -20,6 +20,11 @@ GLfloat differenza_ratio = 0.3f;
 
 
 
+/* blending acceso/spento */
+GLuint  blend;
+
+
+
 /* riceve i punti con cui costruire un triangolo */
 /* riceve i punti in senso ANTIORARIO */
 void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dettaglio) {
@@ -44,7 +49,7 @@ void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dett
 	/* verifica!! */
 
 	/* la normale la imposto qui ? */
-	glNormal3f(destNormal.x,destNormal.y,destNormal.z);
+//	glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 
 //	printf("normale: %f %f %f\n", destNormal.x,destNormal.y,destNormal.z); 
 
@@ -62,7 +67,7 @@ void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dett
 		glBegin(draw_wireframe?GL_LINE_LOOP:GL_TRIANGLES);
 		
 /* imposto qui la normale? */
-	//	glNormal3f(destNormal.x,destNormal.y,destNormal.z);
+		glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 			glVertex3f(point1->x, point1->y, point1->z);
 			glVertex3f(point2->x, point2->y, point2->z);
 			glVertex3f(point3->x, point3->y, point3->z);
@@ -730,37 +735,72 @@ void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfl
 	glEnd(); 
 
 }
+
+
+	
+void setGlassMaterial() {
+	
+	
+	if (!blend) {
+		glDisable(GL_BLEND);              // Turn Blending Off
+		glEnable(GL_DEPTH_TEST);          // Turn Depth Testing On
+	} else {
+		glEnable(GL_BLEND);		    // Turn Blending On
+		glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
+	}
+	
+	
+
+	GLfloat material_ambient      []  = {0.1f, 0.2f, 0.4f, 0.5f}; 
+	GLfloat material_diffuse      []  = {0.3f, 0.3f, 0.6f, 0.5f}; 
+	GLfloat material_specular     []  = {0.7f, 0.7f, 0.7f, 0.5f}; 
+	GLfloat material_emission     []  = {0.0f, 0.0f, 0.0f, 0.5f}; 
+	GLfloat material_shininess    []  = {66};
+
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT  , material_ambient);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+	
+	
+}
+	
+	
+	
+	
+	
 	
 	
 void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza) {
 
 
-	glPushMatrix(); 
+		glPushMatrix(); 
 
-	GLfloat larghezza = profondita_lunghezza_ratio * lunghezza;
+		GLfloat larghezza = profondita_lunghezza_ratio * lunghezza;
 
-	glTranslatef(-larghezza, 0.0f, 0.0f);
+		glTranslatef(-larghezza, 0.0f, 0.0f);
 
-	GLfloat lunghezza_w1 = lunghezza * 0.5f; 
+		GLfloat lunghezza_w1 = lunghezza * 0.5f; 
 
-	GLfloat lunghezza_w2_high = lunghezza * (0.5f + lunghezza_larghezzaporta_ratio);
+		GLfloat lunghezza_w2_high = lunghezza * (0.5f + lunghezza_larghezzaporta_ratio);
 
-	GLfloat lunghezza_w3_high = lunghezza_w2_high * 0.75f;
+		GLfloat lunghezza_w3_high = lunghezza_w2_high * 0.75f;
 
 
-	GLfloat altezza_w2_high = lunghezza * lunghezza_altezza_ratio;
+		GLfloat altezza_w2_high = lunghezza * lunghezza_altezza_ratio;
 
-	GLfloat altezza_w3_high = altezza_w2_high * 0.999f; 
+		GLfloat altezza_w3_high = altezza_w2_high * 0.999f; 
 
 
 	/* differenza di altezza tra point3 e point4 di w1 */
-	GLfloat differenza_w1 = lunghezza * 0.01; 
+		GLfloat differenza_w1 = lunghezza * 0.01; 
 
 	/* differenza di altezza tra point3 e point4 di w2 */
-	GLfloat differenza_w2_high = lunghezza * 0.01; 
+		GLfloat differenza_w2_high = lunghezza * 0.01; 
 
 	/* l'altezza del muro w1 è funzione dell'altezza di w2 * differenza altezza */
-	GLfloat altezza_w1 = altezza_w2_high - (altezza_w2_high * differenza_w2_high);
+		GLfloat altezza_w1 = altezza_w2_high - (altezza_w2_high * differenza_w2_high);
 
 	/* punti per w1 */
 	Point3d  a1 = {0,0,0};
@@ -855,7 +895,10 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 	/* disegno il quadrilatero che sarà il vetro */
 	GLfloat rapporto = altezzaL; 
-	drawGlass(&a1, &b1, &c1, &d1, spessore, rapporto, spigolo_laterale_front_w1,  profondita);
+	
+	
+	
+		
 
 	glPopMatrix(); /* profondità palazzo */
 
@@ -864,7 +907,10 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 
 
-void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front, GLfloat profondita) {
+
+
+
+void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d) {
 
 
 /* set materiale trasparente */
@@ -920,41 +966,54 @@ point_translate(&v4, &trasl_v4);
 
 	// è disegnato in senso antiorario. giusto?
 	// si illumina ugualmente sia che la luce sia davanti, che dietro. 
+	/*
 	glBegin(GL_QUADS);
 		glVertex3f(v4.x, v4.y, v4.z);
 		glVertex3f(v3.x, v3.y, v3.z);
 		glVertex3f(v2.x, v2.y, v2.z);
 		glVertex3f(v1.x, v1.y, v1.z);		
 	glEnd();
+	*/
+	
+	glBegin(GL_QUADS);
+		glVertex3f(a->x, a->y, a->z);
+		glVertex3f(b->x, b->y, b->z);
+		glVertex3f(c->x, c->y, c->z);
+		glVertex3f(d->x, d->y, d->z);
+	glEnd();
+	
+	
+	
+	
 
 /* altro vetro, fino a metà del muro laterale */
 
 /* 2,3,5,6 */
 
-GLfloat lunghezza_glass = profondita/2;
+//GLfloat lunghezza_glass = profondita/2;
 
-Point3d v5 = {lunghezza_glass, v3.y, v3.z}; 
-Point3d v6 = {lunghezza_glass, v2.y, 0.0f}; 
+//Point3d v5 = {lunghezza_glass, v3.y, v3.z}; 
+//Point3d v6 = {lunghezza_glass, v2.y, 0.0f}; 
 
-
+/*
 	glBegin(GL_QUADS);
 		glVertex3f(v2.x, v2.y, v2.z);
 		glVertex3f(v3.x, v3.y, v3.z);
 		glVertex3f(v5.x, v5.y, v5.z);
 		glVertex3f(v6.x, v6.y, v6.z);
 	glEnd();
-
+*/
 
 	/* disegno lo spigolo */
 
 //	setMaterial(1,1,1); 
 
-
+/*
 	glBegin(GL_LINES);
 		glVertex3f(v2.x, v2.y, v2.z);
 		glVertex3f(v3.x, v3.y, v3.z);
 	glEnd();
-
+*/
 	glPopMatrix();
 
 
@@ -1245,39 +1304,61 @@ void setMaterial(GLfloat R,GLfloat G,GLfloat B)
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo)
 
 {
-switch(tipo) {
-	case 'p':
 
-		printf("materiale porcellana\n");
-/* set delle variabili con glMaterial... */
-		break; 
-
+	GLfloat Ka; 
+	GLfloat Kd; 
+	GLfloat Ks;
+	GLfloat Ke;
+	GLfloat shininess; 
 	
-
-	case 'o':
-
-		printf("materiale opaco\n");		
+switch(tipo) {
+	case 'e':
+		printf("materiale muro\n");
 /* set delle variabili con glMaterial... */
+		Ka = 0.05f;
+		Kd = 0.66f;
+		Ks = 0.01f;
+		Ke = 0.0f;
+		shininess = 22;
 		break; 
-
+		
+	case 'o':
+		//printf("materiale opaco tipo gomma\n");		
+/* set delle variabili con glMaterial... */
+		Ka = 0.1f;
+		Kd = 0.1f;
+		Ks = 0.01;
+		Ke = 0.0f;
+		shininess = 5;
+		break; 
+		
+	case 'm':
+		printf("materiale metallico\n");
+		Ka = 0.8;
+		Kd = 0.5;
+		Ks = 0.8f;
+		Ke = 0.0f;
+		shininess = 77;
+		break;
+	
 }
 
 	printf("comincia set material\n");		
 
 
-	GLfloat material_ambient      []  = {0.1f*R, 0.1f*G, 0.1f*B, 1.0f}; 
+	GLfloat material_ambient      []  = {Ka*R, Ka*G, Ka*B, 1.0f}; 
 
-	GLfloat material_diffuse      []  = {0.3f*R, 0.3f*G, 0.3f*B, 1.0f}; 
+	GLfloat material_diffuse      []  = {Kd*R, Kd*G, Kd*B, 1.0f}; 
 
-	GLfloat material_specular     []  = {0.5f*R, 0.5f*G, 0.5f*B, 1.0f}; 
+	GLfloat material_specular     []  = {Ks*R, Ks*G, Ks*B, 1.0f}; 
 
-	GLfloat material_emission     []  = {0.0f*R, 0.0f*G, 0.0f*B, 1.0f}; 
+	GLfloat material_emission     []  = {Ke*R, Ke*G, Ke*B, 1.0f}; 
 
-	GLfloat material_shininess    []  = {30};
+	GLfloat material_shininess    []  = {shininess};
 
-	
+	printf("ambient: %f, %f, %f\n", material_ambient[0], material_ambient[1], material_ambient[2]);	
 
-	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT  , material_ambient);
+	glMaterialfv(GL_FRONT,GL_AMBIENT  , material_ambient);
 
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
 
@@ -1479,13 +1560,10 @@ void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
 	g.y = g.y + estensione; 
 	h.y = h.y + estensione;
 	
-	
-	
 	init_point(&e, &i);
 	init_point(&f, &j);
 	init_point(&h, &l);
 	init_point(&g, &k);
-	
 	i.x = i.x - estensione;
 	j.x = j.x + estensione;
 	l.x = l.x - estensione;
@@ -1607,7 +1685,7 @@ void drawEsterni(){
 	glPushMatrix();
 
 	glTranslatef(-12.0f, 0.0f, 0.0f);
-	setMaterial(0.0f, 1.0f, 0.0f);
+	setMaterialType(0.0f, 1.0f, 0.0f, 'o');
 	drawPlaneEsterni(coordinate4, estensione);
 
 	glPopMatrix();
@@ -1623,7 +1701,7 @@ void drawEsterni(){
 
 
 /* materiale per gli esterni del palazzo*/
-	setMaterial(1, 1, 1);
+	setMaterialType(1, 1, 1, 'e');
 
 
 
@@ -1638,6 +1716,8 @@ void drawEsterni(){
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
 
 	/* copertura tetto e muro laterale */
+
+	setMaterialType(1,1,1, 'e');
 
 	drawBackCurveAndRoof(); 
 

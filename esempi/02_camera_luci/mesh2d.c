@@ -251,6 +251,10 @@ int open_ply(const char* filename)
 
 	set_normals();
 	return 1; /* ok */
+	
+	
+	//return mesh;
+	
 }
 
 

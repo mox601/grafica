@@ -248,20 +248,30 @@ void loadPlyModels() {
 
 	printf("loading ply models...\n");
 
-	char* filenameToOpen = "plymodels/sediaLegno.ply";
 
-	if (!open_ply(filenameToOpen))
-	{
-		fprintf(stderr,"Error opening %s file\n",filenameToOpen);
-//		return -1;
+	int totalMeshes = 4;
+	
+	char* filenameToOpen = "plymodels/Sofa.ply";
+	
+	int* meshPointers[totalMeshes];
+	int i = 0;
+	for (i = 0; i < 4; i++) {
+
+		//meshPointers[i] = open_ply(filenameToOpen);
+	
+		if (!open_ply(filenameToOpen))
+		{
+			fprintf(stderr,"Error opening %s file\n",filenameToOpen);
+//			return -1;
+		}
+
+	
+
+	//glGenTextures(1,&mytexture1d);
+	//setPalette();
+	//glBindTexture(GL_TEXTURE_1D, mytexture1d);
+	//glTexImage1D(GL_TEXTURE_1D,0,3,256,0,GL_RGB,GL_UNSIGNED_BYTE,palette);
 	}
-
-
-	glGenTextures(1,&mytexture1d);
-	setPalette();
-	glBindTexture(GL_TEXTURE_1D, mytexture1d);
-	glTexImage1D(GL_TEXTURE_1D,0,3,256,0,GL_RGB,GL_UNSIGNED_BYTE,palette);
-
 
 
 

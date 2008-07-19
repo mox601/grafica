@@ -25,14 +25,19 @@
 //#include <GL/glut.h>
 
 
-
+/* blending acceso/spento */
+GLuint  blend;
 
 
 #include "vectors.h"
+//#include "camera.h"
 
 GLfloat lunghezza;
 GLfloat altezza;
 GLfloat profondita_lunghezza_ratio;
+
+
+
 
 void drawTriangle(Point3d* point1, Point3d* point2, Point3d* point3, GLfloat dettaglio);
 
@@ -52,7 +57,7 @@ void drawStriscia(Point3d punto_start, Point3d punto_end, GLfloat spessore, GLfl
 
 void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza);
 
-void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d, GLfloat spessore, GLfloat rapporto, GLfloat spigolo_front, GLfloat profondita);
+void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d);
 
 void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza, GLfloat altezza);
 

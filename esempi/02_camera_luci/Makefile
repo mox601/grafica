@@ -16,11 +16,11 @@ all: $(OBJECTS)
 camera: camera.o vectors.o model.o lights.o mesh2d.o ply.o simpleviewer.o particles.o
 	$(CC) -o $@ $^ $(LINKLIBS)
 
-clipping: clipping.o
-	$(CC) -o $@ $^ $(LINKLIBS)
+#clipping: clipping.o
+#	$(CC) -o $@ $^ $(LINKLIBS)
 
-lighting: lighting.o
-	$(CC) -o $@ $^ $(LINKLIBS)
+#lighting: lighting.o
+#	$(CC) -o $@ $^ $(LINKLIBS)
 	
 simpleviewer: simpleviewer.o
 	$(CC) -o $@ $^ $(LINKLIBS)
@@ -30,12 +30,9 @@ mesh2d: mesh2d.o ply
 	
 ply: ply.o
 	$(CC) -o $@ $^ $(LINKLIBS)
-
-
+	
 particles: particles.o
 	$(CC) -o $@ $^ $(LINKLIBS)
-
-	
 	
 subdivision: subdivision.o
 	$(CC) -o $@ $^ $(LINKLIBS)
