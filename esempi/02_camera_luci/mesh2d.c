@@ -33,7 +33,9 @@ struct vertex_t
 	float nx,ny,nz;	/* normal */
 };
 
-static struct 
+
+//static struct
+struct mesh
 {
 	/* number of vertices */
 	int   numvertices; 
@@ -43,9 +45,11 @@ static struct
 
 	/* pointer to first triangle */
 	struct triangle_t* triangles; 
-} 
-mesh;
+};
+//ho invertito nome/definizione
 
+
+typedef struct mesh meshType;
 
 #define swap_int(a,b) {int _tmp=(a);(a)=(b);(b)=_tmp;}
 #define min2(a,b) (((a)<=(b))?(a):(b))
@@ -55,7 +59,8 @@ mesh;
 
 /*======================================================= */
 /*======================================================= */
-void set_normals()
+void set_normals(meshType mesh)
+//aggiungo il parametro mesh, su cui fare le operazioni
 {
 	int   k;
 	float x,y,z;
@@ -113,8 +118,12 @@ void set_normals()
 /*======================================================= */
 /*======================================================= */
 
-int open_ply(const char* filename)
+meshType open_ply(const char* filename)
 {
+
+
+	printf("started opening ply %s\n", filename);
+
 	/* bounding box */
 	int I;
 	struct triangle_t* t,**cursor;
@@ -141,15 +150,38 @@ int open_ply(const char* filename)
 	FILE* file = fopen( filename, "rb" );
 
 	if (!file)
-		return 0;
+		//return 0;
+		printf("errore nell'apertura del file %s", filename);
 
 	ply = read_ply(file);
 
 	if (!ply)
 	{
 		fclose(file);
-		return 0;
+		//return 0;
+		printf("errore nell'apertura del file %s. read_ply non riuscita", filename);
 	}
+
+
+
+
+	/* costruisco la mesh che dovro' restituire */
+	
+	/*
+	struct 
+	{
+		int   numvertices; 
+		struct vertex_t* vertices;
+
+		struct triangle_t* triangles; 
+	} 
+	*/
+	
+	meshType mesh;
+
+
+
+
 
 	cursor=&(mesh.triangles);
 
@@ -249,11 +281,14 @@ int open_ply(const char* filename)
 	//close_ply( ply );
 	fclose(file);
 
-	set_normals();
-	return 1; /* ok */
+
+	/* deve settare le normali della mesh locale */
+
+	set_normals(mesh);
+	//return 1; /* ok */
 	
 	
-	//return mesh;
+	return mesh;
 	
 }
 
@@ -262,7 +297,9 @@ int open_ply(const char* filename)
 /*======================================================= */
 /*======================================================= */
 
-static void draw_triangles()
+//devo levare static?
+
+void draw_triangles(meshType mesh)
 {
 	struct triangle_t* cursor=mesh.triangles;
 
@@ -281,12 +318,14 @@ static void draw_triangles()
 		cursor=cursor->next;
 	}
 	glEnd();
+	
+	//printf("drawTriangles terminata\n");
 }
 
 /*======================================================= */
 /*======================================================= */
 
-void display_ply(int viewmode) /* 0==filled face 1==filled+wireframe 2==wireframe */
+void display_ply(meshType mesh, int viewmode) /* 0==filled face 1==filled+wireframe 2==wireframe */
 {
 
 	glDisable(GL_POLYGON_OFFSET_FILL);
@@ -299,7 +338,7 @@ void display_ply(int viewmode) /* 0==filled face 1==filled+wireframe 2==wirefram
 
 	if (viewmode==0 || viewmode==1)
 	{
-		draw_triangles();
+		draw_triangles(mesh);
 	}
 
 	if (viewmode==1 || viewmode==2)
@@ -308,7 +347,7 @@ void display_ply(int viewmode) /* 0==filled face 1==filled+wireframe 2==wirefram
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glColor3f(0,0,0);
 		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-		draw_triangles();
+		draw_triangles(mesh);
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 		glEnable(GL_LIGHTING);
 	}

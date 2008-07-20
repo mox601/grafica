@@ -11,9 +11,6 @@
 #include <GL/glut.h>
 #endif
 
-
-
-
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
@@ -22,11 +19,12 @@
 
 #include "simpleviewer.h"
 //#include "trackball.h"
+#include "mesh2d.h"
 
 
 /* ply functions */
-int  open_ply   (const char* filename);
-void display_ply(int viewmode);
+//int  open_ply   (const char* filename);
+//void display_ply(int viewmode);
 
 /* prototypes */
 void keydown(unsigned char key, GLint x, GLint y) ;
@@ -66,7 +64,6 @@ static float curquat[4],lastquat[4];
 int enable_texture=0;
 GLuint  mytexture1d=(GLuint )0;
 GLubyte palette[3*256];
-
 
 void setPalette()
 {
@@ -247,23 +244,86 @@ char* filenameToOpen = "plymodels/sediaCuscino.ply";
 void loadPlyModels() {
 
 	printf("loading ply models...\n");
+	
+	
+	// int* meshPointers[`Meshes];
+		
+//	int i = 0;
+	
+	//meshType meshes[1];
+	
+	//for (i = 0; i < totalMeshes; i++) {
 
 
-	int totalMeshes = 4;
-	
-	char* filenameToOpen = "plymodels/Sofa.ply";
-	
-	int* meshPointers[totalMeshes];
-	int i = 0;
-	for (i = 0; i < 4; i++) {
+		char* filenameToOpen = "plymodels/Speaker_base.ply";
+		meshes[0] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/Speaker_cassa.ply";
+		meshes[1] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/apple-imac-2004.ply";
+		meshes[2] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/apple_contenitore.ply";
+		meshes[3] = open_ply(filenameToOpen);
+		filenameToOpen = "plymodels/apple_mela.ply";
+		meshes[4] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/banana.ply";
+		meshes[5] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/bicchiere.ply";
+		meshes[6] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/divano.ply";
+		meshes[7] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/espositore1_cubo.ply";
+		meshes[8] = open_ply(filenameToOpen);
+		filenameToOpen = "plymodels/espositore2_strano.ply";
+		meshes[9] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/lampadeTetto.ply";
+		meshes[10] = open_ply(filenameToOpen);
 
-		//meshPointers[i] = open_ply(filenameToOpen);
-	
-		if (!open_ply(filenameToOpen))
-		{
-			fprintf(stderr,"Error opening %s file\n",filenameToOpen);
+		filenameToOpen = "plymodels/vaso1.ply";
+		meshes[11] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/vaso2.ply";
+		meshes[12] = open_ply(filenameToOpen);
+
+		filenameToOpen = "plymodels/vaso3.ply";
+		meshes[13] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/idrante.ply";
+		meshes[14] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/lampada_base.ply";
+		meshes[15] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/lampada_sopra.ply";
+		meshes[16] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/sediaCuscino.ply";
+		meshes[17] = open_ply(filenameToOpen);
+		
+		filenameToOpen = "plymodels/apple-imac-2004.ply";
+		meshes[18] = open_ply(filenameToOpen);
+		
+		
+		
+		
+		
+
+		
+		
+		printf("openply eseguite!\n");
+
+		//if (!open_ply(filenameToOpen))
+		//{
+		//	fprintf(stderr,"Error opening %s file\n",filenameToOpen);
 //			return -1;
-		}
+		//}
 
 	
 
@@ -271,15 +331,17 @@ void loadPlyModels() {
 	//setPalette();
 	//glBindTexture(GL_TEXTURE_1D, mytexture1d);
 	//glTexImage1D(GL_TEXTURE_1D,0,3,256,0,GL_RGB,GL_UNSIGNED_BYTE,palette);
-	}
+//	} //for
 
 
 
 }
 
-void displayPly()
+void displayPly(meshType mesh)
 {
-		display_ply(viewmode % 3);
+		//display_ply(viewmode % 3);
+		display_ply(mesh, viewmode % 3); /* 0==filled face 1==filled+wireframe 2==wireframe */
+
 }
 
 

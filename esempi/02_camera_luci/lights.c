@@ -21,6 +21,23 @@ GLfloat light_position_directional[4]={
 
 
 
+/* LIGHT2: luce del lampadario */
+GLfloat light_position_lampadario[4]={
+		-13.100014, 14.100018, 10.000002, 1
+};
+
+GLfloat light_direction_lampadario[4]={
+		1.0f,
+		-13.,
+		0.0f
+};
+
+
+
+
+
+
+
 /* colori */
 
 
@@ -53,8 +70,6 @@ void setupLights() {
 	
 	*/
 
-
-
 	/* luce numero 0 locale */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_white);
 
@@ -71,8 +86,24 @@ void setupLights() {
 	glLightfv(GL_LIGHT1, GL_SPECULAR , color_white);
 	glLightfv(GL_LIGHT1, GL_POSITION , light_position_directional);
 
+
+
+GLfloat color_yellow_light     [4]  = {1.0f, 0.65f, 0.06f, 1.0f};
+
+	/* LIGHT2: lampadario */	
+	glLightfv(GL_LIGHT2, GL_AMBIENT  , color_red);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE  , color_red);
+	glLightfv(GL_LIGHT2, GL_SPECULAR , color_white);
+	glLightfv(GL_LIGHT2, GL_POSITION , light_position_lampadario);
+	//glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 77);
+	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, light_direction_lampadario);
+	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.05f);
+	glLighti(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.1f);
+	
+
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
 
 	glEnable(GL_LIGHTING);
 }

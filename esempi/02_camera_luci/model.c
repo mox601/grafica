@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "model.h"
-
+#include "simpleviewer.h"
+#include "mesh2d.h"
 
 //non contando la porta
 GLfloat lunghezza = 30.0f;
@@ -18,12 +19,8 @@ GLfloat lunghezza_sp_laterale_back_ratio = -0.1f;
 GLfloat lunghezza_inclinazione_frontale_ratio = 0.03f;
 GLfloat differenza_ratio = 0.3f;
 
-
-
 /* blending acceso/spento */
 GLuint  blend;
-
-
 
 /* riceve i punti con cui costruire un triangolo */
 /* riceve i punti in senso ANTIORARIO */
@@ -516,16 +513,6 @@ void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d*
 
 
 
-
-
-
-
-
-
-
-
-
-
 void drawFrontWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazione, GLfloat altezza) {
 
 
@@ -689,26 +676,6 @@ glPushMatrix();
 
 		coordinate[2 * i] = radius * coseno;
 		coordinate[2 * i + 1] = radius * seno;
-
-//		printf("coord: %f %f\n", coordinate[2*i], coordinate[(2*i) + 1]);
-
-/*	
-		printf("%d-esimo passo, valore %f = rad %f;  coordinate %f %f\n", i, valore_angolo, valore_angolo_rad, coseno, seno);
-*/		
-			// disegno i punti della lineStrip
-//			glVertex3f(radius * coseno, 0.0f, radius * seno); 
-//			printf("cos %f sen %f\n", coseno, seno); 
-
-
-/* sfere per vedere l'orientamento 
-
-			glPushMatrix();
-				glTranslatef(radius * coseno, 0.0f, radius * seno);
-				glutSolidSphere(0.2f + i/4 + 0.2f , 5.0f, 5.0f);
-			glPopMatrix();
-
-*/
-
 
 		//valore_angolo = valore_angolo - incremento;
 
@@ -1193,7 +1160,7 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 				temp1.y = profondita;
 		}
 			else {
-				temp1.y = profondita - (deltaY * (i-1));				;
+				temp1.y = profondita - (deltaY * (i-1));
 			}
 
 		temp1.x = circle[2 * i]; 
@@ -1313,7 +1280,7 @@ void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo)
 	
 switch(tipo) {
 	case 'e':
-		printf("materiale muro\n");
+		//printf("materiale muro\n");
 /* set delle variabili con glMaterial... */
 		Ka = 0.05f;
 		Kd = 0.66f;
@@ -1333,7 +1300,7 @@ switch(tipo) {
 		break; 
 		
 	case 'm':
-		printf("materiale metallico\n");
+		//printf("materiale metallico\n");
 		Ka = 0.8;
 		Kd = 0.5;
 		Ks = 0.8f;
@@ -1343,7 +1310,7 @@ switch(tipo) {
 	
 }
 
-	printf("comincia set material\n");		
+//	printf("comincia set material\n");		
 
 
 	GLfloat material_ambient      []  = {Ka*R, Ka*G, Ka*B, 1.0f}; 
@@ -1356,7 +1323,7 @@ switch(tipo) {
 
 	GLfloat material_shininess    []  = {shininess};
 
-	printf("ambient: %f, %f, %f\n", material_ambient[0], material_ambient[1], material_ambient[2]);	
+//	printf("ambient: %f, %f, %f\n", material_ambient[0], material_ambient[1], material_ambient[2]);	
 
 	glMaterialfv(GL_FRONT,GL_AMBIENT  , material_ambient);
 
@@ -1528,16 +1495,8 @@ void drawPlane() {
 	
 	drawTriangle(&e, &f1, &e1, dettaglio);
 	drawTriangle(&e, &f, &f1, dettaglio);
-	
-	
-	
-	
 
 }	
-
-
-
-
 
 
 void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
@@ -1591,19 +1550,6 @@ void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void drawFloor() {
 
 	GLfloat length = lunghezza + (lunghezza * lunghezza_larghezzaporta_ratio);
@@ -1614,7 +1560,6 @@ void drawFloor() {
 	Point3d c = {length, height, 0};
 	Point3d d = {0, height, 0};
 	
-	
 	drawTriangle(&a, &b, &c, dettaglio);
 	drawTriangle(&a, &c, &d, dettaglio);	
 
@@ -1623,27 +1568,12 @@ void drawFloor() {
 void drawPlanes(GLint npiani) {
 	glPushMatrix();
 	glTranslatef(-24.0f, 0.0f, 0.0f);
-		glPushMatrix();
-			glTranslatef(22.8f, 0.0f, 0.0f);
-			
-		glPopMatrix();
 	glTranslatef(0.0f, 40.0f, 4.0f);
 	int i; 
 	for(i = 1; i<=npiani; i++) {
 	
-	
-		glPushMatrix();
-			glScalef(0.5f, 0.5f, 0.5f);
-			glTranslatef(0.0f, 0.0f, 1.0f);
-			/* disegno il ply importato */
-			
-			//setMaterial(1,0,0);
-			displayPly();
-		glPopMatrix();
-	
 		drawPlane();
 		glTranslatef(0.0f, 0.0f, 4.0f);
-		//printf("%d piani disegnati\n", i);
 		
 	}
 
@@ -1689,9 +1619,6 @@ void drawEsterni(){
 	drawPlaneEsterni(coordinate4, estensione);
 
 	glPopMatrix();
-
-
-	
 	
 	glPushMatrix();
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
@@ -1726,7 +1653,7 @@ void drawEsterni(){
 
 
 
-void poligono(int n){
+void poligono(int n, GLfloat raggio){
 
 	GLint lati = 20;
 	GLfloat alpha = 2.0 * M_PI / lati;
@@ -1735,16 +1662,43 @@ void poligono(int n){
 	glBegin(draw_wireframe?GL_LINE_LOOP:GL_POLYGON);
 	glNormal3f(0.0f, 0.0f, 1.0f); //normale
 	for (i = 0; i < 20; i++) {
-		glTexCoord2f(cos(alpha * i), sin(alpha * i));
-		glVertex3f(cos(alpha * i), sin(alpha * i), 0.0f);
+		glTexCoord2f(raggio * cos(alpha * i), raggio *sin(alpha * i));
+		glVertex3f(raggio * cos(alpha * i), raggio * sin(alpha * i), 0.0f);
 	}
 	glEnd();
 
 
 }
 
-void cilindro(int n) {
+void cilindro(int n, GLfloat raggio) {
 
+//a partire dalla base
+
+	GLint lati = 20;
+	GLfloat alpha = 2.0 * M_PI / lati;
+	GLfloat angle0, angle1, anglem;
+	int i;
+
+	glPolygonMode(GL_FRONT,GL_FILL);
+	
+	glBegin(draw_wireframe?GL_LINE_LOOP:GL_QUADS);
+	
+	for (i = 0; i < lati; i++) {
+		angle0 = i * alpha;
+		angle1 = (i+1) * alpha;
+		anglem = (angle1 + angle0) / 2;
+		
+		glNormal3f(raggio * cos(anglem), raggio * sin(anglem), 0);
+		glTexCoord2f(0,0);
+		glVertex3f(raggio * cos(angle0), raggio * sin(angle0), 0);
+		glTexCoord2f(0,1);
+		glVertex3f(raggio * cos(angle0), raggio * sin(angle0), 1);
+		glTexCoord2f(1,1);
+		glVertex3f(raggio * cos(angle1), raggio * sin(angle1), 1);
+		glTexCoord2f(1,0);
+		glVertex3f(raggio * cos(angle1), raggio * sin(angle1), 0);
+	}
+	glEnd();
 
 }
 
@@ -1753,31 +1707,252 @@ void cilindro(int n) {
 void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne) {
 
 
+	GLint lati_poligono;
+
+	glPushMatrix();
+	
+	glScalef(1.0f, 1.0f, altezzaColonne);
+
+	glRotatef(180.0f, 0.0f, 1.0f, 0.0f);	
+	poligono(lati_poligono, raggio);	
+	glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);	
+	cilindro(lati_poligono, raggio);	
+	glTranslatef(0.0f, 0.0f, 1.0f);	
+	poligono(lati_poligono, raggio);
+	
+	glPopMatrix();
+
+}
+
+
+void drawLampadaSecca() {
+
+
+/* disegno la lampada secca */
+	glPushMatrix();
+		//glLoadIdentity();
+		
+		glScalef(1.0, 1.0, 1.0);
+		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+		//glTranslatef(0.0f, 0.0f, 4.0f);
+		glTranslatef(48.099838, 2.200000, 4.199998);
+		
+		displayPly(meshes[10]);
+		
+		GLfloat lunghezzaLampada = 2.0f;
+		
+		int j; 
+		int numLampade = 10;
+		for (j = 0; j<numLampade; j++) {
+			glTranslatef(0.0f, lunghezzaLampada, 0.0f);
+			displayPly(meshes[10]);
+		}
+	
+	glPopMatrix();
+
+
+}
+
+
+void drawColumns(GLfloat raggio, GLfloat altezzaColonne) {
+	
+	glPushMatrix();
+	
+	glTranslatef(-21.900047, 59.799660, 0.000000);
+	//glTranslatef(xPosition, yPosition, zPosition); 
+	
+	
+	GLfloat lunghezzaPiano, larghezzaPiano;
+
+
+	lunghezzaPiano = 19.0f; 
+	larghezzaPiano = 18.0f;
+	
+	drawSingleColumn(raggio, altezzaColonne);
+	
+	glTranslatef(lunghezzaPiano, 0, 0); 
+	
+	drawSingleColumn(raggio, altezzaColonne);
+	
+	glTranslatef(0, -larghezzaPiano, 0);
+	
+	drawSingleColumn(raggio, altezzaColonne);
+	
+	glTranslatef(-lunghezzaPiano, 0, 0); 	
+	
+	drawSingleColumn(raggio, altezzaColonne);
+	glPopMatrix();
+}
+
+
+void drawCassa() {
+
+			glPushMatrix();
+			glScalef(0.6, 0.6, 0.6);
+			displayPly(meshes[0]);
+			glTranslatef(0.0f, 0.0f, 2.0);
+			displayPly(meshes[1]);
+			glPopMatrix();
+
+
+}
+
+void drawPianoTerra() {
+
+		glPushMatrix();
+		
+		glTranslatef(-3.899998, 57.399696, 0.300000);
+		
+		/* contenitore per le mele */
+		glPushMatrix();
+			glScalef(0.5f, 0.5f, 0.8f);
+			glTranslatef(0.0f, 0.0f, 1.38f);
+			displayPly(meshes[3]);
+			
+			/* mele */
+			glScalef(0.3, 0.3, 0.3);
+			glTranslatef(1.200000, 0.700000, -0.60);
+			displayPly(meshes[4]);
+			glRotatef(44.0, 0.0, 0.0, 1.0);
+			glTranslatef(-2.100000, -1.100000f, 0.0f);
+			displayPly(meshes[4]);			
+			glRotatef(77.0, 0.0, 0.0, 1.0);
+			glTranslatef(3.099999, 0.0, 0.0); 
+			displayPly(meshes[4]);			
+
+		glPopMatrix();
+		
+		glScalef(0.3f, 0.3f, 0.3f);
+		displayPly(meshes[8]);
+		// finito il primo espositore
+		
+	
+		
+		glTranslatef(0.0f, -16.0f, 0.0f);
+		glPushMatrix();
+		glTranslatef(-0.00000, 0.500000, 1.9000);
+			displayPly(meshes[5]);
+		glPopMatrix();
+		displayPly(meshes[8]);
+		// banana sul secondo espositore
+
+
+		//glTranslatef(xPosition, yPosition, zPosition);
+		glTranslatef(-21.3f, -33.5f, 0.0f);
+		glPushMatrix();
+		glTranslatef(0.000000, 0.100000, 1.800000);
+			displayPly(meshes[11]);
+		glPopMatrix();
+		
+		displayPly(meshes[8]);
+		
+		//vaso sul terzo espositore
+		
+		glPopMatrix();
+		
+
+		
+		glPushMatrix(); 
+			glTranslatef(-15.600023, 57.799690, 0.00);
+			drawCassa();
+			glTranslatef(8.0f, 0.0f, 0.0f);
+			drawCassa();
+		glPopMatrix();
+		
+		
+		
+		
+		drawLampadaSecca();
+		
+}
+
+
+
+
+void drawLampada() {
+
+	glPushMatrix();
+	
+		glTranslatef(-0.800000, -0.700000, 1.40000);
+		displayPly(meshes[15]);
+		glTranslatef(-0.200000, 0.200000, 1.900000);
+		displayPly(meshes[16]);
+
+	glPopMatrix();
+
+
+}
+
+
+
+
+void drawPrimoPiano(){
+
 	glPushMatrix();
 
-	glTranslatef(2.0f, 0.0f, 5.0f);
-	glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 
-	
-	poligono(20);
-	
-	cilindro(20);
-	
-	
-	
-	
-	
-	//faccia di sopra
-	//glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);
+		glTranslatef(-3.0f, 57.399696, 0.300000);
+		glTranslatef(-0.900000, 3.199999, 4.499998);
+		glTranslatef(0.0f, 0.0f, -0.25);
+		//glTranslatef(xPosition, yPosition, zPosition);
+		
+		
+		glPushMatrix();
+			glTranslatef(0.100000, 0.100000, 0.8);
+			glScalef(0.4f, 0.4f, 0.5f);
+			displayPly(meshes[14]);
+		glPopMatrix();
+		
+		
+		
+		glScalef(0.3f, 0.3f, 0.3f);
+		displayPly(meshes[9]);
+		//idrante sul primo espositore strano
+		
+		
+		glTranslatef(-53.399757, -0.900000, 0.000000);
+		
+		
+		
+		glPushMatrix();
+			glTranslatef(0.100000, 0.100000, 0.8);
+			glScalef(0.4f, 0.4f, 0.5f);
+			
+			drawLampada();
 
-	//poligono(20);
+		glPopMatrix();
+		
+		displayPly(meshes[9]);
+		//lampada sul secondo espositore strano
+		
+		
+		
+		
 	
 	
-	
-	
-	
-	
-	
+		//divano
+		glPushMatrix(); 
+			GLfloat scalaDivano = 5.0f * 0.8f;
+			glScalef(scalaDivano, scalaDivano, scalaDivano);
+			glTranslatef(-0.800000, -1.500000, 0.700000);
+			displayPly(meshes[7]); 
+		glPopMatrix();
+		
+		 
+		//poltrona cuscino
+		glPushMatrix();
+			glScalef(2.0f, 2.0f, 2.0f);
+			glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+			glTranslatef(-20.700043, -27.100067, 0.45);
+			displayPly(meshes[17]); 
+			
+			glRotatef(180, 0.0f, 0.0f, 1.0f);
+			glTranslatef(0.100000, 5.999997, 1.500000);
+			displayPly(meshes[18]);
+			//apple
+			
+		glPopMatrix(); 
+		
 	glPopMatrix();
 
 }
@@ -1785,19 +1960,47 @@ void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne) {
 
 
 
-void drawColumns(GLfloat raggio, GLfloat altezzaColonne) {
-	drawSingleColumn(raggio, altezzaColonne);
+void drawSecondoPiano(){
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 4.099998);
+	drawLampadaSecca();
+	glPopMatrix();
+	
+
+
+
+
 }
+	
+void drawTerzoPiano(){
+
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 10.700005);
+	drawLampadaSecca();
+	glPopMatrix();
+
+}
+
+
 
 void drawInterni()
 {
 	//setMaterial(1,1,1);
 	drawPlanes(2);
 	
-	GLfloat raggio = 1.0f;
-	GLfloat altezzaColonne = 20.0f;
+	GLfloat raggio = 0.5f;
+	GLfloat altezzaColonne = 15.0f;
 	drawColumns(raggio, altezzaColonne);
 	
+
+	/* disegno le mesh al piano */
+	
+	drawPianoTerra();
+	drawPrimoPiano(); 
+	drawSecondoPiano();
+	drawTerzoPiano();
 	
 	
 }

@@ -22,7 +22,7 @@ camera: camera.o vectors.o model.o lights.o mesh2d.o ply.o simpleviewer.o partic
 #lighting: lighting.o
 #	$(CC) -o $@ $^ $(LINKLIBS)
 	
-simpleviewer: simpleviewer.o
+simpleviewer: simpleviewer.o mesh2d.o
 	$(CC) -o $@ $^ $(LINKLIBS)
 	
 mesh2d: mesh2d.o ply

@@ -3,9 +3,6 @@
 #include <string.h>
 #include <math.h>     
 
-
-
-
 //#include <GL/glut.h>
 
 #ifdef WIN32
@@ -19,15 +16,11 @@
 #include <GL/glut.h>
 #endif
 
-
-
 #include "vectors.h"
-#include "model.h"
+//#include "model.h"
 #include "lights.h"
 #include "simpleviewer.h"
-
-
-
+#include "camera.h"
 
 /* prototype */
 void redraw(void);
@@ -48,11 +41,9 @@ GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
 
-Point3d  position ={-45.538731f, 77.591087f, 0.800000f};
-Point3d  target   ={10.063024f, 30.954882f, 0.800000f};
+Point3d  position ={-14, 11, 0.800000};
+Point3d  target   ={-13.431612, 85, 17};
 Vector3d vup      ={0,0,1};
-
-
 
 /* dettaglio dei triangoli disegnati */
 /* influisce sulla performance */
@@ -61,9 +52,7 @@ GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
 
-
 enum {M_NONE,M_LOCAL_LIGHT,M_DIRECTIONAL_LIGHT,M_WIREFRAME};
-
 
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -80,14 +69,10 @@ GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
 /* angolo per animazione luce */
 float lightAngle = 0.0;
 
-
-
 int enable_light_directional = 1;
 /* faretto */
-int enable_light_local = 0;
+int enable_light_local = 1;
 int draw_wireframe = 0;
-
-
 
 
 /* ---------------------------------------------------------- */
@@ -120,7 +105,9 @@ void init(void) {
 	//fog?
 	
 	
-	
+	xPosition = 0.0f;
+	yPosition = 0.0f;	
+	zPosition = 0.0f;
 	
 
 
@@ -192,6 +179,7 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Directional light", M_DIRECTIONAL_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 
 
 	/* caricamento dei .ply */
@@ -365,15 +353,59 @@ switch(c)
 	case '9': 
 		/*aumento il dettaglio*/
 		aumentaDettaglio();
-//		printf("9: dettaglio attuale %f\n", dettaglio);
 		break; 
 
 	case '0': 
 		/*diminuisco il dettaglio*/
 		diminuisciDettaglio();
-//		printf("0: dettaglio attuale %f\n", dettaglio);
+		break; 
+		
+		
+		
+		
+		/* controlli per il piazzamento dei solidi */
+		
+	case '7': 
+		/*abbassa z*/
+		zPosition -= 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
+		glutPostRedisplay();
 		break; 
 
+	case '8': 
+		/* alza z */
+		zPosition += 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
+		glutPostRedisplay();
+		break; 
+		
+	case 'k': 
+		/*abbassa x*/
+		xPosition -= 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
+		break; 
+
+	case 'i': 
+		/* alza x */
+		xPosition += 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
+		glutPostRedisplay();
+		break; 
+	
+	case 'j': 
+		/*abbassa y*/
+		yPosition -= 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
+		glutPostRedisplay();
+		break; 
+
+	case 'l': 
+		/* alza y */
+		yPosition += 0.1;
+		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
+		glutPostRedisplay();
+		break;	
+		
 	case 'b': // switch the blending.
 		printf("B/b pressed; blending is: %d\n", blend);
 		blend = blend ? 0 : 1;
@@ -482,7 +514,6 @@ void redraw(void)
 if (enable_light_directional)
 	{
 		glLightfv(GL_LIGHT1, GL_POSITION, light_position_directional);
-
 		glEnable(GL_LIGHT1);
 	}
 	else
@@ -503,6 +534,37 @@ if (enable_light_directional)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
+	
+
+
+
+
+
+	
+	/* disegna sfera dove si trova la luce LIGHT_2 */
+	
+	//glLightfv(GL_LIGHT2, GL_POSITION, light_position_lampadario);
+
+	
+	glPushMatrix();
+	glTranslatef(light_position_lampadario[0], light_position_lampadario[1], light_position_lampadario[2]);
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
+
+		if (!draw_wireframe)
+			glutSolidSphere(0.3, 10, 10);
+		else
+			glutWireSphere(0.3, 10, 10);
+
+	glPopMatrix();
+	
+	
+	
+	
+	
+
+
+	
 
 
 	glPushMatrix();
@@ -568,7 +630,7 @@ if (enable_light_directional)
 	Point3d d1 = {-10, 0, 0}; 
 	
 	
-	drawGlass(&a1, &b1, &c1, &d1);
+	//drawGlass(&a1, &b1, &c1, &d1);
 	
 	/* dopo aver disegnato il vetro, riabilita depth test e spegni il blending */
 	glDisable(GL_BLEND);              // Turn Blending Off
@@ -584,10 +646,10 @@ if (enable_light_directional)
 
 
 /* per conoscere la posizione */
-
+/*
 	printf("position: %f %f %f\n", position.x, position.y, position.z); 
 	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-
+*/
 
 
 

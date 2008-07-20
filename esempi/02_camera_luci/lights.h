@@ -24,6 +24,18 @@
 GLfloat light_position_local[4];
 GLfloat light_position_directional[4];
 
+/* LIGHT2 */
+GLfloat light_position_lampadario[4];
+GLfloat light_direction_lampadario[4];
+
+
+GLfloat light_position_primopiano[4];
+GLfloat light_direction_primopiano[4];
+
+
+
+
+
 /* colori */
 GLfloat color_black     [4]; 
 GLfloat color_white     [4]; 

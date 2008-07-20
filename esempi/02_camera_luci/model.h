@@ -2,13 +2,9 @@
 #define __MODEL_H
 
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <math.h>
-
 
 #ifdef WIN32
 #include <windows.h>
@@ -21,21 +17,20 @@
 #include <GL/glut.h>
 #endif
 
-
 //#include <GL/glut.h>
+
+
+#include "vectors.h"
+#include "camera.h"
 
 
 /* blending acceso/spento */
 GLuint  blend;
 
 
-#include "vectors.h"
-//#include "camera.h"
-
 GLfloat lunghezza;
 GLfloat altezza;
 GLfloat profondita_lunghezza_ratio;
-
 
 
 
