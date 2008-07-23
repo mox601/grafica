@@ -1,0 +1,164 @@
+comandi per git: 
+git commit -a
+git push
+
+fatto
+disegnati i piani interni con le zone per le scale
+drawwall high deve usare drawwalloblique OK
+disegna i contorni dei muri OK
+fatta funzione che crea dei punti su una circonferenza da un angolo di partenza a uno di arrivo
+spostata la definizione di luci in lights.c e .h
+allineamento del muro laterale verde
+disegnare la chiusura dell'edificio
+pavimento interno
+inclinare i punti del guscio mano mano che vengono disegnati
+bloccare l'altezza dell'osservatore ad un minimo
+
+
+
+da fare
+
+
+controllare lo spostamento degli oggetti via tastiera 
+gestione delle altezze nei piani
+
+disegnare le scale
+
+problema della luce che gira in senso opposto al punto osservato
+
+arredare gli interni
+
+aggiungere luci
+
+
+modificare simpleviewer per caricamento di diversi .ply 
+
+il vetro non si fa
+
+se uno preme b da una certa angolazione, si vede il vetro con la
+trasparenza, ma solo in quel caso
+perche' cosi' si sovrappongono comunque a qualsiasi primitiva...
+
+trasparenza dei vetri: todo
+nel main: 
+glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);  
+setup dopo la creazione della finestra: 
+glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
+glDepthFunc(GL_LESS);			// The Type Of Depth Test To Do
+glEnable(GL_DEPTH_TEST);			// Enables Depth Testing
+glShadeModel(GL_SMOOTH);			// Enables Smooth Color Shading
+  
+glMatrixMode(GL_PROJECTION);
+...    
+glMatrixMode(GL_MODELVIEW);
+
+setup delle luci:
+
+ // set up light number 1.
+    glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);  // add lighting. (diffuse).
+    glLightfv(GL_LIGHT1, GL_POSITION,LightPosition); // set light position.
+    glEnable(GL_LIGHT1);                             // turn light 1 on.
+    
+    /* setup blending */
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE);			// Set The Blending Function For Translucency
+    glColor4f(1.0f, 1.0f, 1.0f, 0.5);    
+
+
+nella funzione per attivare il blending
+credo si debba mettere nel momento in cui disegno i vetri
+
+
+blend = blend ? 0 : 1;              // switch the current value of blend, between 0 and 1.
+	printf("Blend is now: %d\n", blend);
+	if (!blend) {
+	  glDisable(GL_BLEND);              // Turn Blending Off
+	  glEnable(GL_DEPTH_TEST);          // Turn Depth Testing On
+	} else {
+	  glEnable(GL_BLEND);		    // Turn Blending On
+	  glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
+
+
+
+
+problema nell'illuminazione del guscio, si illumina dentro e fuori e la parte curva invece al contrario
+il guscio, essendo "piatto" e avendo solo le normali in un senso, non si illumina quando la luce é dentro. come si fa? 
+posso ridisegnare il guscio facendo un glScale e cambiando l'orientamento dei triangoli con il GL_CW?
+
+le normali nella drawTriangle sono per ogni vertice
+
+da migliorare la differenza di altezza tra le due parti di muro frontale
+
+creazione diverse luci dinamiche (giorno che cambia in notte?)
+
+
+leggendo le slide: 
+glut double + glutswapbuffers
+glut_rgb
+
+glut_depth z buffer: 
+glutinitdisplaymode(GLUT_DEPTH)
+nel redraw
+glClear(GL_DEPTH_BUFFER_BIT)
+glEnable(GLDEPTHTEST)
+
+glEnable GL_DEPTH TEST per attivarlo
+gl_cullface per rimuovere le facce posteriori basandosi sulle normali
+utilizzo il modello pin-hole (glperspective e gllookat)
+glfrontface orientamento delle facce: default é CCW
+
+per la camera: 
+nel main si mette glmatrixmode(projection)
+gluperspetctive()
+glMatrixMode(glMODELVIEW)
+glutMainLoop()
+e poi nel redraw si mette la posizione della camera
+glmatrixmode(G:L_MODELVIEW)
+glLoadIdentity()
+e poi glulookat() per avere la camera mobile
+
+
+nella funzione resize() per la finestra: 
+glViewport(0,0,w,h)
+glMatrixmode(PROJECTION)
+glLoad identity
+gluPerspective(..., w/h,.. )
+glMatrixMode(gl_modelview)
+glLoad identity
+gluLookat(...)
+
+
+normalizzazione delle normali 
+glEnable(GL_NORMALIZE)
+
+
+creazione di luci direzionali e posizionali: 
+locali, sono in posizione .....
+lightpos[] = {....., 1}
+
+direzionali, imposto la direzione .....
+lightpos[] = {......., 0}
+
+e poi glLightfv(GL_LIGHT0, GL_POSITION, lightpos)
+
+
+una luce che funziona da torcia? 
+la mettiamo nelle coordinate eye: 
+glMatrixMode(GL_MODELVIEW)
+glLoad identity
+glLightfv(...)
+
+altrimenti nelle coordinate mondo: 
+(dopo la viewing transformations)
+gluLookat(..)
+glLightfv(...)
+
+
+modello di illuminazione: 
+gl light model two side: due materiali differenti per front e back
+gl light model ambient: illuminaz globale della scena
+gl light model local viewer: + qualitá
+gl light model color control: migliori riflessioni e texture mapping
+
+
+poi si settano i materiali
