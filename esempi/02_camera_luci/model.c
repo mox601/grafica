@@ -62,13 +62,24 @@ void drawTriangle(Point3d* point1, Point3d* point2,Point3d* point3, GLfloat dett
 	if (distanza_minima <= dettaglio) {
 		/* disegno triangoli oppure line loops */
 		glBegin(draw_wireframe?GL_LINE_LOOP:GL_TRIANGLES);
+			/* imposto qui la normale? */
+			glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 		
-/* imposto qui la normale? */
-		glNormal3f(destNormal.x,destNormal.y,destNormal.z);
 			glVertex3f(point1->x, point1->y, point1->z);
 			glVertex3f(point2->x, point2->y, point2->z);
 			glVertex3f(point3->x, point3->y, point3->z);
 		glEnd();	
+		
+		
+/* disegno la normale, un segmento che collega due punti ed esce dalla superficie */
+/*
+		glBegin(GL_LINES);
+			//glColor3f(1.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(destNormal.x,destNormal.y,destNormal.z);
+		glEnd();
+*/		
+		
 	} else {
 		/* richiamo la funzione per costruire 4 triangoli più 
 		piccoli, costruiti usando i punti medi del triangolo grande */
