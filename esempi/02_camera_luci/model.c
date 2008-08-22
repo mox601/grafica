@@ -1967,21 +1967,67 @@ void drawPrimoPiano(){
 	glPopMatrix();
 
 }
+	
+	GLfloat lunghezzaScala = 6.0f;
+	GLint nScalini = 20;
+	GLfloat altezzaPiano = 6.0f;
+	GLfloat lunghezzaScalino;
+	GLfloat altezzaScalino;
+	GLfloat profonditaScalino = 2.0f;
+	
+void drawScalino() {
+
+	lunghezzaScalino = lunghezzaScala / nScalini;
+	altezzaScalino = altezzaPiano / nScalini;
+
+	Point3d point1 = {0,0,0};
+	Point3d point2 = {0,lunghezzaScalino,0};
+	Point3d point3 = {0,lunghezzaScalino,altezzaScalino};
+	Point3d point4 = {0,0,altezzaScalino};
+	drawWall(&point1, &point2, &point3, &point4, profonditaScalino, 0.0f, 0.0f, dettaglio);	
+
+}
+
+
+void drawScala() {
+	
+	glPushMatrix();
+	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
+	glTranslatef(0, 0, 7);
+	
+	glTranslatef(-50.899796, -10.200003, -2.899999);
+	
+	drawScalino();
+	
+	GLint i = 1;
+	
+	for(i = 1; i <= nScalini; i++) {
+	
+		glTranslatef(0, -lunghezzaScalino, -altezzaScalino);
+		drawScalino();
+
+	}
+
+	glPopMatrix();
+	
+}
+
 
 
 
 
 void drawSecondoPiano(){
 
+	
+	
+	drawScala();
+
+
+
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 4.099998);
 	drawLampadaSecca();
 	glPopMatrix();
-	
-
-
-
-
 }
 	
 void drawTerzoPiano(){

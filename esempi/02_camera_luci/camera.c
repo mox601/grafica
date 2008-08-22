@@ -41,8 +41,8 @@ GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
 
-Point3d  position ={-14, 11, 0.800000};
-Point3d  target   ={-13.431612, 85, 17};
+Point3d  position ={-17.719740, 19.239782, 0.8000000};
+Point3d  target   ={54.014687, 41.947342, -3.500005};
 Vector3d vup      ={0,0,1};
 
 /* dettaglio dei triangoli disegnati */
@@ -646,10 +646,10 @@ if (enable_light_directional)
 
 
 /* per conoscere la posizione */
-/*
+
 	printf("position: %f %f %f\n", position.x, position.y, position.z); 
 	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-*/
+
 
 
 

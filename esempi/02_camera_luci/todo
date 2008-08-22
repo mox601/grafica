@@ -13,7 +13,7 @@ disegnare la chiusura dell'edificio
 pavimento interno
 inclinare i punti del guscio mano mano che vengono disegnati
 bloccare l'altezza dell'osservatore ad un minimo
-
+arredare gli interni
 
 
 da fare
@@ -26,10 +26,11 @@ disegnare le scale
 
 problema della luce che gira in senso opposto al punto osservato
 
-arredare gli interni
+modificare i materiali degli interni
 
 aggiungere luci
 
+rimettere la vetrata, con trasparenza semplice, usando componente alpha del colore
 
 modificare simpleviewer per caricamento di diversi .ply 
 
@@ -40,6 +41,7 @@ trasparenza, ma solo in quel caso
 perche' cosi' si sovrappongono comunque a qualsiasi primitiva...
 
 trasparenza dei vetri: todo
+
 nel main: 
 glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);  
 setup dopo la creazione della finestra: 
