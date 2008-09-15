@@ -8,31 +8,28 @@ drawwall high deve usare drawwalloblique OK
 disegna i contorni dei muri OK
 fatta funzione che crea dei punti su una circonferenza da un angolo di partenza a uno di arrivo
 spostata la definizione di luci in lights.c e .h
-allineamento del muro laterale verde
 disegnare la chiusura dell'edificio
 pavimento interno
 inclinare i punti del guscio mano mano che vengono disegnati
 bloccare l'altezza dell'osservatore ad un minimo
 arredare gli interni
-
+disegno delle rampe di scale
+modificato simpleviewer per caricamento di diversi .ply 
+sposta le casse un po' piu' in alto
+controllare lo spostamento degli oggetti via tastiera 
+maggiore precisione nei punti della vetrata
+rimettere la vetrata, con trasparenza semplice, usando componente alpha del colore
+la componente alpha del colore si legge solo se il blending e' attivato
 
 da fare
 
-
-controllare lo spostamento degli oggetti via tastiera 
-gestione delle altezze nei piani
-
-disegnare le scale
-
-problema della luce che gira in senso opposto al punto osservato
-
+settare per bene i materiali dei componenti: ora tutto diventa trasparente
 modificare i materiali degli interni
-
 aggiungere luci
-
-rimettere la vetrata, con trasparenza semplice, usando componente alpha del colore
-
-modificare simpleviewer per caricamento di diversi .ply 
+gestione delle altezze nei piani
+disegnare le finiture delle scale
+problema della luce che gira in senso opposto al punto osservato
+piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 
 il vetro non si fa
 

@@ -41,9 +41,10 @@ GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
 
-Point3d  position ={-17.719740, 19.239782, 0.8000000};
-Point3d  target   ={54.014687, 41.947342, -3.500005};
-Vector3d vup      ={0,0,1};
+
+Point3d  position = {-33.046329, 80.965820, 0.800000};
+Point3d  target   = {-0.613364, -4.146697, 20.499987};
+Vector3d vup      = {0, 0, 1};
 
 /* dettaglio dei triangoli disegnati */
 /* influisce sulla performance */
@@ -52,7 +53,7 @@ GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
 
-enum {M_NONE,M_LOCAL_LIGHT,M_DIRECTIONAL_LIGHT,M_WIREFRAME};
+enum {M_NONE,M_LOCAL_LIGHT, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
 
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -81,7 +82,6 @@ int draw_wireframe = 0;
 
 void init(void) {
 
-	/* da sol esame */
 	glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
@@ -102,7 +102,9 @@ void init(void) {
 	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 	//glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
 	
-	//fog?
+	//fog
+	//glClearColor(0.5f, 0.5f, 0.5f, 1);
+	//glEnable(GL_FOG);
 	
 	
 	xPosition = 0.0f;
@@ -264,15 +266,18 @@ switch(c)
 		glutPostRedisplay();	
 		break;
 
+
+		GLfloat rotation = 10.05f;
+		
 /* girati a dx o sx */
 	case 'a':
-		vector_scale(&direction_left, 0.50f);
+		vector_scale(&direction_left, rotation);
 		point_translate(&target, &direction_left);
 		glutPostRedisplay();
 		break;
 
 	case 'd': 
-		vector_scale(&direction_right, 0.50f);
+		vector_scale(&direction_right, rotation);
 		point_translate(&target, &direction_right);
 		glutPostRedisplay();	
 		break; 
@@ -363,48 +368,55 @@ switch(c)
 		
 		
 		
+		
+		GLfloat spostamento = 0.001f;
+		
+		
+		
 		/* controlli per il piazzamento dei solidi */
 		
 	case '7': 
 		/*abbassa z*/
-		zPosition -= 0.1;
+		zPosition -= spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
 		glutPostRedisplay();
 		break; 
 
 	case '8': 
 		/* alza z */
-		zPosition += 0.1;
+		zPosition += spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
 		glutPostRedisplay();
 		break; 
 		
 	case 'k': 
 		/*abbassa x*/
-		xPosition -= 0.1;
+		xPosition -= spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
 		break; 
 
 	case 'i': 
 		/* alza x */
-		xPosition += 0.1;
+		xPosition += spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
 		glutPostRedisplay();
 		break; 
 	
 	case 'j': 
 		/*abbassa y*/
-		yPosition -= 0.1;
+		yPosition -= spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);
 		glutPostRedisplay();
 		break; 
 
 	case 'l': 
 		/* alza y */
-		yPosition += 0.1;
+		yPosition += spostamento;
 		printf("posizione attuale: %f %f %f\n", xPosition, yPosition, zPosition);		
 		glutPostRedisplay();
 		break;	
+		
+		
 		
 	case 'b': // switch the blending.
 		printf("B/b pressed; blending is: %d\n", blend);
@@ -412,6 +424,8 @@ switch(c)
 		printf("Blend is now: %d\n", blend);
 		glutPostRedisplay();
 		break;
+
+
 
 	case 27:
 		exit(0);
@@ -535,11 +549,6 @@ if (enable_light_directional)
 
 	glPopMatrix();
 	
-
-
-
-
-
 	
 	/* disegna sfera dove si trova la luce LIGHT_2 */
 	
@@ -558,14 +567,6 @@ if (enable_light_directional)
 
 	glPopMatrix();
 	
-	
-	
-	
-	
-
-
-	
-
 
 	glPushMatrix();
 	
@@ -587,18 +588,6 @@ if (enable_light_directional)
 
 	/* disegna struttura interna */
 	drawInterni();
-	
-	
-	
-	
-	  
-	
-
-	
-	
-	
-	
-	
 	
 
 	/* disegna muro frontale */
@@ -629,19 +618,22 @@ if (enable_light_directional)
 	Point3d c1 = {-10, 0, 10}; 
 	Point3d d1 = {-10, 0, 0}; 
 	
+	//draw glass!!!
 	
-	//drawGlass(&a1, &b1, &c1, &d1);
+//	drawGlass(&a1, &b1, &c1, &d1);
 	
 	/* dopo aver disegnato il vetro, riabilita depth test e spegni il blending */
 	glDisable(GL_BLEND);              // Turn Blending Off
 	glEnable(GL_DEPTH_TEST);      
 
 
-
-
-
-
-
+	/*
+	GLfloat fogColor[] = {0.5f, 0.5f, 0.5f, 1};
+    glFogfv(GL_FOG_COLOR, fogColor);
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+    glFogf(GL_FOG_START, 0.1f);
+    glFogf(GL_FOG_END, 30.0f);
+*/
 
 
 

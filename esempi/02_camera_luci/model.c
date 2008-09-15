@@ -722,17 +722,27 @@ void setGlassMaterial() {
 	if (!blend) {
 		glDisable(GL_BLEND);              // Turn Blending Off
 		glEnable(GL_DEPTH_TEST);          // Turn Depth Testing On
+		
+		
+		//glDisable(GL_LIGHTING);
+		
+		
+		
 	} else {
 		glEnable(GL_BLEND);		    // Turn Blending On
-		glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
+		//glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE);		// Blending Function For Translucency Based On Source Alpha Value ( NEW )
 	}
 	
-	
+	GLfloat alpha = 0.3f;
 
-	GLfloat material_ambient      []  = {0.1f, 0.2f, 0.4f, 0.5f}; 
-	GLfloat material_diffuse      []  = {0.3f, 0.3f, 0.6f, 0.5f}; 
-	GLfloat material_specular     []  = {0.7f, 0.7f, 0.7f, 0.5f}; 
-	GLfloat material_emission     []  = {0.0f, 0.0f, 0.0f, 0.5f}; 
+//	glColor4f(0.1f, 0.2f, 0.6f, alpha);
+
+
+	GLfloat material_ambient      []  = {0.1f, 0.2f, 0.4f, alpha}; 
+	GLfloat material_diffuse      []  = {0.3f, 0.3f, 0.6f, alpha}; 
+	GLfloat material_specular     []  = {0.7f, 0.7f, 0.7f, alpha}; 
+	GLfloat material_emission     []  = {0.0f, 0.0f, 0.0f, alpha}; 
 	GLfloat material_shininess    []  = {66};
 
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT  , material_ambient);
@@ -863,7 +873,10 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	/* parte bassa */
 	drawWallOblique(&a4, &b4, &c4, &d4, spessore, 0.74f, 0.0, incl_frontale+0.17f, dettaglio, differenza_w3_high);
 
+
 	glPopMatrix();
+
+
 
 
 	/* end parte alta laterale */
@@ -873,10 +886,84 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 	/* disegno il quadrilatero che sarà il vetro */
 	GLfloat rapporto = altezzaL; 
+
+
+
+/* coordinate del vetro */
+
+
+	Point3d  uno = {0, 15, 0};
+	Point3d  due = {0, 32.5f, 0};
+	Point3d  tre = {5.7f, 32.5f, 0};
 	
+	Point3d  unoSu = {-0.6f +0.077f, 15, 3.8f };
+	Point3d  dueSu = {-0.800000, 33.400034f, 5.4f };
+	Point3d  treSu = {5.7f + 1.265217, 32.5f + 1.138695, 0 + 5.440430};
+	
+	//1.265217 1.138695 5.440430
+	
+	glPushMatrix();
+	
+	
+	setGlassMaterial();
+	
+	
+	glBegin(GL_QUADS);
+		glVertex3f(uno.x, uno.y, uno.z);
+		glVertex3f(due.x, due.y, due.z);
+		glVertex3f(dueSu.x, dueSu.y, dueSu.z);
+		glVertex3f(unoSu.x, unoSu.y, unoSu.z);
+		
+		
+		glVertex3f(tre.x, tre.y, tre.z);
+		glVertex3f(due.x, due.y, due.z);
+		glVertex3f(dueSu.x, dueSu.y, dueSu.z);
+		glVertex3f(treSu.x, treSu.y, treSu.z);
+		
+	glEnd();
+	
+	
+	
+	glPopMatrix();
+	
+	
+	
+	
+	
+	glPushMatrix();
+		//primo punto: 0, 15, 0 
+		glTranslatef(0.0f, 15.0f, 0.000000);
+	//	glutSolidSphere(0.05f, 5.0f, 5.0f);
+		//secondo punto: 0, 15+17.5, 0
+		//glTranslatef(0.0f, 17.5, 0.000000);
+	//	glutSolidSphere(0.05f, 5.0f, 5.0f);
+		//terzo punto: 5.7f, 15+17.5, 0
+		//glTranslatef(5.7f, 0.0f, 0.000000);
+//		glutSolidSphere(0.05f, 5.0f, 5.0f);
+		
+		
+		
+		
+		//punti in alto
+		//terzo punto: 5,7, 15+1.5+1.000000, 5.4
+		//glTranslatef(0.000000, 1.000000, 5.4);
+//		glutSolidSphere(0.05f, 5.0f, 5.0f);
+
+				
+		//primo punto in alto: -0.6, 15, 3,8
+		//glTranslatef(-0.600000, 0.000000, 3.799999);
+//		glutSolidSphere(0.05f, 5.0f, 5.0f);
+		
+		//secondo punto in alto: -0.800000 15+18.400034 3.8 + 1.600000 
+		//glTranslatef(xPosition, yPosition, zPosition);
+//		glutSolidSphere(0.05f, 5.0f, 5.0f);
+
+		
+	glPopMatrix();
 	
 	
 		
+
 
 	glPopMatrix(); /* profondità palazzo */
 
@@ -889,11 +976,6 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 
 void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d) {
-
-
-/* set materiale trasparente */
-
-//setMaterial(1,0,1);
 
 /* punti locali */
 Point3d v1; 
@@ -1237,9 +1319,6 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 	
 	drawTriangle(&front1, &start1, &h, dettaglio);
 	drawTriangle(&front2, &j, &start2, dettaglio);
-
-
-
 
 }
 
@@ -1642,6 +1721,22 @@ void drawEsterni(){
 	setMaterialType(1, 1, 1, 'e');
 
 
+/* disegno il vetro laterale */
+
+	Point3d v1 = {0.0f, 0.0f, 0.0f};
+	Point3d v2 = {1.0f, 0.0f, 0.0f};
+	Point3d v3 = {1.0f, 0.0f, 1.0f};
+	Point3d v4 = {0.0f, 0.0f, 1.0f};
+
+
+	drawGlass(&v1, &v2, &v3, &v4);
+
+
+/* ri-setta il materiale per gli esterni del palazzo*/
+
+	setMaterialType(1, 1, 1, 'e');
+
+
 
 	//setMaterial(1,1,0);
 	/* chiamate per settare i materiali */
@@ -1861,18 +1956,15 @@ void drawPianoTerra() {
 		
 		glPopMatrix();
 		
-
 		
 		glPushMatrix(); 
-			glTranslatef(-15.600023, 57.799690, 0.00);
+			glTranslatef(-15.600023, 57.799690, 0.55);
+			//glTranslatef(-15.600023, 57.799690, 0.00);
 			drawCassa();
 			glTranslatef(8.0f, 0.0f, 0.0f);
 			drawCassa();
 		glPopMatrix();
-		
-		
-		
-		
+
 		drawLampadaSecca();
 		
 }
@@ -1936,10 +2028,6 @@ void drawPrimoPiano(){
 		displayPly(meshes[9]);
 		//lampada sul secondo espositore strano
 		
-		
-		
-		
-	
 	
 		//divano
 		glPushMatrix(); 
@@ -1968,18 +2056,35 @@ void drawPrimoPiano(){
 
 }
 	
+	// trova le dimensioni della scala e del piano
+	// 4.0 di altezza del piano + 0.2 di spessore del piano
+	// larghezza 2.0 e lunghezza 6.0 del buco per le scale
+	
+	
 	GLfloat lunghezzaScala = 6.0f;
+	//il numero di scalini non si cambia
 	GLint nScalini = 20;
-	GLfloat altezzaPiano = 6.0f;
+	GLfloat altezzaPiano = 4.2f;
 	GLfloat lunghezzaScalino;
 	GLfloat altezzaScalino;
 	GLfloat profonditaScalino = 2.0f;
 	
+//	lunghezzaScalino = lunghezzaScala / nScalini;
+//	altezzaScalino = altezzaPiano / nScalini;
+
+	
 void drawScalino() {
+	
+	//setMaterial(0,0,1);
 
 	lunghezzaScalino = lunghezzaScala / nScalini;
-	altezzaScalino = altezzaPiano / nScalini;
+	altezzaScalino = (altezzaPiano / nScalini);
+	//printf("altezzaScalino: %f; lunghezzaScalino: %f\n", altezzaScalino, lunghezzaScalino);
 
+	// draw scalino parte da quale punto? 
+	
+	//glutSolidSphere(0.04f, 10.0f, 10.0f);
+	
 	Point3d point1 = {0,0,0};
 	Point3d point2 = {0,lunghezzaScalino,0};
 	Point3d point3 = {0,lunghezzaScalino,altezzaScalino};
@@ -1992,20 +2097,18 @@ void drawScalino() {
 void drawScala() {
 	
 	glPushMatrix();
-	glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-	glTranslatef(0, 0, 7);
-	
-	glTranslatef(-50.899796, -10.200003, -2.899999);
-	
-	drawScalino();
+		glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
+		glTranslatef(0, 0, 7);
+		glTranslatef(-50.999794, -9.299999, -3.099999);
+		//glTranslatef(xPosition, yPosition, zPosition);
+	//glTranslatef(0, -lunghezzaScalino, -altezzaScalino);	
+	//drawScalino();
 	
 	GLint i = 1;
 	
 	for(i = 1; i <= nScalini; i++) {
-	
-		glTranslatef(0, -lunghezzaScalino, -altezzaScalino);
 		drawScalino();
-
+		glTranslatef(0, -lunghezzaScalino, -altezzaScalino);
 	}
 
 	glPopMatrix();
@@ -2018,11 +2121,8 @@ void drawScala() {
 
 void drawSecondoPiano(){
 
-	
-	
+		
 	drawScala();
-
-
 
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 4.099998);
@@ -2032,7 +2132,13 @@ void drawSecondoPiano(){
 	
 void drawTerzoPiano(){
 
-
+	glPushMatrix();
+		glTranslatef(0,0,4.0f);
+		//
+		altezzaPiano = 4.0f;
+		drawScala();
+	glPopMatrix();
+	
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 10.700005);
 	drawLampadaSecca();
