@@ -33,6 +33,22 @@ GLfloat xPosition;
 GLfloat yPosition;
 GLfloat zPosition;
 
+GLUquadricObj *quadratic;
+
+GLuint	filter;			// Which Filter To Use (nearest/linear/mipmapped)
+GLuint	texture[3];		// Storage for 3 textures.
+
+/* Image type  */
+struct Image {
+	unsigned long sizeX;
+	unsigned long sizeY;
+	char *data;
+};
+typedef struct Image Image;
+
+
+
+
 
 void redraw(void);
 void mouse(int button, int state, int x, int y);
@@ -42,5 +58,16 @@ void controlMenu(int value);
 void aumentaDettaglio();
 void diminuisciDettaglio();
 void reshape(int W,int H);
+
+
+GLvoid LoadGLTextures(GLvoid);
+int ImageLoad(char *filename, Image *image);
+
+
+
+
+
+
+
 
 #endif

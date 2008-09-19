@@ -42,8 +42,8 @@ GLfloat quotaMinimaZ = 0.8f;
 
 
 
-Point3d  position = {-33.046329, 80.965820, 0.800000};
-Point3d  target   = {-0.613364, -4.146697, 20.499987};
+Point3d  position = {-3.974169, 43.649551, 5.600000};
+Point3d  target   = {30.439146, 136.976593, 1.649984};
 Vector3d vup      = {0, 0, 1};
 
 /* dettaglio dei triangoli disegnati */
@@ -52,6 +52,13 @@ GLfloat dettaglio = 1.0f;
 GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
+
+
+
+
+
+
+
 
 enum {M_NONE,M_LOCAL_LIGHT, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
 
@@ -75,12 +82,107 @@ int enable_light_directional = 1;
 int enable_light_local = 1;
 int draw_wireframe = 0;
 
+// sfera
+GLUquadricObj *quadratic;	// Storage For Our Quadratic Objects
+
+
+GLuint	filter;			// Which Filter To Use (nearest/linear/mipmapped)
+GLuint	texture[3];		// Storage for 3 textures.
+
+
+
+/* Image type  */
+/* e' in camera.h
+struct Image {
+	unsigned long sizeX;
+	unsigned long sizeY;
+	char *data;
+};
+typedef struct Image Image;
+*/
+
+
+
+
+/* carica le texture openGL */
+
+GLvoid LoadGLTextures(GLvoid) {
+
+	// Stores the texture
+	Image *image1;
+
+	// Allocate space for texture
+	image1 = (Image *) malloc(sizeof(Image));
+	if (image1 == NULL) {
+		printf("Error allocating space for image");
+		exit(0);
+	}
+
+	if (!ImageLoad("./textures/cielo.bmp", image1)) {
+		exit(1);
+	}
+
+	// create Texture
+    glGenTextures(3, &texture[0]);
+
+    // texture 1 (poor quality scaling)
+    glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST); // cheap scaling when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST); // cheap scaling when image smalled than texture
+
+    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
+    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
+
+    // texture 2 (linear scaling)
+    glBindTexture(GL_TEXTURE_2D, texture[1]);   // 2d texture (x and y size)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
+
+    // texture 3 (mipmapped scaling)
+    glBindTexture(GL_TEXTURE_2D, texture[2]);   // 2d texture (x and y size)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly + mipmap when image smalled than texture
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
+
+    // 2d texture, 3 colors, width, height, RGB in that order, byte data, and the data.
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image1->sizeX, image1->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image1->data); 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ---------------------------------------------------------- */
 
 /* inizializza parametri di opengl */
 
 void init(void) {
+
+	LoadGLTextures();					// Load the textures
+	
+		
+	//glEnable(GL_TEXTURE_2D);			// Enable texture mapping
+
+
+
+    //glBindTexture(GL_TEXTURE_2D, texture[filter]);   // choose the texture to use.
+
+
+
 
 	glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
 	glDepthFunc(GL_LESS);
@@ -107,6 +209,16 @@ void init(void) {
 	//glEnable(GL_FOG);
 	
 	
+	
+	
+	// sfera
+//	quadratic = gluNewQuadric();                  // Create A Pointer To The Quadric Object ( NEW )
+	// Can also use GLU_NONE, GLU_FLAT
+  //  gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
+   // gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords ( NEW )
+	
+	
+	
 	xPosition = 0.0f;
 	yPosition = 0.0f;	
 	zPosition = 0.0f;
@@ -115,6 +227,115 @@ void init(void) {
 
 
 }
+
+
+
+
+
+/* carica le immagini da file .BMP */
+
+
+// Load an image from .BMP file
+int ImageLoad(char *filename, Image *image) {
+    FILE *file;
+    unsigned long size;                 // size of the image in bytes.
+    unsigned long i;                    // standard counter.
+    unsigned short int planes;          // number of planes in image (must be 1) 
+    unsigned short int bpp;             // number of bits per pixel (must be 24)
+    char temp;                          // used to convert bgr to rgb color.
+
+	// Make sure the file exists
+	if ((file = fopen(filename, "rb"))==NULL)
+	{
+		printf("File Not Found : %s\n",filename);
+		return 0;
+	}
+
+	// Skip to bmp header
+	fseek(file,18, SEEK_CUR);
+
+	// read width
+	if ((i = fread(&image->sizeX, 4, 1, file)) != 1) {
+		printf("Error reading width from %s.\n", filename);
+		return 0;
+	}
+	printf("Width of %s: %lu\n",filename, image->sizeX);
+
+	//read the height
+	if ((i = fread(&image->sizeY,4,1,file)) != 1) {
+		printf("Error reading height from %s.\n", filename);
+		return 0;
+	}
+	printf("Height of %s: %lu\n", filename, image->sizeY);
+
+	// calculate the size (assuming 24 bpp)
+	size = image->sizeX * image->sizeY * 3;
+
+	// read the planes
+	if ((fread(&planes, 2, 1, file)) != 1) {
+		printf("Error reading planes from %s. \n", filename);
+		return 0;
+	}
+
+	if (planes != 1) {
+		printf("Planes from %s is not 1: %u\n", filename, planes);
+		return 0;
+	}
+	printf("Planes from %s is : %u\n", filename, planes);
+
+
+	// read the bpp
+	if ((i = fread(&bpp, 2, 1, file)) != 1) {
+		printf("Error reading bpp from %s. \n", filename);
+		return 0;
+	}
+
+	if (bpp != 24) {
+		printf("Bpp from %s is not 24: %u\n", filename, bpp);
+		return 0;
+	}
+
+	// seek past the rest of the bitmap header
+	fseek(file, 24, SEEK_CUR);
+
+	// Read the data
+	image->data = (char *) malloc(size);
+	if (image->data == NULL) {
+		printf("Error allocating memory for colour-corrected image data");
+		return 0;
+	}
+
+	if ((i = fread(image->data,size,1,file)) != 1) {
+		printf("Error reading image data from %s.\n", filename);
+		return 0;
+	}
+
+	// reverse all of the colours bgr => rgb)
+	for (i=0;i<size;i+=3) {
+		temp = image->data[i];
+		image->data[i] = image->data[i+2];
+		image->data[i+2] = temp;
+	}
+
+	// Thats all folks
+	return 1;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void reshape(int W,int H)
 {
@@ -125,7 +346,7 @@ void reshape(int W,int H)
 		60.0,  /* field of view in degree */ 
 		W/H,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		200.0  /* Z far */ 
+		600.0  /* Z far molto grande per far vedere lo sfondo */ 
 	);
 	
 	
@@ -184,8 +405,14 @@ int main(int argc, char **argv)
 
 
 
+
+
+
 	/* caricamento dei .ply */
 	loadPlyModels();
+
+
+
 
 
 
@@ -196,7 +423,7 @@ int main(int argc, char **argv)
 		60.0,  /* field of view in degree */ 
 		1.0,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		200.0  /* Z far */ 
+		500.0  /* Z far */ 
 	);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -369,8 +596,18 @@ switch(c)
 		
 		
 		
-		GLfloat spostamento = 0.001f;
+	case 'F':
+    case 'f': // switch the filter.
+		printf("F/f pressed; filter is: %d\n", filter);
+		filter+=1;
+		if (filter>2) 
+			filter=0;		
+		printf("Filter is now: %d\n", filter);
+	break;
 		
+		
+		
+		GLfloat spostamento = 0.001f;
 		
 		
 		/* controlli per il piazzamento dei solidi */
@@ -482,6 +719,12 @@ void redraw(void)
 
 	/* clear the screen and the depth buffer */
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
+	
+	//disabilita le texture, le attivano solo gli oggetti con texture
+	glDisable(GL_TEXTURE_2D);
+
+	
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
 	glLoadIdentity();
@@ -607,18 +850,35 @@ if (enable_light_directional)
 
 	//drawWall(&a, &b, &c, &d, spessore, sp_laterale, -incl_frontale, dettaglio);
 
-	glPopMatrix();
+
 
 
 
 	setGlassMaterial();
 	
-	Point3d a1 = {0, 0, 0}; 
-	Point3d b1 = {0, 0, 10}; 
-	Point3d c1 = {-10, 0, 10}; 
-	Point3d d1 = {-10, 0, 0}; 
-	
 	//draw glass!!!
+	
+	glPushMatrix();
+	
+	
+	glTranslatef(-23.912642, 32.516140, 0.0f);
+	
+	drawGlassRight();
+
+	glPopMatrix();
+
+
+
+
+
+
+
+	glPopMatrix();
+// esterni ed interni 
+
+	
+	
+	
 	
 //	drawGlass(&a1, &b1, &c1, &d1);
 	

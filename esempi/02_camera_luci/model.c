@@ -722,21 +722,15 @@ void setGlassMaterial() {
 	if (!blend) {
 		glDisable(GL_BLEND);              // Turn Blending Off
 		glEnable(GL_DEPTH_TEST);          // Turn Depth Testing On
-		
-		
 		//glDisable(GL_LIGHTING);
-		
-		
-		
 	} else {
 		glEnable(GL_BLEND);		    // Turn Blending On
 		//glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE);		// Blending Function For Translucency Based On Source Alpha Value ( NEW )
 	}
 	
-	GLfloat alpha = 0.3f;
+	GLfloat alpha = 0.8f;
 
-//	glColor4f(0.1f, 0.2f, 0.6f, alpha);
 
 
 	GLfloat material_ambient      []  = {0.1f, 0.2f, 0.4f, alpha}; 
@@ -889,8 +883,17 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 
 
+
+
+
+
 /* coordinate del vetro */
 
+
+/* il vetro si disegna alla fine, dopo tutti gli interni */
+//	drawGlassRight();
+
+/* ** refactorized **
 
 	Point3d  uno = {0, 15, 0};
 	Point3d  due = {0, 32.5f, 0};
@@ -900,7 +903,6 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	Point3d  dueSu = {-0.800000, 33.400034f, 5.4f };
 	Point3d  treSu = {5.7f + 1.265217, 32.5f + 1.138695, 0 + 5.440430};
 	
-	//1.265217 1.138695 5.440430
 	
 	glPushMatrix();
 	
@@ -923,10 +925,14 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	glEnd();
 	
 	
-	
+	glDisable(GL_BLEND);		
+
 	glPopMatrix();
-	
-	
+
+*/
+
+
+
 	
 	
 	
@@ -962,13 +968,71 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 	glPopMatrix();
 	
 	
-		
-
-
 	glPopMatrix(); /* profondità palazzo */
+
+}
+
+
+
+
+void drawGlassRight() {
+
+
+
+/* coordinate del vetro */
+
+
+// xPosition, yPosition, zPosition
+
+	Point3d  uno = {-0.126522, -2.530433, 0.000000};
+	Point3d  due = {-0.126522, 32.626522, 0.000000};
+	Point3d  tre = {11.393473, 32.500000, 0.000000};
+
+	Point3d  unoSu = {-1.265217, -2.5, 7.595649};
+	Point3d  dueSu = {-1.559130, 34.412209, 10.840429};
+
+	Point3d  treSu = {11.519996, 34.524345, 10.880859};
+
+	//printf("point3Su coords: %f %f %f\n", treSu.x, treSu.y, treSu.z);
+		
+	//1.265217 1.138695 5.440430
+	
+	glPushMatrix();
+	
+	
+	setGlassMaterial();
+	
+	
+	glBegin(GL_QUADS);
+		glVertex3f(uno.x, uno.y, uno.z);
+		glVertex3f(due.x, due.y, due.z);
+		glVertex3f(dueSu.x, dueSu.y, dueSu.z);
+		glVertex3f(unoSu.x, unoSu.y, unoSu.z);
+		
+		
+		glVertex3f(tre.x, tre.y, tre.z);
+		glVertex3f(due.x, due.y, due.z);
+		glVertex3f(dueSu.x, dueSu.y, dueSu.z);
+		glVertex3f(treSu.x, treSu.y, treSu.z);
+		
+	glEnd();
+	
+	
+	glDisable(GL_BLEND);		    // Turn Blending Off
+
+	
+	
+	
+	glPopMatrix();
+	
+
+
 
 
 }
+
+
+
 
 
 
@@ -1704,7 +1768,8 @@ void drawEsterni(){
 	
 	glPushMatrix();
 
-	glTranslatef(-12.0f, 0.0f, 0.0f);
+	glTranslatef(-12.0f, 0.0f, 0.0f);	
+	//materiale pavimento esterno
 	setMaterialType(0.0f, 1.0f, 0.0f, 'o');
 	drawPlaneEsterni(coordinate4, estensione);
 
@@ -1715,21 +1780,6 @@ void drawEsterni(){
 		setMaterial(1.0, 0.0, 0.0);
 		drawFloor();
 	glPopMatrix();
-
-
-/* materiale per gli esterni del palazzo*/
-	setMaterialType(1, 1, 1, 'e');
-
-
-/* disegno il vetro laterale */
-
-	Point3d v1 = {0.0f, 0.0f, 0.0f};
-	Point3d v2 = {1.0f, 0.0f, 0.0f};
-	Point3d v3 = {1.0f, 0.0f, 1.0f};
-	Point3d v4 = {0.0f, 0.0f, 1.0f};
-
-
-	drawGlass(&v1, &v2, &v3, &v4);
 
 
 /* ri-setta il materiale per gli esterni del palazzo*/
@@ -1755,6 +1805,43 @@ void drawEsterni(){
 	drawBackCurveAndRoof(); 
 
 	glPopMatrix();
+	
+	
+	
+	
+	
+	
+	/* disegno una sfera esterna con texture per fare lo sfondo */
+	
+	glEnable(GL_TEXTURE_2D);			// Enable texture mapping
+
+
+
+	// sfera
+	quadratic = gluNewQuadric();                  // Create A Pointer To The Quadric Object ( NEW )
+	
+	// e' rivolto verso l'interno, per le texture
+	gluQuadricOrientation(quadratic, GLU_INSIDE);
+	
+
+    gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
+	gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords ( NEW )
+	
+	
+	gluQuadricDrawStyle(quadratic, draw_wireframe?GLU_LINE:GLU_FILL);
+
+	
+	glBindTexture(GL_TEXTURE_2D, texture[filter]);   // choose the texture to use.
+	setMaterialType(1,1,1, 'e');
+
+
+	gluSphere(quadratic,410,10,10);                // Draw A Sphere
+
+
+	glDisable(GL_TEXTURE_2D);			// disable texture mapping
+
+		
+	
 }
 
 
@@ -1832,6 +1919,13 @@ void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne) {
 
 
 void drawLampadaSecca() {
+
+
+
+//	lampada appesa in alto, bianca (o acciaio)
+		setMaterialType(0.5, 0.5, 0.5, 'e');	
+
+
 
 
 /* disegno la lampada secca */
@@ -1913,22 +2007,43 @@ void drawPianoTerra() {
 		glPushMatrix();
 			glScalef(0.5f, 0.5f, 0.8f);
 			glTranslatef(0.0f, 0.0f, 1.38f);
+			
+			// viola
+			setMaterialType(0, 0, 1, 'e');
+			
 			displayPly(meshes[3]);
 			
 			/* mele */
 			glScalef(0.3, 0.3, 0.3);
 			glTranslatef(1.200000, 0.700000, -0.60);
+			
+			// rossa
+			setMaterialType(1, 0, 0, 'e');
+			
 			displayPly(meshes[4]);
 			glRotatef(44.0, 0.0, 0.0, 1.0);
 			glTranslatef(-2.100000, -1.100000f, 0.0f);
+			
+			//verde
+			setMaterialType(0, 1, 0, 'e');
+			
 			displayPly(meshes[4]);			
 			glRotatef(77.0, 0.0, 0.0, 1.0);
 			glTranslatef(3.099999, 0.0, 0.0); 
+			
+			//arancione
+			setMaterialType(0.95, 0.5, 0.15, 'e');
+			
 			displayPly(meshes[4]);			
 
 		glPopMatrix();
 		
 		glScalef(0.3f, 0.3f, 0.3f);
+		
+		
+		
+		setMaterialType(1,1,1, 'e');
+		
 		displayPly(meshes[8]);
 		// finito il primo espositore
 		
@@ -1937,8 +2052,15 @@ void drawPianoTerra() {
 		glTranslatef(0.0f, -16.0f, 0.0f);
 		glPushMatrix();
 		glTranslatef(-0.00000, 0.500000, 1.9000);
+		
+			// giallo
+			setMaterialType(0.93, 0.74, 0.11, 'e');
+			
 			displayPly(meshes[5]);
 		glPopMatrix();
+		
+
+		setMaterialType(1, 1, 1, 'e');		
 		displayPly(meshes[8]);
 		// banana sul secondo espositore
 
@@ -1947,9 +2069,16 @@ void drawPianoTerra() {
 		glTranslatef(-21.3f, -33.5f, 0.0f);
 		glPushMatrix();
 		glTranslatef(0.000000, 0.100000, 1.800000);
+
+
+			//terracotta
+			setMaterialType(0.56, 0.26, 0.21, 'e');		
+
 			displayPly(meshes[11]);
 		glPopMatrix();
-		
+
+		setMaterialType(1, 1, 1, 'e');		
+
 		displayPly(meshes[8]);
 		
 		//vaso sul terzo espositore
@@ -1960,10 +2089,17 @@ void drawPianoTerra() {
 		glPushMatrix(); 
 			glTranslatef(-15.600023, 57.799690, 0.55);
 			//glTranslatef(-15.600023, 57.799690, 0.00);
+			
+			//nero
+			setMaterialType(0.14, 0.17, 0.19, 'e');		
+
 			drawCassa();
 			glTranslatef(8.0f, 0.0f, 0.0f);
 			drawCassa();
 		glPopMatrix();
+
+
+	
 
 		drawLampadaSecca();
 		
@@ -1977,8 +2113,16 @@ void drawLampada() {
 	glPushMatrix();
 	
 		glTranslatef(-0.800000, -0.700000, 1.40000);
+		
+		//base, ottone molto speculare
+		setMaterialType(0.41, 0.25, 0.06, 'e');		
+
 		displayPly(meshes[15]);
-		glTranslatef(-0.200000, 0.200000, 1.900000);
+		glTranslatef(-0.200000 + 0.126522, 0.200000 -0.379565, 1.900000);
+		
+
+		// bianca, che emette luce gialla
+		setMaterialType(1, 1, 1, 'e');		
 		displayPly(meshes[16]);
 
 	glPopMatrix();
@@ -2003,12 +2147,19 @@ void drawPrimoPiano(){
 		glPushMatrix();
 			glTranslatef(0.100000, 0.100000, 0.8);
 			glScalef(0.4f, 0.4f, 0.5f);
+			
+			//rosso, metallo
+			setMaterialType(1, 0, 0, 'e');		
+
 			displayPly(meshes[14]);
 		glPopMatrix();
-		
-		
+
 		
 		glScalef(0.3f, 0.3f, 0.3f);
+		
+		//bianco, espositore
+		setMaterialType(1, 1, 1, 'e');		
+
 		displayPly(meshes[9]);
 		//idrante sul primo espositore strano
 		
@@ -2021,10 +2172,14 @@ void drawPrimoPiano(){
 			glTranslatef(0.100000, 0.100000, 0.8);
 			glScalef(0.4f, 0.4f, 0.5f);
 			
+			//materiali all'interno ->> 
 			drawLampada();
 
 		glPopMatrix();
 		
+		
+		setMaterialType(1, 1, 1, 'e');		
+
 		displayPly(meshes[9]);
 		//lampada sul secondo espositore strano
 		
@@ -2033,7 +2188,11 @@ void drawPrimoPiano(){
 		glPushMatrix(); 
 			GLfloat scalaDivano = 5.0f * 0.8f;
 			glScalef(scalaDivano, scalaDivano, scalaDivano);
-			glTranslatef(-0.800000, -1.500000, 0.700000);
+			glTranslatef(-0.800000, -1.500000 + -0.632608, 0.700000);
+						
+			// pelle bordeaux, speculare
+			setMaterialType(0.12, 0.01, 0.01, 'e');		
+			
 			displayPly(meshes[7]); 
 		glPopMatrix();
 		
@@ -2043,10 +2202,19 @@ void drawPrimoPiano(){
 			glScalef(2.0f, 2.0f, 2.0f);
 			glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 			glTranslatef(-20.700043, -27.100067, 0.45);
+			
+			
+			//poltrona, bianca
+			setMaterialType(1, 1, 1, 'e');		
+			
 			displayPly(meshes[17]); 
 			
 			glRotatef(180, 0.0f, 0.0f, 1.0f);
 			glTranslatef(0.100000, 5.999997, 1.500000);
+			
+			//nero, speculare
+			setMaterialType(0.1, 0.1, 0.1, 'e');		
+
 			displayPly(meshes[18]);
 			//apple
 			
@@ -2095,6 +2263,12 @@ void drawScalino() {
 
 
 void drawScala() {
+
+
+//  materiale delle scale
+
+		setMaterialType(0.2, 0.2, 0.2, 'e');	
+
 	
 	glPushMatrix();
 		glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
@@ -2126,6 +2300,9 @@ void drawSecondoPiano(){
 
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 4.099998);
+	
+	
+	
 	drawLampadaSecca();
 	glPopMatrix();
 }
@@ -2151,10 +2328,20 @@ void drawTerzoPiano(){
 void drawInterni()
 {
 	//setMaterial(1,1,1);
+	
+	
+	
+	// materiale dei piani 
+	setMaterialType(1, 1, 1, 'e');
+
 	drawPlanes(2);
 	
 	GLfloat raggio = 0.5f;
 	GLfloat altezzaColonne = 15.0f;
+	
+	
+	// materiale delle colonne
+	setMaterialType(1, 1, 1, 'e');
 	drawColumns(raggio, altezzaColonne);
 	
 

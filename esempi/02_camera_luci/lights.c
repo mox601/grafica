@@ -103,7 +103,7 @@ GLfloat color_yellow_light     [4]  = {1.0f, 0.65f, 0.06f, 1.0f};
 
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHT2);
+	//glEnable(GL_LIGHT2);
 
 	glEnable(GL_LIGHTING);
 }

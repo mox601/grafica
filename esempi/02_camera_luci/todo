@@ -20,16 +20,26 @@ controllare lo spostamento degli oggetti via tastiera
 maggiore precisione nei punti della vetrata
 rimettere la vetrata, con trasparenza semplice, usando componente alpha del colore
 la componente alpha del colore si legge solo se il blending e' attivato
+il vetro si disegna per ultimo, dopo gli interni
+piano terra, ogni oggetto ha un materiale. 
+primo piano, ogni oggetto ha un materiale. 
+ogni oggetto che si ripete, ha il materiale settato all'interno della sua definizione
+creare una sfera con texture interna per realizzare lo sfondo
+
 
 da fare
 
-settare per bene i materiali dei componenti: ora tutto diventa trasparente
-modificare i materiali degli interni
+impostare i materiali degli interni
+parametri giusti dei materiali esterni
+estendere il pavimento verde per incontrare lo sfondo
+settare per bene i materiali dei componenti, con valori speculari etc
 aggiungere luci
+migliorare la texture di sfondo
+piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 gestione delle altezze nei piani
 disegnare le finiture delle scale
+perfezionare disegno cassa
 problema della luce che gira in senso opposto al punto osservato
-piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 
 il vetro non si fa
 
