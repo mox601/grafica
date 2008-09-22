@@ -977,11 +977,9 @@ GLfloat profondita = lunghezza * profondita_lunghezza_ratio + spessore + 0.03f;
 
 void drawGlassRight() {
 
-
-
 /* coordinate del vetro */
 
-
+//disabilito illuminazione?
 // xPosition, yPosition, zPosition
 
 	Point3d  uno = {-0.126522, -2.530433, 0.000000};
@@ -1020,15 +1018,8 @@ void drawGlassRight() {
 	
 	glDisable(GL_BLEND);		    // Turn Blending Off
 
-	
-	
-	
 	glPopMatrix();
 	
-
-
-
-
 }
 
 
@@ -1186,9 +1177,35 @@ void drawBackCurveAndRoof() {
 
 	GLdouble* circle = drawCircle(3.0f, numPoints, 90.0f, 210.0f);
 
+	// problema: si illumina sia dentro che fuori. 
+	
+	// soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
+	
+	
+	GLfloat R = 1.0f;
+	GLfloat G = 1.0f;
+	GLfloat B = 1.0f;
+	
+	GLfloat Ka = 1.0f;
+	GLfloat Kd = 0.8f;
+	GLfloat Ks = 0.8f;
+	GLfloat Ke = 0.0f;
+	GLfloat shininess = 1.0f;
+	
+	
+	GLfloat material_ambient      []  = {Ka*R, Ka*G, Ka*B, 1.0f}; 
+	GLfloat material_diffuse      []  = {Kd*R, Kd*G, Kd*B, 1.0f}; 
+	GLfloat material_specular     []  = {Ks*R, Ks*G, Ks*B, 1.0f}; 
+	GLfloat material_emission     []  = {Ke*R, Ke*G, Ke*B, 1.0f}; 
+	GLfloat material_shininess    []  = {shininess};
 
+	glMaterialfv(GL_BACK,GL_DIFFUSE  , material_diffuse);
+	glMaterialfv(GL_BACK,GL_SPECULAR , material_specular);
+	glMaterialfv(GL_BACK,GL_EMISSION , material_emission);
+	glMaterialfv(GL_BACK,GL_SHININESS, material_shininess);
+	
+	
 	drawShell(circle, numPoints, profondita+4);
-
 	
 	glPopMatrix();
 
@@ -1253,10 +1270,11 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
 
 /* ma le disegno anche nell' altro senso, per fare l'illuminazione anche all'esterno */
-/*
-		drawTriangle(&a, &c, &b, dettaglio * 0.7f);
-		drawTriangle(&b, &c, &d, dettaglio * 0.7f);
-*/
+		glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 3.0f);
+			drawTriangle(&a, &c, &b, dettaglio * 0.7f);
+			drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+		glPopMatrix();
 
 	}//for
 
@@ -1747,6 +1765,20 @@ void drawEsterni(){
 
 	/* ingrandisce la dimensione della struttura */
 	glScalef(2.0f, 2.0f, 2.0f); 
+	
+	
+	
+	/* inserisco qui la roba delle luci, o raddoppio le coordinate ?*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/* pavimento all'esterno */
@@ -2292,9 +2324,6 @@ void drawScala() {
 	glPopMatrix();
 	
 }
-
-
-
 
 
 void drawSecondoPiano(){

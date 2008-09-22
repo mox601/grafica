@@ -34,17 +34,15 @@ int startx,starty;
 int going_forward   = 0;
 int moving_on_plane = 0;
 
-
 GLfloat spostamentoX;
 GLfloat spostamentoY;
 GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
-
-
 Point3d  position = {-3.974169, 43.649551, 5.600000};
-Point3d  target   = {30.439146, 136.976593, 1.649984};
+Point3d  target   = {30.439146, 2.976593, 1.649984};
 Vector3d vup      = {0, 0, 1};
+GLfloat zFar = 1000.0f;
 
 /* dettaglio dei triangoli disegnati */
 /* influisce sulla performance */
@@ -53,14 +51,7 @@ GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
 
-
-
-
-
-
-
-
-enum {M_NONE,M_LOCAL_LIGHT, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
+enum {M_NONE, M_LOCAL_LIGHT, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
 
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -77,19 +68,16 @@ GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
 /* angolo per animazione luce */
 float lightAngle = 0.0;
 
+// sole
 int enable_light_directional = 1;
-/* faretto */
-int enable_light_local = 1;
+int enable_light_local = 0;
 int draw_wireframe = 0;
 
 // sfera
 GLUquadricObj *quadratic;	// Storage For Our Quadratic Objects
 
-
 GLuint	filter;			// Which Filter To Use (nearest/linear/mipmapped)
 GLuint	texture[3];		// Storage for 3 textures.
-
-
 
 /* Image type  */
 /* e' in camera.h
@@ -152,20 +140,6 @@ GLvoid LoadGLTextures(GLvoid) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ---------------------------------------------------------- */
 
 /* inizializza parametri di opengl */
@@ -174,15 +148,9 @@ void init(void) {
 
 	LoadGLTextures();					// Load the textures
 	
-		
 	//glEnable(GL_TEXTURE_2D);			// Enable texture mapping
 
-
-
     //glBindTexture(GL_TEXTURE_2D, texture[filter]);   // choose the texture to use.
-
-
-
 
 	glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
 	glDepthFunc(GL_LESS);
@@ -207,15 +175,6 @@ void init(void) {
 	//fog
 	//glClearColor(0.5f, 0.5f, 0.5f, 1);
 	//glEnable(GL_FOG);
-	
-	
-	
-	
-	// sfera
-//	quadratic = gluNewQuadric();                  // Create A Pointer To The Quadric Object ( NEW )
-	// Can also use GLU_NONE, GLU_FLAT
-  //  gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
-   // gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords ( NEW )
 	
 	
 	
@@ -336,7 +295,7 @@ void reshape(int W,int H)
 		60.0,  /* field of view in degree */ 
 		W/H,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		600.0  /* Z far molto grande per far vedere lo sfondo */ 
+		zFar  /* Z far molto grande per far vedere lo sfondo */ 
 	);
 	
 	
@@ -403,7 +362,7 @@ int main(int argc, char **argv)
 		60.0,  /* field of view in degree */ 
 		1.0,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		500.0  /* Z far per far rientrare lo sfondo s*/ 
+		zFar  /* Z far per far rientrare lo sfondo s */ 
 	);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -714,10 +673,39 @@ void redraw(void)
 		target.x  , target.y   ,  target.z,       
 		vup.x     , vup.y      ,  vup.z);
 
-	/* movimento luce 0 local */
+	/* movimento luce 1 locale */
 	light_position_local[0]= -30.0f + sin(lightAngle)*5;
 	light_position_local[1]= -1.0f + cos(lightAngle)*5;
 //	light_position_local[2]= 1.0f + cos(lightAngle)*5;
+
+	
+	
+	
+	/* luce 0, una luce del sole direzionale */
+
+	if (enable_light_directional)
+	{
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position_directional);
+		glEnable(GL_LIGHT0);
+	}
+	else
+	{
+		glDisable(GL_LIGHT0);
+	}
+	
+	/* disegna sfera gialla dove si trova la luce solare (o da dove viene) */
+	glPushMatrix();
+	glTranslatef(light_position_directional[0],light_position_directional[1],light_position_directional[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_yellow_light);
+		if (!draw_wireframe)
+			glutSolidSphere(0.2, 5, 5);
+		else
+			glutWireSphere(0.2, 5, 5);
+	glPopMatrix();
+
+
+
+
 
 	/* per fare update della posizione e stato della luce 1 */
 	if (enable_light_local)
@@ -730,39 +718,11 @@ void redraw(void)
 		glDisable(GL_LIGHT1);
 	}
 
-	/* disegna sfera dove si trova la luce */
-	glPushMatrix();
-	glTranslatef(light_position_local[0],light_position_local[1],light_position_local[2]);
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
-
-		if (!draw_wireframe)
-			glutSolidSphere(0.3, 10, 10);
-		else
-			glutWireSphere(0.3, 10, 10);
-
-	glPopMatrix();
-
-
-
-	/* luce 0, una luce del sole direzionale */
-
-	if (enable_light_directional)
-	{
-		glLightfv(GL_LIGHT0, GL_POSITION, light_position_directional);
-		glEnable(GL_LIGHT0);
-	}
-	else
-	{
-		glDisable(GL_LIGHT0);
-	}
-
 
 	/* disegna sfera dove si trova la luce direzionale */
 	glPushMatrix();
-	glTranslatef(light_position_directional[0],light_position_directional[1],light_position_directional[2]);
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
+	glTranslatef(light_position_local[0],light_position_local[1],light_position_local[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_black);
 
 		if (!draw_wireframe)
 			glutSolidSphere(0.3, 10, 10);
@@ -770,6 +730,10 @@ void redraw(void)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
+	
+	
+	
+	
 	
 	
 	/* disegna sfera dove si trova la luce LIGHT_2 */
@@ -790,6 +754,9 @@ void redraw(void)
 	glPopMatrix();
 	
 
+
+
+
 	glPushMatrix();
 	
 	/* assi di riferimento */
@@ -807,11 +774,34 @@ void redraw(void)
 	/* disegna la struttura esterna */
 	drawEsterni();
 
-
 	/* disegna struttura interna */
+	/* attutisco la luce del sole, e dopo la rimetto come era per gli esterni */
+	
+	
+	
+	GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
+	/* luce numero 0 direzionale, il sole */
+	glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);
+	glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni);
+	
+	
+	
 	drawInterni();
 	
-
+	
+	
+	// rimetto il colore normale
+	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
+	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+	
+	
+	
+	
+	
+	
+	
 	/* disegna muro frontale */
 
 //	drawFrontWall(lunghezza, dettaglio, segno_inclinazione, altezza);
@@ -829,10 +819,6 @@ void redraw(void)
 
 	//drawWall(&a, &b, &c, &d, spessore, sp_laterale, -incl_frontale, dettaglio);
 
-
-
-
-
 	setGlassMaterial();
 	
 	//draw glass!!!
@@ -842,11 +828,16 @@ void redraw(void)
 	
 	glTranslatef(-23.912642, 32.516140, 0.0f);
 	
-	drawGlassRight();
+	// posso anche spegnere l'illuminazione?
+	// no, meglio curare il colore a posteriori
+	
+		//glDisable(GL_LIGHT0);
+
+			drawGlassRight();
+
+		//glEnable(GL_LIGHT0);
 
 	glPopMatrix();
-
-
 
 
 
@@ -854,32 +845,17 @@ void redraw(void)
 
 	glPopMatrix();
 // esterni ed interni 
-
-	
-	
-	
-	
-//	drawGlass(&a1, &b1, &c1, &d1);
 	
 	/* dopo aver disegnato il vetro, riabilita depth test e spegni il blending */
 	glDisable(GL_BLEND);              // Turn Blending Off
 	glEnable(GL_DEPTH_TEST);      
 
 
-	/*
-	GLfloat fogColor[] = {0.5f, 0.5f, 0.5f, 1};
-    glFogfv(GL_FOG_COLOR, fogColor);
-    glFogi(GL_FOG_MODE, GL_LINEAR);
-    glFogf(GL_FOG_START, 0.1f);
-    glFogf(GL_FOG_END, 30.0f);
-*/
-
-
 
 /* per conoscere la posizione */
 
-	printf("position: %f %f %f\n", position.x, position.y, position.z); 
-	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+//	printf("position: %f %f %f\n", position.x, position.y, position.z); 
+//	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
 
 
 

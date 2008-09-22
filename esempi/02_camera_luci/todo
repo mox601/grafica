@@ -32,13 +32,17 @@ estendere il pavimento verde per incontrare lo sfondo, con correzione dettaglio 
 da fare
 
 le coordinate delle luci devono essere COERENTI a quelle del modello.
-nel modello faccio una glScalef che deve coinvolgere anche le posizioni delle luci
-
+luce del sole e luce interna
+oppure attutirla e farne una uguale che illumina l'interno, ma meno intensa
+problema del guscio esterno, si illumina front and back...
+soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
 aggiungere luci
 impostare i materiali degli interni
 parametri giusti dei materiali esterni
+parametri colore del vetro esterno, é troppo scuro?
 settare per bene i materiali dei componenti, con valori speculari etc
 migliorare la texture di sfondo
+correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
 va in crash con valori piccoli/grandi di dettaglio
 piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 gestione delle altezze nei piani

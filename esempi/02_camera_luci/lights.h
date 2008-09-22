@@ -43,6 +43,7 @@ GLfloat color_red       [4];
 GLfloat color_green     [4];
 GLfloat color_blue      [4];
 GLfloat coloryellow	[4];
+GLfloat color_yellow_light[4];
 
 
 

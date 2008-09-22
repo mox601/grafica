@@ -5,31 +5,41 @@
 // luce direzionale, sole
 //  GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 }; 
 /* posizione LIGHT 0 direzionale - a 45 gradi, diretta verso l'origine */
+
+
+
+#define GLSCALAMENTO 2.0
+
+/* posizione LIGHT 0 il sole */
 GLfloat light_position_directional[4]={
-		-1.0f,
-		-1.0f,
-		-1.0f,
+		10.0f * GLSCALAMENTO,
+		10.0f * GLSCALAMENTO,
+		10.0f * GLSCALAMENTO,
 		0.0f
 };
 
 
 /* posizione LIGHT 1 */
 GLfloat light_position_local[4]={
-		-10.0f,
-		-25.0f,
-		1.0f,
+		-10.0f * GLSCALAMENTO,
+		-25.0f * GLSCALAMENTO,
+		1.0f * GLSCALAMENTO,
 		1.0f
 	};
 
 
 /* LIGHT2: luce del lampadario */
 GLfloat light_position_lampadario[4]={
-		-13.100014, 14.100018, 10.000002, 1
+		-13.100014 * GLSCALAMENTO, 
+		14.100018 * GLSCALAMENTO, 
+		10.000002 * GLSCALAMENTO, 
+		1
 };
 
 GLfloat light_direction_lampadario[4]={
-		1.0f,
-		-13.,
+		1.0f * GLSCALAMENTO,
+		-13.0 * GLSCALAMENTO,
+		-1.0f * GLSCALAMENTO,
 		0.0f
 };
 
@@ -42,7 +52,7 @@ GLfloat color_red       [4]  = {1.0f, 0.0f, 0.0f, 1.0f};
 GLfloat color_green     [4]  = {0.0f, 1.0f, 0.0f, 1.0f};
 GLfloat color_blue      [4]  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow		[4]  = {1.0f, 1.0f, 0.0f, 1.0f};
-GLfloat color_yellow_light[4]  = {1.0f, 0.65f, 0.06f, 1.0f};
+GLfloat color_yellow_light[4]  = {0.87f, 0.47f, 0.09f, 1.0f};
 
 
 
@@ -50,7 +60,8 @@ GLfloat color_yellow_light[4]  = {1.0f, 0.65f, 0.06f, 1.0f};
 
 void setupLights() {
 
-	printf("setup lights parameters. runs once\n");
+	printf("Setup lights parameters. runs once\n");
+	
 	/* migliora l'illuminazione */
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
@@ -87,7 +98,7 @@ void setupLights() {
 	glLighti(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.1f);
 	
 
-	glEnable(GL_LIGHT0);
+	//glEnable(GL_LIGHT0);
 	//glEnable(GL_LIGHT1);
 	//glEnable(GL_LIGHT2);
 
