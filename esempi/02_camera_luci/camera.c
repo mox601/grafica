@@ -327,16 +327,6 @@ int ImageLoad(char *filename, Image *image) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 void reshape(int W,int H)
 {
 	glViewport(0, 0, W, H);
@@ -399,23 +389,13 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("-----------------------", M_NONE);
 
 	glutAddMenuEntry("Local light"      , M_LOCAL_LIGHT);
-	glutAddMenuEntry("Directional light", M_DIRECTIONAL_LIGHT);
+	glutAddMenuEntry("Directional light - Sole", M_DIRECTIONAL_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 
-
-
-
-
 	/* caricamento dei .ply */
 	loadPlyModels();
-
-
-
-
-
-
 
 
 	glMatrixMode(GL_PROJECTION);
@@ -423,7 +403,7 @@ int main(int argc, char **argv)
 		60.0,  /* field of view in degree */ 
 		1.0,   /* aspect ratio */ 
 		1.0,   /* Z near */ 
-		500.0  /* Z far */ 
+		500.0  /* Z far per far rientrare lo sfondo s*/ 
 	);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -693,8 +673,8 @@ void controlMenu(int value)
 
 	case M_DIRECTIONAL_LIGHT:
 		enable_light_directional=1-enable_light_directional;
-		printf("switch luce direzionale\n");
-		printf("luce direzionale = %d\n", enable_light_directional);
+		printf("switch luce direzionale - sole\n");
+		printf("luce direzionale del sole = %d\n", enable_light_directional);
 	break;
 
 	case M_WIREFRAME:draw_wireframe=1-draw_wireframe;
@@ -739,15 +719,15 @@ void redraw(void)
 	light_position_local[1]= -1.0f + cos(lightAngle)*5;
 //	light_position_local[2]= 1.0f + cos(lightAngle)*5;
 
-	/* per fare update della posizione e stato della luce 0 */
+	/* per fare update della posizione e stato della luce 1 */
 	if (enable_light_local)
 	{
-		glLightfv(GL_LIGHT0, GL_POSITION, light_position_local);
-		glEnable(GL_LIGHT0);
+		glLightfv(GL_LIGHT1, GL_POSITION, light_position_local);
+		glEnable(GL_LIGHT1);
 	}
 	else
 	{
-		glDisable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
 	}
 
 	/* disegna sfera dove si trova la luce */
@@ -765,17 +745,16 @@ void redraw(void)
 
 
 
-	/* luce 1, una luce direzionale */
+	/* luce 0, una luce del sole direzionale */
 
-
-if (enable_light_directional)
+	if (enable_light_directional)
 	{
-		glLightfv(GL_LIGHT1, GL_POSITION, light_position_directional);
-		glEnable(GL_LIGHT1);
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position_directional);
+		glEnable(GL_LIGHT0);
 	}
 	else
 	{
-		glDisable(GL_LIGHT1);
+		glDisable(GL_LIGHT0);
 	}
 
 

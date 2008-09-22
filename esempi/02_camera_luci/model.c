@@ -1664,6 +1664,8 @@ void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
 	Point3d k; 
 	Point3d l;
 	
+	GLfloat dettaglioLocale = dettaglio * 2.0f;
+	
 	init_point(&coordinate[0], &e);
 	init_point(&coordinate[1], &f);
 	init_point(&coordinate[2], &g);
@@ -1683,17 +1685,17 @@ void drawPlaneEsterni(Point3d *coordinate, GLfloat estensione) {
 	k.x = k.x + estensione;
 	
 	
-	drawTriangle(&e, &l, &i, dettaglio);
-	drawTriangle(&e, &h, &l, dettaglio);
+	drawTriangle(&e, &l, &i, dettaglioLocale);
+	drawTriangle(&e, &h, &l, dettaglioLocale);
 	
-	drawTriangle(&f, &coordinate[0], &e, dettaglio);
-	drawTriangle(&f, &coordinate[1], &coordinate[0], dettaglio);
+	drawTriangle(&f, &coordinate[0], &e, dettaglioLocale);
+	drawTriangle(&f, &coordinate[1], &coordinate[0], dettaglioLocale);
 
-	drawTriangle(&coordinate[2], &h, &coordinate[3], dettaglio);	
-	drawTriangle(&coordinate[2], &g, &h, dettaglio);	
+	drawTriangle(&coordinate[2], &h, &coordinate[3], dettaglioLocale);	
+	drawTriangle(&coordinate[2], &g, &h, dettaglioLocale);	
 	
-	drawTriangle(&j, &g, &f, dettaglio);	
-	drawTriangle(&j, &k, &g, dettaglio);	
+	drawTriangle(&j, &g, &f, dettaglioLocale);	
+	drawTriangle(&j, &k, &g, dettaglioLocale);	
 
 }	
 
@@ -1752,7 +1754,8 @@ void drawEsterni(){
 	
 	GLfloat lunghezza1 = 32.50f;
 	GLfloat profondita1 = 12.0f;
-	GLfloat estensione = 40.0f;
+	GLfloat aggiuntaExt = 150.0f;
+	GLfloat estensione = 40.0f + aggiuntaExt;
 	/* piano semplice */
 	Point3d a = {0.0f, 0.0f, 0.0f};
 	Point3d b = {profondita1, 0.0f, 0.0f};
@@ -1778,6 +1781,7 @@ void drawEsterni(){
 	glPushMatrix();
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 		setMaterial(1.0, 0.0, 0.0);
+		//pavimento interno
 		drawFloor();
 	glPopMatrix();
 
