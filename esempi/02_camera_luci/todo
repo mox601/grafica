@@ -26,23 +26,24 @@ primo piano, ogni oggetto ha un materiale.
 ogni oggetto che si ripete, ha il materiale settato all'interno della sua definizione
 creare una sfera con texture interna per realizzare lo sfondo
 estendere il pavimento verde per incontrare lo sfondo, con correzione dettaglio triangoli
+ho fatto due gusci, ora si devono piazzare e accendere/spegnere la luce quando si disegnano
+soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
+quando disegno la sfera di sfondo disabilito l'illuminazione, altrimenti mi si ombreggia
+posizionamento guscio
 
 
 
 da fare
-
 le coordinate delle luci devono essere COERENTI a quelle del modello.
-luce del sole e luce interna
 oppure attutirla e farne una uguale che illumina l'interno, ma meno intensa
-ho fatto due gusci, ora si devono piazzare e accendere/spegnere la luce quando si disegnano
-soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
+correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
+modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili
 aggiungere luci
 impostare i materiali degli interni
+settare per bene i materiali dei componenti, con valori speculari etc
 parametri giusti dei materiali esterni
 parametri colore del vetro esterno, é troppo scuro?
-settare per bene i materiali dei componenti, con valori speculari etc
 migliorare la texture di sfondo
-correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
 va in crash con valori piccoli/grandi di dettaglio
 piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 gestione delle altezze nei piani

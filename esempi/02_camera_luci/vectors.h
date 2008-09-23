@@ -30,6 +30,8 @@ void point_translate(Point3d* point,const Vector3d* v);
 
 void vector_normalize(Vector3d* v);
 
+void point_normalize(Point3d* v);
+
 GLfloat vector_modulo(Vector3d* v);
 
 void vector_scale(Vector3d* v,GLfloat coeff);

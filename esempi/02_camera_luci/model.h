@@ -22,6 +22,7 @@
 
 #include "vectors.h"
 #include "camera.h"
+#include "lights.h"
 
 
 /* blending acceso/spento */

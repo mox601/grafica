@@ -51,7 +51,7 @@ GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
 
-enum {M_NONE, M_LOCAL_LIGHT, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
+enum {M_NONE, M_LOCAL_LIGHTONE, M_LOCAL_LIGHTTWO, M_LOCAL_LIGHTTHREE, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
 
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -70,7 +70,10 @@ float lightAngle = 0.0;
 
 // sole
 int enable_light_directional = 1;
-int enable_light_local = 0;
+int enable_light_localONE = 0;
+int enable_light_localTWO = 0;
+int enable_light_localTHREE = 0;
+
 int draw_wireframe = 0;
 
 // sfera
@@ -347,7 +350,9 @@ int main(int argc, char **argv)
 	
 	glutAddMenuEntry("-----------------------", M_NONE);
 
-	glutAddMenuEntry("Local light"      , M_LOCAL_LIGHT);
+	glutAddMenuEntry("Local light - luce rossa al piano terra"      , M_LOCAL_LIGHTONE);
+	glutAddMenuEntry("Local light - luce gialla al secondo piano"      , M_LOCAL_LIGHTTWO);
+	glutAddMenuEntry("Local light - luce verde al terzo piano"      , M_LOCAL_LIGHTTHREE);
 	glutAddMenuEntry("Directional light - Sole", M_DIRECTIONAL_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -401,21 +406,34 @@ void key(unsigned char c, int x, int y)
 
 	vector_diff(&direction_forward,&target,&position);
 	vector_diff(&direction_backward,&position,&target);
+	
+	// normalizzo le direzioni forward e backward
+	vector_normalize(&direction_forward);
+	vector_normalize(&direction_backward);
+	
+	//??
+	//vector_normalize(&target);
 
 	vector_cross_product(&direction_left,&vup,&direction_forward);
 	vector_cross_product(&direction_right,&vup,&direction_backward);
+	
+	// normalizzo le direzioni left e right
+	//vector_normalize(&direction_left);
+	//vector_normalize(&direction_right);
 
 	direction_up=vup;
 	direction_down=vup;
 	vector_scale(&direction_down, -1);
 
+	// lunghezza dei passi avanti e indietro
+	GLfloat avanzamento = 0.9f;
 
 switch(c) 
 	{
 
 /* w: avanti; s: indietro */
 	case 'w':
-		vector_scale(&direction_forward,0.05f);
+		vector_scale(&direction_forward, avanzamento);
 		Vector3d direction_forward_x = direction_forward; 
 		direction_forward_x.z = 0.0f; 
 		point_translate(&position, &direction_forward_x);
@@ -424,7 +442,7 @@ switch(c)
 		break;
 	
 	case 's':
-		vector_scale(&direction_backward,0.05f);
+		vector_scale(&direction_backward,avanzamento);
 		Vector3d direction_backward_x = direction_backward; 
 		direction_backward_x.z = 0.0f; 
 		point_translate(&position, &direction_backward_x);
@@ -624,11 +642,22 @@ void controlMenu(int value)
 	{
 	case M_NONE:return;
 
-	case M_LOCAL_LIGHT:
-		enable_light_local=1-enable_light_local;
-		printf("switch luce locale\n");
-		printf("luce locale = %d\n", enable_light_local);
+	case M_LOCAL_LIGHTONE:
+		enable_light_localONE=1-enable_light_localONE;
+		printf("switch luce locale rossa al piano terra\n");
+		printf("luce locale = %d\n", enable_light_localONE);
 	break;
+
+	case M_LOCAL_LIGHTTWO:
+		enable_light_localTWO=1-enable_light_localTWO;
+		printf("switch luce locale rossa al piano terra\n");
+		printf("luce locale = %d\n", enable_light_localTWO);
+	break;
+	
+	
+	
+	
+
 
 	case M_DIRECTIONAL_LIGHT:
 		enable_light_directional=1-enable_light_directional;
@@ -708,7 +737,7 @@ void redraw(void)
 
 
 	/* per fare update della posizione e stato della luce 1 */
-	if (enable_light_local)
+	if (enable_light_localONE)
 	{
 		glLightfv(GL_LIGHT1, GL_POSITION, light_position_local);
 		glEnable(GL_LIGHT1);
@@ -779,7 +808,6 @@ void redraw(void)
 	
 	
 	
-	GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
 	/* luce numero 0 direzionale, il sole */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);

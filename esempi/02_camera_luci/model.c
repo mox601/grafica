@@ -1199,10 +1199,10 @@ void drawBackCurveAndRoof() {
 	GLfloat material_emission     []  = {Ke*R, Ke*G, Ke*B, 1.0f}; 
 	GLfloat material_shininess    []  = {shininess};
 
-	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+//	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+//	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+//	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+//	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
 	
 	
 	drawShell(circle, numPoints, profondita+4);
@@ -1211,14 +1211,38 @@ void drawBackCurveAndRoof() {
 	// disegno un'altra shell, per farla illuminare diversamente
 	
 	glPushMatrix();
-		glScalef(1.0, 0.99f, 0.9f);
-		glTranslatef(0.0f, yPosition, zPosition);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+
+		glTranslatef(0.0f, -(-profondita_lunghezza_ratio * lunghezza - 1.10f ), 0.0f);
+		glScalef(0.99f, 0.989f, 0.99f);
+		glTranslatef(0.0f, +(-profondita_lunghezza_ratio * lunghezza - 1.10f ) -0.126522, 0.0f);
+		
+		
+		
+		//attutisci luce del sole, siamo in interni
+
+	//	glEnable(GL_LIGHT0);
+
+		/* luce numero 0 direzionale, il sole */
+		glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);
+		glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni);
+		
+		
+//		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+//		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+//		glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+//		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+		
+		
 		
 		drawShellInvertedNormals(circle, numPoints, profondita+4);
+		
+
+		// rimetto il colore normale
+	//	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
+	//	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
+	//	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+		
 			
 	glPopMatrix();	
 	
@@ -1997,17 +2021,7 @@ void drawEsterni(){
 	
 	
 	/* inserisco qui la roba delle luci, o raddoppio le coordinate ?*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	/* pavimento all'esterno */
 	Point3d *coordinate4= malloc(4 * 3 * sizeof(GLfloat));
@@ -2099,9 +2113,14 @@ void drawEsterni(){
 	setMaterialType(1,1,1, 'e');
 
 
+	//disabilito l'illuminazione, altrimenti mi si ombreggia lo sfondo
+	
+	glDisable(GL_LIGHTING);
+
 	gluSphere(quadratic,410,10,10);                // Draw A Sphere
 
-
+	glEnable(GL_LIGHTING);
+	
 	glDisable(GL_TEXTURE_2D);			// disable texture mapping
 
 		

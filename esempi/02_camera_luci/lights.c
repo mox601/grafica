@@ -10,6 +10,11 @@
 
 #define GLSCALAMENTO 2.0
 
+
+
+
+
+
 /* posizione LIGHT 0 il sole */
 GLfloat light_position_directional[4]={
 		10.0f * GLSCALAMENTO,
@@ -19,13 +24,27 @@ GLfloat light_position_directional[4]={
 };
 
 
-/* posizione LIGHT 1 */
-GLfloat light_position_local[4]={
+/* posizione LIGHT 1, luce mobile al primo piano */
+GLfloat light_position_localONE[4]={
 		-10.0f * GLSCALAMENTO,
 		-25.0f * GLSCALAMENTO,
 		1.0f * GLSCALAMENTO,
 		1.0f
 	};
+
+/* posizione LIGHT 1, luce mobile al secondo piano */
+GLfloat light_position_localTWO[4]={
+		-10.0f * GLSCALAMENTO,
+		-25.0f * GLSCALAMENTO,
+		1.0f * GLSCALAMENTO,
+		1.0f
+	};
+
+
+
+
+
+
 
 
 /* LIGHT2: luce del lampadario */
@@ -53,6 +72,7 @@ GLfloat color_green     [4]  = {0.0f, 1.0f, 0.0f, 1.0f};
 GLfloat color_blue      [4]  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow		[4]  = {1.0f, 1.0f, 0.0f, 1.0f};
 GLfloat color_yellow_light[4]  = {0.87f, 0.47f, 0.09f, 1.0f};
+GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
 
 
 
@@ -79,11 +99,14 @@ void setupLights() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_POSITION , light_position_directional);
 
-	/* luce numero 1 locale */
-	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_white);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_white);
-	glLightfv(GL_LIGHT1, GL_SPECULAR , color_white);
-	glLightfv(GL_LIGHT1, GL_POSITION , light_position_local);
+
+
+	/* luce numero 1 locale al primo piano */
+	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_red);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_red);
+	glLightfv(GL_LIGHT1, GL_SPECULAR , color_red);
+	glLightfv(GL_LIGHT1, GL_POSITION , light_position_localONE);
+
 
 
 
