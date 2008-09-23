@@ -34,7 +34,7 @@ da fare
 le coordinate delle luci devono essere COERENTI a quelle del modello.
 luce del sole e luce interna
 oppure attutirla e farne una uguale che illumina l'interno, ma meno intensa
-problema del guscio esterno, si illumina front and back...
+ho fatto due gusci, ora si devono piazzare e accendere/spegnere la luce quando si disegnano
 soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
 aggiungere luci
 impostare i materiali degli interni

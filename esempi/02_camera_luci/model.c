@@ -1199,18 +1199,246 @@ void drawBackCurveAndRoof() {
 	GLfloat material_emission     []  = {Ke*R, Ke*G, Ke*B, 1.0f}; 
 	GLfloat material_shininess    []  = {shininess};
 
-	glMaterialfv(GL_BACK,GL_DIFFUSE  , material_diffuse);
-	glMaterialfv(GL_BACK,GL_SPECULAR , material_specular);
-	glMaterialfv(GL_BACK,GL_EMISSION , material_emission);
-	glMaterialfv(GL_BACK,GL_SHININESS, material_shininess);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
 	
 	
 	drawShell(circle, numPoints, profondita+4);
+	
+	
+	// disegno un'altra shell, per farla illuminare diversamente
+	
+	glPushMatrix();
+		glScalef(1.0, 0.99f, 0.9f);
+		glTranslatef(0.0f, yPosition, zPosition);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
+		
+		drawShellInvertedNormals(circle, numPoints, profondita+4);
+			
+	glPopMatrix();	
 	
 	glPopMatrix();
 
 
 }
+
+
+void drawShellInvertedNormals(GLdouble* circle, GLint numPoints, GLfloat profondita) {
+
+	Point3d a; 
+	Point3d b; 
+	Point3d c; 
+	Point3d d; 
+	
+	int i = 0;
+
+	GLfloat deltaInclinazione = 0.8f;
+
+	GLfloat deltaY = deltaInclinazione/numPoints;
+
+	/* posso inclinare i punti mano mano che li disegno */
+
+	for (i = 0; i < numPoints; i++) {
+	
+		/* primo */
+		a.x = circle[2 * i];
+		if (i == 0 ) { 
+			a.y = 0.0f;
+			c.y = profondita;
+		}
+			else {
+				a.y = (deltaY * (i-1)); 
+				c.y = profondita - (deltaY * (i-1));
+			}
+		a.z = circle[(2 * i)  + 1];
+		/* secondo */
+		b.x = circle[(2 * i) + 2];
+		b.y = 0.0f + (deltaY * i); 
+		b.z = circle[(2 * i) + 3];
+	
+		/* punti distanti a profondita */
+		/* terzo */
+		c.x = circle[2 * i];
+	// c.y	 
+		c.z = circle[(2 * i)  + 1];
+		/* quarto */
+		d.x = circle[(2 * i) + 2];
+		d.y = profondita - (deltaY * i); 
+		d.z = circle[(2 * i) + 3];
+	
+	
+		/* come mi organizzo per le normali? */
+	
+		/* il dettaglio è un pò cambiato */
+
+
+//oriento in maniera diversa i triangle
+		drawTriangle(&a, &c, &b, dettaglio * 0.7f);
+		drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+
+/* oriento in modo diverso le facce della parte curva */
+	//	drawTriangle(&a, &b, &c, dettaglio * 0.7f);
+	//	drawTriangle(&b, &d, &c, dettaglio * 0.7f);
+
+
+/* ma le disegno anche nell' altro senso, per fare l'illuminazione anche all'esterno */
+	/*
+		glPushMatrix();
+			drawTriangle(&a, &c, &b, dettaglio * 0.7f);
+			drawTriangle(&b, &c, &d, dettaglio * 0.7f);
+		glPopMatrix();
+*/
+	}//for
+
+
+	Point3d e;
+	Point3d f;
+	GLfloat altezza = 4.5f; 
+
+	/* punto d, in alto a dx */
+	/* punto b, in alto a sx */
+
+	/* punto e, in basso a sx */
+	e.x = circle[0]; 
+	e.y = 0.0f + (deltaY * numPoints + 0.3f);
+	e.z = - altezza; 
+
+	/* punto f, in basso a dx */
+	f.x = circle[0]; 
+	f.y = profondita - (deltaY * numPoints + 0.3f);
+	f.z = - altezza;
+	
+	/* normali ? */
+	/* muro obliquo retrostante */
+	
+	/*
+	drawTriangle(&d, &b, &e, dettaglio);
+	drawTriangle(&e, &f, &d, dettaglio);
+	*/
+	
+	drawTriangle(&d, &e, &b, dettaglio);
+	drawTriangle(&e, &d, &f, dettaglio);
+	
+
+
+	/* da e ed f traccio dei triangoli con ogni punto del cerchio */
+
+
+	/* centro faccia profondita */
+
+	Point3d h; 
+	h.x = 0.0f;
+	h.y = profondita - (deltaY * numPoints / 2); 
+	h.z = 0.0f; 
+	
+	drawTriangle(&h, &f, &d, dettaglio);
+
+	Point3d temp1; 
+	Point3d temp2; 
+	Point3d temp3; 
+	Point3d temp4;
+
+	/* centro faccia 0.0f */
+	Point3d j; 
+	j.x = 0.0f;
+	j.y = 0.0f + (deltaY * numPoints / 2); 
+	j.z = 0.0f; 
+	
+	drawTriangle(&j, &b, &e, dettaglio);
+
+	/* disegno i triangolini laterali */
+
+
+
+	for (i = 0; i < numPoints; i++) {
+	
+	if (i == 0 ) { 
+				temp1.y = profondita;
+		}
+			else {
+				temp1.y = profondita - (deltaY * (i-1));
+			}
+
+		temp1.x = circle[2 * i]; 
+		temp1.z = circle[(2 * i) + 1]; 
+		temp2.x = circle[(2 * i) + 2]; 
+		temp2.y = profondita - (deltaY * (i));
+		temp2.z = circle[(2 * i) + 3]; 
+
+		
+
+
+		drawTriangle(&h, &temp2, &temp1, dettaglio);
+
+		/* e poi li disegno sull'altra faccia */
+		/*
+		temp3.x = circle[2 * i]; 
+		temp3.y = profondita - (deltaY * (i-1));
+		temp3.z = circle[(2 * i) + 1]; 
+
+		temp4.x = circle[(2 * i) + 2]; 
+		temp4.y = profondita - (deltaY * (i));
+		temp4.z = circle[(2 * i) + 3]; 
+		*/
+		
+		if ( i == 0 ) {
+			temp1.y = 0.0f;
+		}
+		else {
+			temp1.y = 0.0f + (deltaY * (i-1));
+		}
+
+		temp2.y = 0.0f + (deltaY * (i));		
+
+		drawTriangle(&j, &temp1, &temp2, dettaglio);
+
+	}
+
+
+
+	Point3d start1; 
+	start1.x = circle[0];
+	start1.y = profondita; 
+	start1.z = circle[1];
+
+	Point3d start2; 
+	start2.x = circle[0];
+	start2.y = 0.0f; 
+	start2.z = circle[1];
+
+	GLfloat adjust = 3.8f; 
+
+	Point3d front1 = {circle[0] - lunghezza - adjust, profondita, circle[1]};
+	Point3d front2 = {circle[0] - lunghezza - adjust, 0.0f, circle[1]};
+
+
+	/* normali!! 
+	é il piano superiore */
+	/*
+	drawTriangle(&front1, &front2, &start1, dettaglio);
+	drawTriangle(&start1, &front2, &start2, dettaglio);
+
+	
+	drawTriangle(&front1, &start1, &h, dettaglio);
+	drawTriangle(&front2, &j, &start2, dettaglio);
+	*/
+	
+	
+	drawTriangle(&front1, &start1, &front2, dettaglio);
+	drawTriangle(&start1, &start2, &front2, dettaglio);
+
+	
+	drawTriangle(&front1, &h, &start1, dettaglio);
+	drawTriangle(&front2, &start2, &j, dettaglio);
+
+}
+
+
 
 void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
@@ -1270,12 +1498,12 @@ void drawShell(GLdouble* circle, GLint numPoints, GLfloat profondita) {
 
 
 /* ma le disegno anche nell' altro senso, per fare l'illuminazione anche all'esterno */
+	/*
 		glPushMatrix();
-		glTranslatef(0.0f, 0.0f, 3.0f);
 			drawTriangle(&a, &c, &b, dettaglio * 0.7f);
 			drawTriangle(&b, &c, &d, dettaglio * 0.7f);
 		glPopMatrix();
-
+*/
 	}//for
 
 
