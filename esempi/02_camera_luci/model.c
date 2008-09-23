@@ -2117,7 +2117,7 @@ void drawEsterni(){
 	
 	glDisable(GL_LIGHTING);
 
-	gluSphere(quadratic,410,10,10);                // Draw A Sphere
+		gluSphere(quadratic,410,10,10);                // Draw A Sphere
 
 	glEnable(GL_LIGHTING);
 	
