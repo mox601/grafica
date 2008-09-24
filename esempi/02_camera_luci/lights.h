@@ -18,21 +18,17 @@
 #endif
 
 
+#define GLSCALAMENTO 2.0
+
+
 //#include <GL/glut.h>  
 
 /* posizioni */
 GLfloat light_position_local[4];
+GLfloat light_position_localONE[4];
+GLfloat light_position_localTWO[4];
+GLfloat light_position_localTHREE[4];
 GLfloat light_position_directional[4];
-
-/* LIGHT2 */
-GLfloat light_position_lampadario[4];
-GLfloat light_direction_lampadario[4];
-
-
-GLfloat light_position_primopiano[4];
-GLfloat light_direction_primopiano[4];
-
-
 
 
 

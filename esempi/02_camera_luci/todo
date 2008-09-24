@@ -39,6 +39,11 @@ oppure attutirla e farne una uguale che illumina l'interno, ma meno intensa
 correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
 modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili
 aggiungere luci
+rossa piano terra
+gialla primo piano
+verde secondo piano
+una variabile va da 1 a -1 per controllare il movimento 
+quando si guarda in basso, la z near taglia il pavimento e fa vedere lo sfondo. 
 impostare i materiali degli interni
 settare per bene i materiali dei componenti, con valori speculari etc
 parametri giusti dei materiali esterni

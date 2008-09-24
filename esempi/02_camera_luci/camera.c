@@ -297,7 +297,7 @@ void reshape(int W,int H)
 	gluPerspective( 
 		60.0,  /* field of view in degree */ 
 		W/H,   /* aspect ratio */ 
-		1.0,   /* Z near */ 
+		0.8,   /* Z near */ 
 		zFar  /* Z far molto grande per far vedere lo sfondo */ 
 	);
 	
@@ -315,14 +315,56 @@ void reshape(int W,int H)
 }
 
 
+GLfloat motionTimer = 0.0f;
+GLfloat motionStep = 0.05f;
+GLfloat motionUpperBound = 1.0f;
+GLfloat motionLowerBound = -1.0f;
+GLint motionSign = 1;
+
+
+void incrementMotionTimer() {
+
+	if ((motionTimer + motionStep) > motionUpperBound) {
+		motionTimer = motionUpperBound;
+		motionSign = -1;
+		//printf("upper bound hit\n");
+	} else { 
+		motionTimer += motionStep;
+	}
+
+}
+
+void decrementMotionTimer() {
+
+	if ((motionTimer - motionStep) < motionLowerBound) {
+		motionTimer = motionLowerBound;
+		motionSign = 1;
+		//printf("lower bound hit\n");
+	} else { 
+		motionTimer -= motionStep;
+	}
+
+}
+
+
 void idle(void)
 {
 /* movimento luce */
 	lightAngle += 0.01f;
 	if (lightAngle > 360.f) {
 		lightAngle = 0.0f;
+	
+	}
+	
+	if (motionSign == 1) {
+		incrementMotionTimer();
+	} else {
+			decrementMotionTimer();
 		}
-//	printf("angolo luce: %f\n", lightAngle);
+		
+	//printf("motionTimer: %f, motionSign: %d\n", motionTimer, motionSign);
+
+
 	glutPostRedisplay();
 }
 
@@ -366,7 +408,7 @@ int main(int argc, char **argv)
 	gluPerspective( 
 		60.0,  /* field of view in degree */ 
 		1.0,   /* aspect ratio */ 
-		1.0,   /* Z near */ 
+		0.8,   /* Z near */ 
 		zFar  /* Z far per far rientrare lo sfondo s */ 
 	);
 
@@ -703,8 +745,8 @@ void redraw(void)
 		vup.x     , vup.y      ,  vup.z);
 
 	/* movimento luce 1 locale */
-	light_position_local[0]= -30.0f + sin(lightAngle)*5;
-	light_position_local[1]= -1.0f + cos(lightAngle)*5;
+//	light_position_local[0]= -30.0f + sin(lightAngle)*5;
+//	light_position_local[1]= -1.0f + cos(lightAngle)*5;
 //	light_position_local[2]= 1.0f + cos(lightAngle)*5;
 
 	
@@ -734,12 +776,26 @@ void redraw(void)
 
 
 
+	/*aggiorno la posizione della luce sulla base delle xPosition... */
+
+	//y e z 23.659597 1.644782
+	// si deve muovere sull'asse x a partire da valore x = -11.38 fino a x=-0.759130
+
+	GLfloat ampiezzaMovimento = (-11.38 + 0.759130);
+	GLfloat xPositionStart = ampiezzaMovimento / 2;
+	GLfloat stepMovimento = ampiezzaMovimento;
+
+	GLfloat xPositionONE = motionTimer;
+
+	light_position_localONE[0] = xPositionONE * GLSCALAMENTO;
+	light_position_localONE[1] = 23.659597 * GLSCALAMENTO;
+	light_position_localONE[2] = 1.644782 * GLSCALAMENTO;
 
 
 	/* per fare update della posizione e stato della luce 1 */
 	if (enable_light_localONE)
 	{
-		glLightfv(GL_LIGHT1, GL_POSITION, light_position_local);
+		glLightfv(GL_LIGHT1, GL_POSITION, light_position_localONE);
 		glEnable(GL_LIGHT1);
 	}
 	else
@@ -748,10 +804,10 @@ void redraw(void)
 	}
 
 
-	/* disegna sfera dove si trova la luce direzionale */
+	/* disegna sfera dove si trova la luce direzionale rossa 1 */
 	glPushMatrix();
-	glTranslatef(light_position_local[0],light_position_local[1],light_position_local[2]);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_black);
+	glTranslatef(light_position_localONE[0],light_position_localONE[1],light_position_localONE[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_red);
 
 		if (!draw_wireframe)
 			glutSolidSphere(0.3, 10, 10);
@@ -765,27 +821,6 @@ void redraw(void)
 	
 	
 	
-	/* disegna sfera dove si trova la luce LIGHT_2 */
-	
-	//glLightfv(GL_LIGHT2, GL_POSITION, light_position_lampadario);
-
-	
-	glPushMatrix();
-	glTranslatef(light_position_lampadario[0], light_position_lampadario[1], light_position_lampadario[2]);
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
-
-		if (!draw_wireframe)
-			glutSolidSphere(0.3, 10, 10);
-		else
-			glutWireSphere(0.3, 10, 10);
-
-	glPopMatrix();
-	
-
-
-
-
 	glPushMatrix();
 	
 	/* assi di riferimento */
@@ -825,11 +860,7 @@ void redraw(void)
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 	
 	
-	
-	
-	
-	
-	
+		
 	/* disegna muro frontale */
 
 //	drawFrontWall(lunghezza, dettaglio, segno_inclinazione, altezza);
@@ -884,9 +915,6 @@ void redraw(void)
 
 //	printf("position: %f %f %f\n", position.x, position.y, position.z); 
 //	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-
-
-
 
 	
 	glutSwapBuffers();
