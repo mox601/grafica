@@ -77,6 +77,10 @@ GLfloat color_blue      [4]  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow		[4]  = {1.0f, 1.0f, 0.0f, 1.0f};
 GLfloat color_yellow_light[4]  = {0.87f, 0.47f, 0.09f, 1.0f};
 GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
+GLfloat sun_color_interni_internalshell[4]  = {0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat variableLight[4]  = {0.0f, 1.0f, 0.0f, 1.0f};
+GLfloat direzioneLuceRossa[3]  = {0, 0, 1};
+
 
 
 
@@ -87,7 +91,7 @@ void setupLights() {
 	printf("Setup lights parameters. runs once\n");
 	
 	/* migliora l'illuminazione */
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
 	/*
 	da fare: 
@@ -105,10 +109,12 @@ void setupLights() {
 
 
 
-	/* luce rossa numero 1 locale al piano terra */
+	/* luce rossa numero 1 locale al piano terra, Ž una spotlight */
 	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_red);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_red);
 	glLightfv(GL_LIGHT1, GL_SPECULAR , color_red);
+    //glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
+	//glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direzioneLuceRossa);
 	glLightfv(GL_LIGHT1, GL_POSITION , light_position_localONE);
 
 

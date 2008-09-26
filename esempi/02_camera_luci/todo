@@ -29,22 +29,26 @@ estendere il pavimento verde per incontrare lo sfondo, con correzione dettaglio 
 ho fatto due gusci, ora si devono piazzare e accendere/spegnere la luce quando si disegnano
 soluzione: un involucro che si illumina in un modo e uno che si illumina in un altro.
 quando disegno la sfera di sfondo disabilito l'illuminazione, altrimenti mi si ombreggia
-posizionamento guscio
-
+una variabile va da 1 a -1 per controllare il movimento 
+le coordinate delle luci devono essere COERENTI a quelle del modello.
+collegare il movimento delle luci al movimento 1 -1
+spegnere le luci non interessate quando si disegnano i gli oggetti ai piani e le scale
+aggiungere luci: 
+rossa piano terra
+gialla primo piano
+variabile secondo piano
 
 
 da fare
-le coordinate delle luci devono essere COERENTI a quelle del modello.
-oppure attutirla e farne una uguale che illumina l'interno, ma meno intensa
+far diventare la luce rossa al piano terra una spotlight 
+orientamento della spotlight "sinusoidale"
+spegnere le luci non interessate quando si disegnano  i piani / le mura / il pavimento / gli esterni
+le scale non si illuminano con la luce rossa
+attenuazione delle luci colorate
 correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
 modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili
-aggiungere luci
-rossa piano terra
-gialla primo piano
-verde secondo piano
-una variabile va da 1 a -1 per controllare il movimento 
-quando si guarda in basso, la z near taglia il pavimento e fa vedere lo sfondo. 
 impostare i materiali degli interni
+cambiare colore al pavimento, non rosso (texture?)
 settare per bene i materiali dei componenti, con valori speculari etc
 parametri giusti dei materiali esterni
 parametri colore del vetro esterno, é troppo scuro?

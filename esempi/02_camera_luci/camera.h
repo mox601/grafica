@@ -29,6 +29,12 @@ GLfloat stepDetail;
 int draw_wireframe;
 
 
+int enable_light_directional;
+int enable_light_localONE;
+int enable_light_localTWO;
+int enable_light_localTHREE;
+
+
 GLfloat xPosition;
 GLfloat yPosition;
 GLfloat zPosition;

@@ -1159,7 +1159,6 @@ void plane(Point3d *coordinate, GLfloat riduzioneDettaglio) {
 /* tetto e muro curvo */
 void drawBackCurveAndRoof() {
 
-
 	GLfloat inclinazione = 9.0f; 
 
 	GLint numPoints = 7 / dettaglio;
@@ -1186,9 +1185,9 @@ void drawBackCurveAndRoof() {
 	GLfloat G = 1.0f;
 	GLfloat B = 1.0f;
 	
-	GLfloat Ka = 1.0f;
-	GLfloat Kd = 0.8f;
-	GLfloat Ks = 0.8f;
+	GLfloat Ka = 0.6f;
+	GLfloat Kd = 0.4f;
+	GLfloat Ks = 0.2f;
 	GLfloat Ke = 0.0f;
 	GLfloat shininess = 1.0f;
 	
@@ -1213,19 +1212,21 @@ void drawBackCurveAndRoof() {
 	glPushMatrix();
 
 		glTranslatef(0.0f, -(-profondita_lunghezza_ratio * lunghezza - 1.10f ), 0.0f);
-		glScalef(0.99f, 0.989f, 0.99f);
-		glTranslatef(0.0f, +(-profondita_lunghezza_ratio * lunghezza - 1.10f ) -0.126522, 0.0f);
+		glScalef(0.99f, 0.985f, 0.99f);
+		glTranslatef(0.0f -0.1, +(-profondita_lunghezza_ratio * lunghezza - 1.10f ) -0.126522, -0.10);
 		
 		
 		
 		//attutisci luce del sole, siamo in interni
 
-	//	glEnable(GL_LIGHT0);
+		//	glEnable(GL_LIGHT0);
+
+
 
 		/* luce numero 0 direzionale, il sole */
-		glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);
-		glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni);
+		glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni_internalshell);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni_internalshell);
+		glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni_internalshell);
 		
 		
 //		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
@@ -1998,7 +1999,32 @@ void drawPlanes(GLint npiani) {
 	int i; 
 	for(i = 1; i<=npiani; i++) {
 	
+	
+		if ( i == 1 ) {
+			// spegni la luce 3
+				glDisable(GL_LIGHT3);
+			}
+	
+		
+		if ( i == 2 ) {
+			// spegni la luce 1
+				glDisable(GL_LIGHT1);
+			}
+	
+	
 		drawPlane();
+	
+			
+		if (enable_light_localTHREE) {
+			glEnable(GL_LIGHT3);
+		}
+		
+		if (enable_light_localONE) {
+			glEnable(GL_LIGHT1);
+		}
+										
+													
+																			
 		glTranslatef(0.0f, 0.0f, 4.0f);
 		
 	}
@@ -2048,6 +2074,7 @@ void drawEsterni(){
 	glTranslatef(-12.0f, 0.0f, 0.0f);	
 	//materiale pavimento esterno
 	setMaterialType(0.0f, 1.0f, 0.0f, 'o');
+
 	drawPlaneEsterni(coordinate4, estensione);
 
 	glPopMatrix();
@@ -2056,6 +2083,9 @@ void drawEsterni(){
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 		setMaterial(1.0, 0.0, 0.0);
 		//pavimento interno
+		//spegnere delle luci?
+		
+		
 		drawFloor();
 	glPopMatrix();
 
@@ -2573,7 +2603,7 @@ void drawScala() {
 }
 
 
-void drawSecondoPiano(){
+void drawPrimaScalaLampada(){
 
 		
 	drawScala();
@@ -2587,7 +2617,7 @@ void drawSecondoPiano(){
 	glPopMatrix();
 }
 	
-void drawTerzoPiano(){
+void drawSecondaScalaLampada(){
 
 	glPushMatrix();
 		glTranslatef(0,0,4.0f);
@@ -2598,7 +2628,24 @@ void drawTerzoPiano(){
 	
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 10.700005);
+	
+	
+	//spengo le luci che non la illuminano
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT2);
+
 	drawLampadaSecca();
+	
+	if(enable_light_localTWO) {
+		glEnable(GL_LIGHT2);
+	}
+	if(enable_light_localONE) {
+		glEnable(GL_LIGHT1);
+	}
+	
+	
+	
+	
 	glPopMatrix();
 
 }
@@ -2625,12 +2672,58 @@ void drawInterni()
 	drawColumns(raggio, altezzaColonne);
 	
 
-	/* disegno le mesh al piano */
+	/* disegno le mesh nei piani, accendendo e spegnendo le luci */
 	
-	drawPianoTerra();
-	drawPrimoPiano(); 
-	drawSecondoPiano();
-	drawTerzoPiano();
+	glDisable(GL_LIGHT2);
+	glDisable(GL_LIGHT3);
+		//oggetti del piano terra
+		drawPianoTerra();
+	
+	if(enable_light_localTWO) {
+		glEnable(GL_LIGHT2);
+	}
+	if(enable_light_localTHREE) {
+		glEnable(GL_LIGHT3);
+	}
+	
+	
+	// oggetti del primo piano
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT3);
+	
+			drawPrimoPiano(); 
+	
+	if(enable_light_localONE) {
+		glEnable(GL_LIGHT1);
+	}
+	if(enable_light_localTHREE) {
+		glEnable(GL_LIGHT3);
+	}
+	
+	
+	
+	// scala per arrivare al primo piano e lampada
+	// e' illuminata anche dalla luce al primo piano
+
+	glDisable(GL_LIGHT3);	
+		drawPrimaScalaLampada();
+	
+	if(enable_light_localTHREE) {
+		glEnable(GL_LIGHT3);
+	}
+	
+	
+	
+	// accendo tutte le luci per disegnare la seconda scala e la lampada ()
+	if(enable_light_localTWO) {
+		glEnable(GL_LIGHT2);
+	}
+	if(enable_light_localONE) {
+		glEnable(GL_LIGHT1);
+	}
+
+
+	drawSecondaScalaLampada();
 	
 	
 }

@@ -41,6 +41,9 @@ GLfloat color_blue      [4];
 GLfloat coloryellow	[4];
 GLfloat color_yellow_light[4];
 GLfloat sun_color_interni[4];
+GLfloat sun_color_interni_internalshell[4];
+GLfloat variableLight[4];
+
 
 
 

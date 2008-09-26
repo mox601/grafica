@@ -39,8 +39,10 @@ GLfloat spostamentoY;
 GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
-Point3d  position = {-3.974169, 43.649551, 5.600000};
-Point3d  target   = {30.439146, 2.976593, 1.649984};
+
+
+Point3d  position = {-14.398088, 20.264778, 6.400000};
+Point3d  target   = {-5.042627, 87.731598, 11.099984};
 Vector3d vup      = {0, 0, 1};
 GLfloat zFar = 1000.0f;
 
@@ -161,14 +163,16 @@ void init(void) {
 	glEnable(GL_NORMALIZE);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
-	/* spostato nel file lights.c */
-	setupLights();
-
 	/* smooth shading */
 	glShadeModel(GL_SMOOTH);
 	/* antialiasing sulle linee */
 	glEnable(GL_LINE_SMOOTH);
 
+
+	/* spostato nel file lights.c */
+	setupLights();
+
+	
 	/* blending per i vetri */
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -179,15 +183,10 @@ void init(void) {
 	//glClearColor(0.5f, 0.5f, 0.5f, 1);
 	//glEnable(GL_FOG);
 	
-	
-	
 	xPosition = 0.0f;
 	yPosition = 0.0f;	
 	zPosition = 0.0f;
 	
-
-
-
 }
 
 
@@ -301,8 +300,7 @@ void reshape(int W,int H)
 		zFar  /* Z far molto grande per far vedere lo sfondo */ 
 	);
 	
-	
-	
+
 	glMatrixMode(GL_MODELVIEW);		
 	glLoadIdentity();
 	gluLookAt(
@@ -350,16 +348,21 @@ void decrementMotionTimer() {
 void idle(void)
 {
 /* movimento luce */
+	
+	
 	lightAngle += 0.01f;
 	if (lightAngle > 360.f) {
 		lightAngle = 0.0f;
 	
 	}
 	
+	
+	//printf("lightAngle: %f\n", lightAngle);
+	
 	if (motionSign == 1) {
-		incrementMotionTimer();
+		//incrementMotionTimer();
 	} else {
-			decrementMotionTimer();
+		//	decrementMotionTimer();
 		}
 		
 	//printf("motionTimer: %f, motionSign: %d\n", motionTimer, motionSign);
@@ -390,11 +393,11 @@ int main(int argc, char **argv)
 	/* creazione del menu per il tasto DX */
 	glutCreateMenu(controlMenu);
 	
-	glutAddMenuEntry("-----------------------", M_NONE);
+	//glutAddMenuEntry("-----------------------", M_NONE);
 
 	glutAddMenuEntry("Local light - luce rossa al piano terra"      , M_LOCAL_LIGHTONE);
 	glutAddMenuEntry("Local light - luce gialla al secondo piano"      , M_LOCAL_LIGHTTWO);
-	glutAddMenuEntry("Local light - luce verde al terzo piano"      , M_LOCAL_LIGHTTHREE);
+	glutAddMenuEntry("Local light - luce variabile al terzo piano"      , M_LOCAL_LIGHTTHREE);
 	glutAddMenuEntry("Directional light - Sole", M_DIRECTIONAL_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -421,6 +424,7 @@ int main(int argc, char **argv)
 
 /* ---------------------------------------------------------- */
 
+// alcuni valori di dettaglio fanno segmentation fault
 
 void aumentaDettaglio() {
 	if (dettaglio > (dettaglioMax + stepDetail)) { 
@@ -692,15 +696,16 @@ void controlMenu(int value)
 
 	case M_LOCAL_LIGHTTWO:
 		enable_light_localTWO=1-enable_light_localTWO;
-		printf("switch luce locale rossa al piano terra\n");
+		printf("switch luce locale gialla al primo piano\n");
 		printf("luce locale = %d\n", enable_light_localTWO);
 	break;
 	
+	case M_LOCAL_LIGHTTHREE:
+		enable_light_localTHREE=1-enable_light_localTHREE;
+		printf("switch luce locale verde al secondo piano\n");
+		printf("luce locale = %d\n", enable_light_localTHREE);
+	break;
 	
-	
-	
-
-
 	case M_DIRECTIONAL_LIGHT:
 		enable_light_directional=1-enable_light_directional;
 		printf("switch luce direzionale - sole\n");
@@ -776,18 +781,15 @@ void redraw(void)
 
 
 
-	/*aggiorno la posizione della luce sulla base delle xPosition... */
+	/* aggiorno la posizione della luce rossa */
 
 	//y e z 23.659597 1.644782
 	// si deve muovere sull'asse x a partire da valore x = -11.38 fino a x=-0.759130
 
 	GLfloat ampiezzaMovimento = (-11.38 + 0.759130);
-	GLfloat xPositionStart = ampiezzaMovimento / 2;
-	GLfloat stepMovimento = ampiezzaMovimento;
+	GLfloat spostamentoLocale = ampiezzaMovimento /2;
 
-	GLfloat xPositionONE = motionTimer;
-
-	light_position_localONE[0] = xPositionONE * GLSCALAMENTO;
+	light_position_localONE[0] = ((spostamentoLocale * cos(1.5f*lightAngle)) + spostamentoLocale - 0.5) * GLSCALAMENTO;
 	light_position_localONE[1] = 23.659597 * GLSCALAMENTO;
 	light_position_localONE[2] = 1.644782 * GLSCALAMENTO;
 
@@ -815,12 +817,129 @@ void redraw(void)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
+
+
+
+
+
+
+
+
+/* aggiorno la posizione della luce gialla, primo piano*/
+
+	//y e z 23.659597 1.644782
+	// si deve muovere sull'asse x a partire da valore x = -11.38 fino a x=-0.759130
+
+	GLfloat deltaYellow = 180.0f;
+
+	light_position_localTWO[0] = ((spostamentoLocale * cos(0.5f*(lightAngle + deltaYellow))) + spostamentoLocale - 0.5) * GLSCALAMENTO;
+	light_position_localTWO[1] = 23.659597 * GLSCALAMENTO;
+	//primo piano!!!
+	light_position_localTWO[2] = (1.644782 + 2.024347) * GLSCALAMENTO;
+
+
+	/* per fare update della posizione e stato della luce 2 */
+	if (enable_light_localTWO)
+	{
+		glLightfv(GL_LIGHT2, GL_POSITION, light_position_localTWO);
+		glEnable(GL_LIGHT2);
+	}
+	else
+	{
+		glDisable(GL_LIGHT2);
+	}
+
+
+	/* disegna sfera dove si trova la luce direzionale gialla 2 */
+	glPushMatrix();
+	glTranslatef(light_position_localTWO[0],light_position_localTWO[1],light_position_localTWO[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coloryellow);
+
+		if (!draw_wireframe)
+			glutSolidSphere(0.3, 10, 10);
+		else
+			glutWireSphere(0.3, 10, 10);
+
+	glPopMatrix();
+
+
+
+
+
+
+
+
+
+/* aggiorno la posizione della luce verde, secondo piano*/
+
+// parte da verde e poi cambia i coefficienti sinusoidalmente
 	
+	GLfloat deltaGreen = 90.0f;
+
+	light_position_localTHREE[0] = ((spostamentoLocale * cos(2.0f*(lightAngle+ deltaGreen))) + spostamentoLocale - 0.5) * GLSCALAMENTO;
+	light_position_localTHREE[1] = 23.659597 * GLSCALAMENTO;
+	//secondo piano!!!
+//	light_position_localTHREE[2] = (1.644782f + (2.024347) + 3.289563) * GLSCALAMENTO;
+	light_position_localTHREE[2] = (6.958692f) * GLSCALAMENTO;
+		
+
+	// cambio i parametri del colore
 	
-	
-	
-	
-	
+	variableLight[0] = sin(2.0f*lightAngle);
+	variableLight[1] = sin(0.8 * lightAngle + 45.0f);
+	variableLight[2] = sin(lightAngle + 180.0f);
+			
+	// update del colore della luce
+	glLightfv(GL_LIGHT3, GL_AMBIENT  , variableLight);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE  , variableLight);
+	glLightfv(GL_LIGHT3, GL_SPECULAR , variableLight);
+
+	/* per fare update della posizione e stato della luce 2 */
+	if (enable_light_localTHREE)
+	{
+		glLightfv(GL_LIGHT3, GL_POSITION, light_position_localTHREE);
+		glEnable(GL_LIGHT3);
+	}
+	else
+	{
+		glDisable(GL_LIGHT3);
+	}
+
+
+	/* disegna sfera dove si trova la luce direzionale verde 3 */
+	glPushMatrix();
+	glTranslatef(light_position_localTHREE[0],light_position_localTHREE[1],light_position_localTHREE[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, variableLight);
+
+		if (!draw_wireframe)
+			glutSolidSphere(0.3, 10, 10);
+		else
+			glutWireSphere(0.3, 10, 10);
+
+	glPopMatrix();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+																														
 	glPushMatrix();
 	
 	/* assi di riferimento */
@@ -834,15 +953,18 @@ void redraw(void)
 */
 
 	glLineWidth(1);
-
+	
+	
 	/* disegna la struttura esterna */
 	drawEsterni();
 
+
+
+
+
 	/* disegna struttura interna */
-	/* attutisco la luce del sole, e dopo la rimetto come era per gli esterni */
-	
-	
-	
+	/* attutisco la luce del sole, e dopo la rimetto come era per il vetro */
+
 	/* luce numero 0 direzionale, il sole */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);
@@ -850,7 +972,7 @@ void redraw(void)
 	
 	
 	
-	drawInterni();
+		drawInterni();
 	
 	
 	
@@ -913,8 +1035,8 @@ void redraw(void)
 
 /* per conoscere la posizione */
 
-//	printf("position: %f %f %f\n", position.x, position.y, position.z); 
-//	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+	printf("position: %f %f %f\n", position.x, position.y, position.z); 
+	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
 
 	
 	glutSwapBuffers();
