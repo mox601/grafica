@@ -431,7 +431,8 @@ void aumentaDettaglio() {
 		dettaglio = dettaglio - stepDetail;
 	} else {
 		dettaglio = dettaglioMax;
-		}
+		}		
+		printf("dettaglio attuale: %f\n", dettaglio);
 }
 void diminuisciDettaglio() {
 	if (dettaglio < (dettaglioMin - stepDetail)) { 
@@ -439,6 +440,7 @@ void diminuisciDettaglio() {
 	} else {
 		dettaglio = dettaglioMin;
 		}
+		printf("dettaglio attuale: %f\n", dettaglio);
 }
 
 
