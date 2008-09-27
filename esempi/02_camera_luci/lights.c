@@ -12,11 +12,12 @@
 
 /* posizione LIGHT 0 il sole */
 /* posizione LIGHT 0 direzionale - a 45 gradi, diretta verso l'origine */
+/* meglio locale ?*/
 GLfloat light_position_directional[4]={
 		10.0f * GLSCALAMENTO,
 		10.0f * GLSCALAMENTO,
 		10.0f * GLSCALAMENTO,
-		0.0f
+		1.0f
 };
 
 
@@ -45,6 +46,14 @@ GLfloat light_position_localTHREE[4]={
 		1.0f
 	};
 
+
+/* posizione light 4, luce della luna, dalla parte opposta rispetto al sole */
+GLfloat light_position_lunar[4] = {
+		-100.0f * GLSCALAMENTO,
+		-100.0f * GLSCALAMENTO,
+		100.0f * GLSCALAMENTO,
+		0.0f
+};
 
 
 
@@ -75,12 +84,13 @@ GLfloat color_red       [4]  = {1.0f, 0.0f, 0.0f, 1.0f};
 GLfloat color_green     [4]  = {0.0f, 1.0f, 0.0f, 1.0f};
 GLfloat color_blue      [4]  = {0.0f, 0.0f, 1.0f, 1.0f};
 GLfloat coloryellow		[4]  = {1.0f, 1.0f, 0.0f, 1.0f};
-GLfloat color_yellow_light[4]  = {0.87f, 0.47f, 0.09f, 1.0f};
+GLfloat color_yellow_light[4]  = {0.7f, 0.7f, 0.7f, 1.0f};
 GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
+GLfloat moon_color_esterni[4]  = {0.05f, 0.05f, 0.05f, 1.0f};
+GLfloat moon_color_interni[4]  = {0.005f, 0.005f, 0.005f, 1.0f};
 GLfloat sun_color_interni_internalshell[4]  = {0.1f, 0.1f, 0.1f, 1.0f};
 GLfloat variableLight[4]  = {0.0f, 1.0f, 0.0f, 1.0f};
-GLfloat direzioneLuceRossa[3]  = {0, 0, 1};
-
+GLfloat direzioneLuceRossa[3]  = {0, -1, 0};
 
 
 
@@ -93,16 +103,10 @@ void setupLights() {
 	/* migliora l'illuminazione */
 	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
-	/*
-	da fare: 
-	luce0 - luce ambientale, il sole. viene dall'alto. da abbinare ad un'altra luce
-	luce1 - accoppiata alla luce ambientale?? 
-	luce2 - luce di un lampione?
 	
-	*/
 
 	/* luce numero 0 direzionale, il sole  - giallo? */
-	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
+	//glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_POSITION , light_position_directional);
@@ -110,27 +114,62 @@ void setupLights() {
 
 
 	/* luce rossa numero 1 locale al piano terra, Ž una spotlight */
-	glLightfv(GL_LIGHT1, GL_AMBIENT  , color_red);
+	//glLightfv(GL_LIGHT1, GL_AMBIENT  , color_red);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_red);
 	glLightfv(GL_LIGHT1, GL_SPECULAR , color_red);
-    //glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
-	//glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direzioneLuceRossa);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direzioneLuceRossa);
 	glLightfv(GL_LIGHT1, GL_POSITION , light_position_localONE);
+	
+	// attenuazione con la distanza
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION,  1.0f);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.035f);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.02f);
+
+
+
+
 
 
 	/* luce gialla numero 2 locale al primo piano */
-	glLightfv(GL_LIGHT2, GL_AMBIENT  , coloryellow);
+	//glLightfv(GL_LIGHT2, GL_AMBIENT  , coloryellow);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE  , coloryellow);
 	glLightfv(GL_LIGHT2, GL_SPECULAR , coloryellow);
 	glLightfv(GL_LIGHT2, GL_POSITION , light_position_localTWO);
 	
+	// attenuazione con la distanza
+	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION,  1.0f);
+	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.045f);
+	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.002f);
 	
-	/* luce verde numero 3 locale al primo piano */
-	glLightfv(GL_LIGHT3, GL_AMBIENT  , color_green);
+	
+	
+	/* luce verde numero 3 locale al secondo piano */
+	//glLightfv(GL_LIGHT3, GL_AMBIENT  , color_green);
 	glLightfv(GL_LIGHT3, GL_DIFFUSE  , color_green);
 	glLightfv(GL_LIGHT3, GL_SPECULAR , color_green);
 	glLightfv(GL_LIGHT3, GL_POSITION , light_position_localTHREE);
 
+
+	// attenuazione con la distanza
+	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION,  1.0f);
+	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.045f);
+	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.002f);
+
+
+
+
+
+	/* luce bianca numero 4 locale luna */
+	glLightfv(GL_LIGHT4, GL_AMBIENT  , color_black);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE  , moon_color_esterni);
+	glLightfv(GL_LIGHT4, GL_SPECULAR , moon_color_esterni);
+	glLightfv(GL_LIGHT4, GL_POSITION , light_position_lunar);
+
+	// attenuazione con la distanza
+	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION,  1.0f);
+	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.005f);
+	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.002f);
 
 
 

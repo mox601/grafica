@@ -34,7 +34,7 @@ void point_normalize(Point3d* v);
 
 GLfloat vector_modulo(Vector3d* v);
 
-void vector_scale(Vector3d* v,GLfloat coeff);
+void vector_scale(Vector3d* v, GLfloat coeff);
 
 void init_point(Point3d* source, Point3d* dest);
 

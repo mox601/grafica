@@ -29,6 +29,7 @@ GLfloat light_position_localONE[4];
 GLfloat light_position_localTWO[4];
 GLfloat light_position_localTHREE[4];
 GLfloat light_position_directional[4];
+GLfloat light_position_lunar[4];
 
 
 
@@ -41,6 +42,8 @@ GLfloat color_blue      [4];
 GLfloat coloryellow	[4];
 GLfloat color_yellow_light[4];
 GLfloat sun_color_interni[4];
+GLfloat moon_color_interni[4];
+GLfloat moon_color_esterni[4];
 GLfloat sun_color_interni_internalshell[4];
 GLfloat variableLight[4];
 

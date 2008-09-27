@@ -75,7 +75,7 @@ int enable_light_directional = 1;
 int enable_light_localONE = 0;
 int enable_light_localTWO = 0;
 int enable_light_localTHREE = 0;
-
+int enable_lunar_light = 0;
 int draw_wireframe = 0;
 
 // sfera
@@ -399,6 +399,7 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Local light - luce gialla al secondo piano"      , M_LOCAL_LIGHTTWO);
 	glutAddMenuEntry("Local light - luce variabile al terzo piano"      , M_LOCAL_LIGHTTHREE);
 	glutAddMenuEntry("Directional light - Sole", M_DIRECTIONAL_LIGHT);
+//	glutAddMenuEntry("Local light - Notte", M_LUNAR_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
@@ -450,7 +451,13 @@ void diminuisciDettaglio() {
 void key(unsigned char c, int x, int y)
 {
  	
-	Vector3d direction_forward,direction_right,direction_up, direction_backward, direction_left, direction_down;
+			
+	Vector3d direction_forward, 
+	direction_right, 
+	direction_up, 
+	direction_backward, 
+	direction_left, 
+	direction_down;
 
 	vector_diff(&direction_forward,&target,&position);
 	vector_diff(&direction_backward,&position,&target);
@@ -499,17 +506,52 @@ switch(c)
 		break;
 
 
-		GLfloat rotation = 10.05f;
 		
+		/*nella f del mouse c'era questo: 
+	
+		vector_scale(&direction_right, 0.1f*deltax);
+		vector_scale(&direction_up, 0.1f*deltay);
+		
+		point_translate(&target, &direction_up);
+		point_translate(&target, &direction_right);
+	
+	
+	*/
+		
+		
+		GLfloat rotation = 100.0f;
+		
+	
 /* girati a dx o sx */
 	case 'a':
+		//printf("target pre: %f %f %f\n", target.x, target.y, target.z);
+		//printf("direction_left pre: %f %f %f\n", direction_left.x, &direction_left.y, &direction_left.z);
+		//vector_scale(&direction_left, rotation);
+	
 		vector_scale(&direction_left, rotation);
+//		vector_scale(&direction_up, 0.1f*rotation);
+
+		//printf("coeff deltax: %f\n", 0.1f * deltax);
+		//printf("coeff deltay: %f\n", 0.1f * deltay);
+				
+		//point_translate(&target, &direction_up);
 		point_translate(&target, &direction_left);
+			
+			
+			
+			
+			
+							
+		//printf("direction_left dop: %f %f %f\n", direction_left.x, &direction_left.y, &direction_left.z);
+		//point_translate(&target, &direction_left);
+		//printf("target dop: %f %f %f\n", target.x, target.y, target.z);
 		glutPostRedisplay();
 		break;
 
 	case 'd': 
+		//printf("direction_right pre: %f %f %f\n", direction_right.x, &direction_right.y, &direction_right.z);
 		vector_scale(&direction_right, rotation);
+		//printf("direction_right dop: %f %f %f\n", direction_right.x, &direction_right.y, &direction_right.z);
 		point_translate(&target, &direction_right);
 		glutPostRedisplay();	
 		break; 
@@ -672,6 +714,19 @@ switch(c)
 	case 27:
 		exit(0);
 		break;
+
+
+	/* per conoscere la posizione */
+
+	//printf("position: %f %f %f\n", position.x, position.y, position.z); 
+	//printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+
+
+
+
+
+
+
 	}
 	
 	
@@ -710,9 +765,14 @@ void controlMenu(int value)
 	
 	case M_DIRECTIONAL_LIGHT:
 		enable_light_directional=1-enable_light_directional;
-		printf("switch luce direzionale - sole\n");
+		enable_lunar_light = 1-enable_lunar_light;	
+		printf("switch giorno/notte\n");
 		printf("luce direzionale del sole = %d\n", enable_light_directional);
+		printf("luce direzionale della luna = %d\n", enable_lunar_light);
+
 	break;
+	
+	
 
 	case M_WIREFRAME:draw_wireframe=1-draw_wireframe;
 		printf("switch wireframe\n");
@@ -865,13 +925,6 @@ void redraw(void)
 	glPopMatrix();
 
 
-
-
-
-
-
-
-
 /* aggiorno la posizione della luce verde, secondo piano*/
 
 // parte da verde e poi cambia i coefficienti sinusoidalmente
@@ -922,16 +975,36 @@ void redraw(void)
 
 
 
+	//enable_lunar_light
 
 
 
+/* per fare update della posizione e stato della luce 2 */
+	if (enable_lunar_light)
+	{
+		glLightfv(GL_LIGHT4, GL_POSITION, light_position_lunar);
+		glEnable(GL_LIGHT4);
+	}
+	else
+	{
+		glDisable(GL_LIGHT4);
+	}
 
 
+	if(enable_lunar_light) {
+	/* disegna sfera dove si trova la luna */
+	glPushMatrix();
+	glTranslatef(light_position_lunar[0],light_position_lunar[1],light_position_lunar[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_white);
 
-
-
-
-
+		glDisable(GL_LIGHTING);
+		if (!draw_wireframe)
+			glutSolidSphere(8.0, 10, 10);
+		else
+			glutWireSphere(8.0, 10, 10);
+		glEnable(GL_LIGHTING);
+	glPopMatrix();
+	}
 
 
 
@@ -965,12 +1038,16 @@ void redraw(void)
 
 
 	/* disegna struttura interna */
-	/* attutisco la luce del sole, e dopo la rimetto come era per il vetro */
+	/* attutisco la luce del sole e della luna, e dopo la rimetto come era per il vetro */
 
 	/* luce numero 0 direzionale, il sole */
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni);
 	glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni);
+	/* luna */
+	glLightfv(GL_LIGHT4, GL_AMBIENT  , moon_color_interni);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE  , moon_color_interni);
+	glLightfv(GL_LIGHT4, GL_SPECULAR , moon_color_interni);
 	
 	
 	
@@ -978,10 +1055,14 @@ void redraw(void)
 	
 	
 	
-	// rimetto il colore normale
+	// rimetto il colore normale al sole 
 	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+	/* luna */
+	glLightfv(GL_LIGHT4, GL_AMBIENT  , moon_color_esterni);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE  , moon_color_esterni);
+	glLightfv(GL_LIGHT4, GL_SPECULAR , moon_color_esterni);
 	
 	
 		
@@ -1035,11 +1116,6 @@ void redraw(void)
 
 
 
-/* per conoscere la posizione */
-
-	printf("position: %f %f %f\n", position.x, position.y, position.z); 
-	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-
 	
 	glutSwapBuffers();
 }
@@ -1065,6 +1141,7 @@ void motion(int x, int y)
 {
 	int deltax = (x - startx);
 	int deltay = (y - starty);
+
 	
 	Vector3d direction_forward,direction_right,direction_up;
 
@@ -1084,9 +1161,12 @@ void motion(int x, int y)
 	}
 	else if (moving_on_plane)
 	{		
-		vector_scale(&direction_right, 0.03f*deltax);
-		vector_scale(&direction_up, 0.05f*deltay);
-		
+		vector_scale(&direction_right, 0.1f*deltax);
+		vector_scale(&direction_up, 0.1f*deltay);
+
+		//printf("coeff deltax: %f\n", 0.1f * deltax);
+		//printf("coeff deltay: %f\n", 0.1f * deltay);
+				
 		point_translate(&target, &direction_up);
 		point_translate(&target, &direction_right);
 		

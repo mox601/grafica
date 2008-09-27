@@ -1224,7 +1224,7 @@ void drawBackCurveAndRoof() {
 
 
 		/* luce numero 0 direzionale, il sole */
-		glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni_internalshell);
+		//glLightfv(GL_LIGHT0, GL_AMBIENT  , sun_color_interni_internalshell);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni_internalshell);
 		glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni_internalshell);
 		
@@ -1454,12 +1454,25 @@ void drawShellInvertedNormals(GLdouble* circle, GLint numPoints, GLfloat profond
 	*/
 	
 	
+	
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT2);
+		
 	drawTriangle(&front1, &start1, &front2, dettaglio);
 	drawTriangle(&start1, &start2, &front2, dettaglio);
 
 	
 	drawTriangle(&front1, &h, &start1, dettaglio);
 	drawTriangle(&front2, &start2, &j, dettaglio);
+	
+	if(enable_light_localONE) {
+		glEnable(GL_LIGHT1);
+	}
+	
+	if(enable_light_localTWO) {
+		glEnable(GL_LIGHT2);
+	}
+
 
 }
 
@@ -1707,11 +1720,11 @@ switch(tipo) {
 	case 'e':
 		//printf("materiale muro\n");
 /* set delle variabili con glMaterial... */
-		Ka = 0.05f;
-		Kd = 0.66f;
-		Ks = 0.01f;
+		Ka = 0.253043;
+		Kd = 0.759130;
+		Ks = 0.0f;
 		Ke = 0.0f;
-		shininess = 22;
+		shininess = 0.2;
 		break; 
 		
 	case 'o':
@@ -2074,8 +2087,24 @@ void drawEsterni(){
 	glTranslatef(-12.0f, 0.0f, 0.0f);	
 	//materiale pavimento esterno
 	setMaterialType(0.0f, 1.0f, 0.0f, 'o');
-
-	drawPlaneEsterni(coordinate4, estensione);
+	
+			// spegne le luci interne
+			glDisable(GL_LIGHT1);
+			glDisable(GL_LIGHT2);
+			glDisable(GL_LIGHT3);						
+			
+				drawPlaneEsterni(coordinate4, estensione);
+			
+			// riaccende le luci interne se abilitate
+			if(enable_light_localTHREE) {
+				glEnable(GL_LIGHT3);
+			}
+			if(enable_light_localTWO) {
+				glEnable(GL_LIGHT2);
+			}
+			if(enable_light_localONE) {
+				glEnable(GL_LIGHT1);
+			}
 
 	glPopMatrix();
 	
@@ -2083,10 +2112,24 @@ void drawEsterni(){
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 		setMaterial(1.0, 0.0, 0.0);
 		//pavimento interno
-		//spegnere delle luci?
-		
+		//spegnere delle luci, la 2 e la 3
+	
+		glDisable(GL_LIGHT2);
+		glDisable(GL_LIGHT3);	
 		
 		drawFloor();
+		
+		if (enable_light_localTWO) {
+			glEnable(GL_LIGHT2);
+		}
+		if (enable_light_localTHREE) {
+			glEnable(GL_LIGHT3);
+		}
+
+	
+	
+	
+	
 	glPopMatrix();
 
 
@@ -2143,13 +2186,41 @@ void drawEsterni(){
 	setMaterialType(1,1,1, 'e');
 
 
-	//disabilito l'illuminazione, altrimenti mi si ombreggia lo sfondo
+	//se é acceso il sole, disabilito l'illuminazione, altrimenti mi si ombreggia lo sfondo
 	
-	glDisable(GL_LIGHTING);
-
-		gluSphere(quadratic,410,10,10);                // Draw A Sphere
-
-	glEnable(GL_LIGHTING);
+	if (enable_light_directional) {
+	
+		glDisable(GL_LIGHTING);
+			gluSphere(quadratic,410,10,10);                // Draw A Sphere
+		glEnable(GL_LIGHTING);
+	} else {
+	
+			// spegne le luci interne
+			glDisable(GL_LIGHT1);
+			glDisable(GL_LIGHT2);
+			glDisable(GL_LIGHT3);		
+			
+			//sará illuminato dalla luce della luna, locale
+			
+															
+			gluSphere(quadratic,410,10,10);                // Draw A Sphere
+			
+			
+			
+			// riaccende le luci interne se abilitate
+			if(enable_light_localTHREE) {
+				glEnable(GL_LIGHT3);
+			}
+			if(enable_light_localTWO) {
+				glEnable(GL_LIGHT2);
+			}
+			if(enable_light_localONE) {
+				glEnable(GL_LIGHT1);
+			}					
+			
+			
+			
+	}
 	
 	glDisable(GL_TEXTURE_2D);			// disable texture mapping
 
@@ -2234,12 +2305,8 @@ void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne) {
 void drawLampadaSecca() {
 
 
-
 //	lampada appesa in alto, bianca (o acciaio)
 		setMaterialType(0.5, 0.5, 0.5, 'e');	
-
-
-
 
 /* disegno la lampada secca */
 	glPushMatrix();

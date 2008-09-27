@@ -70,11 +70,6 @@ void point_normalize(Point3d* v)
 }
 
 
-
-
-
-
-
 GLfloat vector_modulo(Vector3d* v) 
 {
 	GLfloat m=(GLfloat)sqrt(v->x*v->x + v->y*v->y + v->z*v->z);
@@ -84,15 +79,15 @@ GLfloat vector_modulo(Vector3d* v)
 
 
 
-void vector_scale(Vector3d* v,GLfloat coeff)
+void vector_scale(Vector3d* v, GLfloat coeff)
 
 {
 
-	v->x *= coeff;
+	v->x = v->x * coeff;
 
-	v->y *= coeff;
+	v->y = v->y * coeff;
 
-	v->z *= coeff;
+	v->z = v->z * coeff;
 
 }
 

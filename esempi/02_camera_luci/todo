@@ -37,17 +37,20 @@ aggiungere luci:
 rossa piano terra
 gialla primo piano
 variabile secondo piano
+spegnere le luci non interessate quando si disegnano  i piani / le mura / il pavimento / gli esterni
+quando la luce del sole si spegne, si accende una luce piú tenue, tipo luna di notte
+e da mouse, va troppo lento mentre gira
 
 
 da fare
-far diventare la luce rossa al piano terra una spotlight 
-orientamento della spotlight "sinusoidale"
-spegnere le luci non interessate quando si disegnano  i piani / le mura / il pavimento / gli esterni
-le scale non si illuminano con la luce rossa
-attenuazione delle luci colorate
-correggere i controlli da tastiera e da mouse, va troppo lento mentre gira
-modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili
+correggere i controlli da tastiera gira troppo lento
+problemi nel disegno dei piani, normali sballate??
+modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili e + bianco
 impostare i materiali degli interni
+le scale non si illuminano con la luce rossa
+attenuazione con distanza delle luci colorate (e del sole?)
+aggiungere faro esterno spotlight
+orientamento della spotlight "sinusoidale"
 settare per bene i materiali dei componenti, con valori speculari etc
 cambiare colore al pavimento, non rosso (texture?)
 parametri giusti dei materiali esterni
