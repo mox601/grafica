@@ -40,9 +40,8 @@ GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
 
-
-Point3d  position = {-14.398088, 20.264778, 6.400000};
-Point3d  target   = {-5.042627, 87.731598, 11.099984};
+Point3d  position = {-2.449978, 44.136532, 5.599999};
+Point3d  target   = {20.721243, 369.380005, -33.200043};
 Vector3d vup      = {0, 0, 1};
 GLfloat zFar = 1000.0f;
 
@@ -717,10 +716,10 @@ switch(c)
 
 
 	/* per conoscere la posizione */
-
-	//printf("position: %f %f %f\n", position.x, position.y, position.z); 
-	//printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-
+/*
+	printf("position: %f %f %f\n", position.x, position.y, position.z); 
+	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+*/
 
 
 
@@ -943,7 +942,7 @@ void redraw(void)
 	variableLight[2] = sin(lightAngle + 180.0f);
 			
 	// update del colore della luce
-	glLightfv(GL_LIGHT3, GL_AMBIENT  , variableLight);
+	//glLightfv(GL_LIGHT3, GL_AMBIENT  , variableLight);
 	glLightfv(GL_LIGHT3, GL_DIFFUSE  , variableLight);
 	glLightfv(GL_LIGHT3, GL_SPECULAR , variableLight);
 
@@ -999,10 +998,12 @@ void redraw(void)
 //	direzioneFaro[2] = (maxHeight * cos(lightAngle * 1.2f)) + maxHeight;
 	direzioneFaro[2] = 0.0f;
 	
+	
+	/*
 	printf("direzione faro x: %f\n", direzioneFaro[0]);
 	printf("direzione faro y: %f\n", direzioneFaro[1]);
 	printf("direzione faro z: %f\n", direzioneFaro[2]);
-	
+	*/
 
 	if (enable_lunar_light)
 	{
@@ -1164,6 +1165,20 @@ void redraw(void)
 	/* dopo aver disegnato il vetro, riabilita depth test e spegni il blending */
 	glDisable(GL_BLEND);              // Turn Blending Off
 	glEnable(GL_DEPTH_TEST);      
+
+
+
+
+
+
+	printf("position: %f %f %f\n", position.x, position.y, position.z); 
+	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
+
+
+
+
+
+
 
 
 

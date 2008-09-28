@@ -41,28 +41,31 @@ spegnere le luci non interessate quando si disegnano  i piani / le mura / il pav
 quando la luce del sole si spegne, si accende una luce piú tenue, tipo luna di notte
 e da mouse, va troppo lento mentre gira
 attenuazione con distanza delle luci colorate (e del sole?)
+settare per bene i materiali dei componenti, con valori speculari etc
+il pavimento non deve essere speculare!!
+
 
 
 da fare
-correggere i controlli da tastiera gira troppo lento
-problemi nel disegno dei piani, normali sballate?? nel secondo piano si illumina anche il lato opposto alla luce
-modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili e + bianco
+correggere i controlli da tastiera gira troppo lento (rimuovere la possibilita)
 impostare i materiali degli oggetti interni
-aggiungere faro esterno spotlight
-problema di riflessioni che non vanno bene, sia interne che esterne
-orientamento della spotlight "sinusoidale"
-settare per bene i materiali dei componenti, con valori speculari etc
 cambiare colore al pavimento, non rosso (texture?)
 parametri giusti dei materiali esterni
-la luna é troppo finta
+materiale e illuminazione della parete interna quando e' giorno: troppo diversa dalla shell interna
+modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili e + bianco
+problema di riflessioni che non vanno bene, sia interne che esterne
+problema della luce che gira in senso opposto al punto osservato
+sistemare faro esterno spotlight con orientamento della spotlight "sinusoidale"
+la luna é troppo finta (antialiasing)
+aggiungere lucetta vicino al divano
 parametri colore del vetro esterno, é troppo scuro?
 migliorare la texture di sfondo
 va in crash con valori piccoli/grandi di dettaglio
 piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
-gestione delle altezze nei piani
 disegnare le finiture delle scale
 perfezionare disegno cassa
-problema della luce che gira in senso opposto al punto osservato
+
+
 
 
 

@@ -186,16 +186,6 @@ void setupLights() {
 
 
 
-
-
-
-
-
-
-
-
-
-
 	//glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 77);
 	//glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, light_direction_lampadario);
 	//glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.05f);

@@ -1706,15 +1706,21 @@ void setMaterial(GLfloat R,GLfloat G,GLfloat B)
 
 
 /* funzione per impostare i materiali */
-void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo)
+void setMaterialType(GLfloat R, GLfloat G, GLfloat B, unsigned char tipo)
 
 {
 
-	GLfloat Ka; 
-	GLfloat Kd; 
-	GLfloat Ks;
-	GLfloat Ke;
-	GLfloat shininess; 
+	GLfloat Ka = 0.0f; 
+	GLfloat Kd = 0.0f; 
+	GLfloat Ks = 0.0f;
+	GLfloat Ke = 0.0f;
+	GLfloat shininess = 0.0f; 
+
+	GLfloat material_ambient[4]; 
+	GLfloat material_diffuse[4]; 
+	GLfloat material_specular[4]; 
+	GLfloat material_emission[4]; 
+	GLfloat material_shininess[1];
 	
 switch(tipo) {
 	case 'e':
@@ -1724,53 +1730,243 @@ switch(tipo) {
 		Kd = 0.759130;
 		Ks = 0.0f;
 		Ke = 0.0f;
-		shininess = 0.2;
+		shininess = 1.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.7f;
+		material_specular[1] = Ks*0.7f;
+		material_specular[2] = Ks*0.7f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+		
 		break; 
 		
 	case 'o':
-		//printf("materiale opaco tipo gomma\n");		
+		//printf("materiale opaco /  tipo gomma;		
 /* set delle variabili con glMaterial... */
 		Ka = 0.1f;
 		Kd = 0.1f;
 		Ks = 0.01;
 		Ke = 0.0f;
-		shininess = 5;
+		shininess = 22.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.55f;
+		material_specular[1] = Ks*0.55f;
+		material_specular[2] = Ks*0.55f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+		
 		break; 
 		
 	case 'm':
 		//printf("materiale metallico\n");
-		Ka = 0.8;
-		Kd = 0.5;
-		Ks = 0.8f;
+		Ka = 0.253043;
+		Kd = 0.885652;
+		Ks = 2.277390;
 		Ke = 0.0f;
-		shininess = 77;
-		break;
+		shininess = 120;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.75f;
+		material_specular[1] = Ks*0.75f;
+		material_specular[2] = Ks*0.75f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+	break;
+		
+		
+		
+		
+		
+	case 'b':
+		//printf("materiale banana\n"); 0.126522 3.416084 -0.632608
+		Ka = 0.126522;
+		Kd = 3.416084;
+		Ks = 0.0f;
+		Ke = 0.0f;
+		shininess = 5.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.2f;
+		material_specular[1] = Ks*0.2f;
+		material_specular[2] = Ks*0.2f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+	break;
+		
+		
+	case 's':
+		//printf("materiale scala\n"); -0.253043 2.024347 1.391738
+		Ka = 0.05f;
+		Kd = 2.024347;
+		Ks = 1.391738;
+		Ke = 0.0f;
+		shininess = 10.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.05f;
+		material_specular[1] = Ks*0.05f;
+		material_specular[2] = Ks*0.05f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+	break;	
+		
+		
+	case 'p':
+		//printf("materiale pavimento\n"); 0.632608 0.253043 0.126522
+		Ka = 0.632608;
+		Kd = 0.253043;
+		Ks = 0.126522;
+		Ke = 0.0f;
+		shininess = 10.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.60f;
+		material_specular[1] = Ks*0.30f;
+		material_specular[2] = Ks*0.02f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*R;
+		material_emission[1] = Ke*G;
+		material_emission[2] = Ke*B; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+	break;
+		
+		
+		
+		
+		
+	case 'l':
+		//printf("materiale lampada, emette luce gialla "); 0.379565 0.253043 0.253043
+		Ka = 0.379565;
+		Kd = 0.253043;
+		Ks = 0.126522;
+		Ke = 0.253043;
+		shininess = 8.0f;
+		
+		material_ambient[0] = Ka*R;
+		material_ambient[1] = Ka*G;
+		material_ambient[2] = Ka*B; 
+		material_ambient[3] = 1.0f;
+		
+		material_diffuse[0] = Kd*R;
+		material_diffuse[1] = Kd*G;
+		material_diffuse[2] = Kd*B; 
+		material_diffuse[3] = 1.0f;
+		 
+		material_specular[0] = Ks*0.60f;
+		material_specular[1] = Ks*0.30f;
+		material_specular[2] = Ks*0.02f; 
+		material_specular[3] = 1.0f;
+		  
+		material_emission[0] = Ke*0.72f;
+		material_emission[1] = Ke*0.50f;
+		material_emission[2] = Ke*0.016f; 
+		material_emission[3] = 1.0f;
+		    
+		material_shininess[0]  = shininess;
+	break;
+
+		
+			
+		
+		
 	
 }
 
 //	printf("comincia set material\n");		
 
-
-	GLfloat material_ambient      []  = {Ka*R, Ka*G, Ka*B, 1.0f}; 
-
-	GLfloat material_diffuse      []  = {Kd*R, Kd*G, Kd*B, 1.0f}; 
-
-	GLfloat material_specular     []  = {Ks*R, Ks*G, Ks*B, 1.0f}; 
-
-	GLfloat material_emission     []  = {Ke*R, Ke*G, Ke*B, 1.0f}; 
-
-	GLfloat material_shininess    []  = {shininess};
-
-//	printf("ambient: %f, %f, %f\n", material_ambient[0], material_ambient[1], material_ambient[2]);	
-
 	glMaterialfv(GL_FRONT,GL_AMBIENT  , material_ambient);
-
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE  , material_diffuse);
-
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR , material_specular);
-
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION , material_emission);
-
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, material_shininess);
 
 }
@@ -2110,7 +2306,9 @@ void drawEsterni(){
 	
 	glPushMatrix();
 		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-		setMaterial(1.0, 0.0, 0.0);
+
+		setMaterialType(0.16f, 0.10f, 0.05f, 'p');
+
 		//pavimento interno
 		//spegnere delle luci, la 2 e la 3
 	
@@ -2369,7 +2567,11 @@ void drawCassa() {
 
 			glPushMatrix();
 			glScalef(0.6, 0.6, 0.6);
+			//nero dello stand
+			setMaterialType(0.14, 0.17, 0.19, 'm');	
 			displayPly(meshes[0]);
+			//cassa e piu opaca dello stand
+			setMaterialType(0.24, 0.27, 0.29, 'o');
 			glTranslatef(0.0f, 0.0f, 2.0);
 			displayPly(meshes[1]);
 			glPopMatrix();
@@ -2388,8 +2590,8 @@ void drawPianoTerra() {
 			glScalef(0.5f, 0.5f, 0.8f);
 			glTranslatef(0.0f, 0.0f, 1.38f);
 			
-			// viola
-			setMaterialType(0, 0, 1, 'e');
+			// blu
+			setMaterialType(0.0f, 0.365f, 0.049f, 'm');
 			
 			displayPly(meshes[3]);
 			
@@ -2398,21 +2600,21 @@ void drawPianoTerra() {
 			glTranslatef(1.200000, 0.700000, -0.60);
 			
 			// rossa
-			setMaterialType(1, 0, 0, 'e');
+			setMaterialType(1, 0, 0, 'm');
 			
 			displayPly(meshes[4]);
 			glRotatef(44.0, 0.0, 0.0, 1.0);
 			glTranslatef(-2.100000, -1.100000f, 0.0f);
 			
 			//verde
-			setMaterialType(0, 1, 0, 'e');
+			setMaterialType(0, 1, 0, 'm');
 			
 			displayPly(meshes[4]);			
 			glRotatef(77.0, 0.0, 0.0, 1.0);
 			glTranslatef(3.099999, 0.0, 0.0); 
 			
 			//arancione
-			setMaterialType(0.95, 0.5, 0.15, 'e');
+			setMaterialType(0.95, 0.5, 0.15, 'm');
 			
 			displayPly(meshes[4]);			
 
@@ -2433,8 +2635,8 @@ void drawPianoTerra() {
 		glPushMatrix();
 		glTranslatef(-0.00000, 0.500000, 1.9000);
 		
-			// giallo
-			setMaterialType(0.93, 0.74, 0.11, 'e');
+			// materiale banana
+			setMaterialType(0.93, 0.74, 0.11, 'b');
 			
 			displayPly(meshes[5]);
 		glPopMatrix();
@@ -2442,7 +2644,7 @@ void drawPianoTerra() {
 
 		setMaterialType(1, 1, 1, 'e');		
 		displayPly(meshes[8]);
-		// banana sul secondo espositore
+		// fine banana sul secondo espositore
 
 
 		//glTranslatef(xPosition, yPosition, zPosition);
@@ -2452,7 +2654,7 @@ void drawPianoTerra() {
 
 
 			//terracotta
-			setMaterialType(0.56, 0.26, 0.21, 'e');		
+			setMaterialType(0.56, 0.26, 0.21, 'm');		
 
 			displayPly(meshes[11]);
 		glPopMatrix();
@@ -2470,9 +2672,7 @@ void drawPianoTerra() {
 			glTranslatef(-15.600023, 57.799690, 0.55);
 			//glTranslatef(-15.600023, 57.799690, 0.00);
 			
-			//nero
-			setMaterialType(0.14, 0.17, 0.19, 'e');		
-
+			
 			drawCassa();
 			glTranslatef(8.0f, 0.0f, 0.0f);
 			drawCassa();
@@ -2495,14 +2695,14 @@ void drawLampada() {
 		glTranslatef(-0.800000, -0.700000, 1.40000);
 		
 		//base, ottone molto speculare
-		setMaterialType(0.41, 0.25, 0.06, 'e');		
+		setMaterialType(0.41, 0.25, 0.06, 'm');		
 
 		displayPly(meshes[15]);
 		glTranslatef(-0.200000 + 0.126522, 0.200000 -0.379565, 1.900000);
 		
 
 		// bianca, che emette luce gialla
-		setMaterialType(1, 1, 1, 'e');		
+		setMaterialType(1, 1, 1, 'l');		
 		displayPly(meshes[16]);
 
 	glPopMatrix();
@@ -2529,7 +2729,7 @@ void drawPrimoPiano(){
 			glScalef(0.4f, 0.4f, 0.5f);
 			
 			//rosso, metallo
-			setMaterialType(1, 0, 0, 'e');		
+			setMaterialType(1, 0, 0, 'm');		
 
 			displayPly(meshes[14]);
 		glPopMatrix();
@@ -2537,8 +2737,8 @@ void drawPrimoPiano(){
 		
 		glScalef(0.3f, 0.3f, 0.3f);
 		
-		//bianco, espositore
-		setMaterialType(1, 1, 1, 'e');		
+		//nero, espositore
+		setMaterialType(1,1,1, 'e');		
 
 		displayPly(meshes[9]);
 		//idrante sul primo espositore strano
@@ -2571,7 +2771,7 @@ void drawPrimoPiano(){
 			glTranslatef(-0.800000, -1.500000 + -0.632608, 0.700000);
 						
 			// pelle bordeaux, speculare
-			setMaterialType(0.12, 0.01, 0.01, 'e');		
+			setMaterialType(0.19, 0.01, 0.01, 'm');		
 			
 			displayPly(meshes[7]); 
 		glPopMatrix();
@@ -2593,7 +2793,7 @@ void drawPrimoPiano(){
 			glTranslatef(0.100000, 5.999997, 1.500000);
 			
 			//nero, speculare
-			setMaterialType(0.1, 0.1, 0.1, 'e');		
+			setMaterialType(0.1, 0.1, 0.1, 'm');		
 
 			displayPly(meshes[18]);
 			//apple
@@ -2647,7 +2847,7 @@ void drawScala() {
 
 //  materiale delle scale
 
-		setMaterialType(0.2, 0.2, 0.2, 'e');	
+		setMaterialType(0.2, 0.2, 0.2, 's');	
 
 	
 	glPushMatrix();
