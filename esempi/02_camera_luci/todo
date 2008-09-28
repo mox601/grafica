@@ -40,20 +40,21 @@ variabile secondo piano
 spegnere le luci non interessate quando si disegnano  i piani / le mura / il pavimento / gli esterni
 quando la luce del sole si spegne, si accende una luce piú tenue, tipo luna di notte
 e da mouse, va troppo lento mentre gira
+attenuazione con distanza delle luci colorate (e del sole?)
 
 
 da fare
 correggere i controlli da tastiera gira troppo lento
-problemi nel disegno dei piani, normali sballate??
+problemi nel disegno dei piani, normali sballate?? nel secondo piano si illumina anche il lato opposto alla luce
 modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili e + bianco
-impostare i materiali degli interni
-le scale non si illuminano con la luce rossa
-attenuazione con distanza delle luci colorate (e del sole?)
+impostare i materiali degli oggetti interni
 aggiungere faro esterno spotlight
+problema di riflessioni che non vanno bene, sia interne che esterne
 orientamento della spotlight "sinusoidale"
 settare per bene i materiali dei componenti, con valori speculari etc
 cambiare colore al pavimento, non rosso (texture?)
 parametri giusti dei materiali esterni
+la luna é troppo finta
 parametri colore del vetro esterno, é troppo scuro?
 migliorare la texture di sfondo
 va in crash con valori piccoli/grandi di dettaglio

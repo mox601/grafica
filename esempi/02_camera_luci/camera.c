@@ -398,7 +398,7 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Local light - luce rossa al piano terra"      , M_LOCAL_LIGHTONE);
 	glutAddMenuEntry("Local light - luce gialla al secondo piano"      , M_LOCAL_LIGHTTWO);
 	glutAddMenuEntry("Local light - luce variabile al terzo piano"      , M_LOCAL_LIGHTTHREE);
-	glutAddMenuEntry("Directional light - Sole", M_DIRECTIONAL_LIGHT);
+	glutAddMenuEntry("Giorno / Notte", M_DIRECTIONAL_LIGHT);
 //	glutAddMenuEntry("Local light - Notte", M_LUNAR_LIGHT);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -771,8 +771,6 @@ void controlMenu(int value)
 		printf("luce direzionale della luna = %d\n", enable_lunar_light);
 
 	break;
-	
-	
 
 	case M_WIREFRAME:draw_wireframe=1-draw_wireframe;
 		printf("switch wireframe\n");
@@ -979,15 +977,47 @@ void redraw(void)
 
 
 
-/* per fare update della posizione e stato della luce 2 */
+/* per fare update della posizione e stato della luce della luna e del faro */
+
+
+
+
+
+
+/* posizione faro */
+
+	//faro_spotlight[0] = xPosition/GLSCALAMENTO; 
+	//faro_spotlight[1] = yPosition/GLSCALAMENTO; 
+	//faro_spotlight[2] = zPosition/GLSCALAMENTO; 
+	
+/* movimento del faro */
+
+	GLfloat maxHeight = 3.0;
+	
+	direzioneFaro[0] = 0.0f + xPosition;
+	direzioneFaro[1] = 0.0f + yPosition;
+//	direzioneFaro[2] = (maxHeight * cos(lightAngle * 1.2f)) + maxHeight;
+	direzioneFaro[2] = 0.0f;
+	
+	printf("direzione faro x: %f\n", direzioneFaro[0]);
+	printf("direzione faro y: %f\n", direzioneFaro[1]);
+	printf("direzione faro z: %f\n", direzioneFaro[2]);
+	
+
 	if (enable_lunar_light)
 	{
 		glLightfv(GL_LIGHT4, GL_POSITION, light_position_lunar);
+		glLightfv(GL_LIGHT5, GL_POSITION, faro_spotlight);
+		glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, direzioneFaro);
+		glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 6.073038f);
+
 		glEnable(GL_LIGHT4);
+		glEnable(GL_LIGHT5);
 	}
 	else
 	{
 		glDisable(GL_LIGHT4);
+		glDisable(GL_LIGHT5);
 	}
 
 
@@ -1004,10 +1034,31 @@ void redraw(void)
 			glutWireSphere(8.0, 10, 10);
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
+	
+	
 	}
 
 
 
+/* blocchetto dove si trova il faro */
+	glPushMatrix();
+	glTranslatef(faro_spotlight[0], faro_spotlight[1], faro_spotlight[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_black);
+
+	GLUquadric* faro = gluNewQuadric();
+
+	GLdouble raggioBase = 0.1f;
+	GLdouble raggioTop = 0.1f;
+	GLdouble altezza = 0.5f;
+	
+		//glDisable(GL_LIGHTING);
+		if (!draw_wireframe)
+		gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
+		else
+		gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
+		//glEnable(GL_LIGHTING);
+	glPopMatrix();
+	
 
 
 

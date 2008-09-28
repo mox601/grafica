@@ -30,6 +30,9 @@ GLfloat light_position_localTWO[4];
 GLfloat light_position_localTHREE[4];
 GLfloat light_position_directional[4];
 GLfloat light_position_lunar[4];
+GLfloat direzioneFaro[3];
+GLfloat faro_spotlight[4];
+
 
 
 

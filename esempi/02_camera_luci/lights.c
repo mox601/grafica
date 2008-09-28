@@ -55,25 +55,17 @@ GLfloat light_position_lunar[4] = {
 		0.0f
 };
 
-
-
-
-
-
-/* LIGHT2: luce del lampadario */
-GLfloat light_position_lampadario[4]={
-		-13.100014 * GLSCALAMENTO, 
-		14.100018 * GLSCALAMENTO, 
-		10.000002 * GLSCALAMENTO, 
-		1
+ 
+ 
+/* faro esterno */
+GLfloat faro_spotlight[4] = {
+		13.790876 ,
+		-16.574362,
+		0.0f,
+		1.0f
 };
 
-GLfloat light_direction_lampadario[4]={
-		1.0f * GLSCALAMENTO,
-		-13.0 * GLSCALAMENTO,
-		-1.0f * GLSCALAMENTO,
-		0.0f
-};
+
 
 
 /* colori */
@@ -90,7 +82,9 @@ GLfloat moon_color_esterni[4]  = {0.05f, 0.05f, 0.05f, 1.0f};
 GLfloat moon_color_interni[4]  = {0.005f, 0.005f, 0.005f, 1.0f};
 GLfloat sun_color_interni_internalshell[4]  = {0.1f, 0.1f, 0.1f, 1.0f};
 GLfloat variableLight[4]  = {0.0f, 1.0f, 0.0f, 1.0f};
+/* direzioni */
 GLfloat direzioneLuceRossa[3]  = {0, -1, 0};
+GLfloat direzioneFaro[3]  = {0, 0, 15};
 
 
 
@@ -167,9 +161,37 @@ void setupLights() {
 	glLightfv(GL_LIGHT4, GL_POSITION , light_position_lunar);
 
 	// attenuazione con la distanza
-	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION,  1.0f);
-	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.005f);
-	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.002f);
+	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION,  0.8f);
+	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.005f);
+	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.002f);
+
+
+
+	/* luce bianca numero 5 locale faro */
+	glLightfv(GL_LIGHT5, GL_AMBIENT  , color_black);
+	glLightfv(GL_LIGHT5, GL_DIFFUSE  , color_white);
+	glLightfv(GL_LIGHT5, GL_SPECULAR , color_white);
+	glLightfv(GL_LIGHT5, GL_POSITION , faro_spotlight);
+
+	// attenuazione con la distanza
+	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION,  0.8f);
+	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, 0.005f);
+	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, 0.02f);
+	glLightf(GL_LIGHT5, GL_SPOT_CUTOFF, 15.0f);
+	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, direzioneFaro);
+	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 0.0f);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
