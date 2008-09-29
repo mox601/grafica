@@ -21,6 +21,7 @@
 #include "lights.h"
 #include "simpleviewer.h"
 #include "camera.h"
+#include "texture.h"
 
 /* prototype */
 void redraw(void);
@@ -39,9 +40,8 @@ GLfloat spostamentoY;
 GLfloat spostamentoZ = 0.8f;
 GLfloat quotaMinimaZ = 0.8f;
 
-
-Point3d  position = {-2.449978, 44.136532, 5.599999};
-Point3d  target   = {20.721243, 369.380005, -33.200043};
+Point3d  position = {26.788454, 115.961273, 31.399990};
+Point3d  target   = {-281.613159, -521.421997, -12.699849};
 Vector3d vup      = {0, 0, 1};
 GLfloat zFar = 1000.0f;
 
@@ -52,7 +52,7 @@ GLfloat dettaglioMax = 0.08f;
 GLfloat dettaglioMin = 15.0f;
 GLfloat stepDetail = 0.5f;
 
-enum {M_NONE, M_LOCAL_LIGHTONE, M_LOCAL_LIGHTTWO, M_LOCAL_LIGHTTHREE, M_DIRECTIONAL_LIGHT, M_WIREFRAME};
+enum {M_NONE, M_LOCAL_LIGHTONE, M_LOCAL_LIGHTTWO, M_LOCAL_LIGHTTHREE, M_DIRECTIONAL_LIGHT, M_WIREFRAME, VIEW_LIGHTS};
 
 /* materiali */
 GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -76,6 +76,7 @@ int enable_light_localTWO = 0;
 int enable_light_localTHREE = 0;
 int enable_lunar_light = 0;
 int draw_wireframe = 0;
+int enable_light_spheres = 0;
 
 // sfera
 GLUquadricObj *quadratic;	// Storage For Our Quadratic Objects
@@ -151,6 +152,8 @@ GLvoid LoadGLTextures(GLvoid) {
 void init(void) {
 
 	LoadGLTextures();					// Load the textures
+	loadTextures();
+
 	
 	//glEnable(GL_TEXTURE_2D);			// Enable texture mapping
 
@@ -175,7 +178,7 @@ void init(void) {
 	/* blending per i vetri */
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+	//glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 	//glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
 	
 	//fog
@@ -399,6 +402,7 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Local light - luce variabile al terzo piano"      , M_LOCAL_LIGHTTHREE);
 	glutAddMenuEntry("Giorno / Notte", M_DIRECTIONAL_LIGHT);
 //	glutAddMenuEntry("Local light - Notte", M_LUNAR_LIGHT);
+	glutAddMenuEntry("visualizza posizione delle luci", VIEW_LIGHTS);
 	glutAddMenuEntry("Draw wireframe",    M_WIREFRAME);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
@@ -505,18 +509,7 @@ switch(c)
 		break;
 
 
-		
-		/*nella f del mouse c'era questo: 
 	
-		vector_scale(&direction_right, 0.1f*deltax);
-		vector_scale(&direction_up, 0.1f*deltay);
-		
-		point_translate(&target, &direction_up);
-		point_translate(&target, &direction_right);
-	
-	
-	*/
-		
 		
 		GLfloat rotation = 100.0f;
 		
@@ -770,6 +763,11 @@ void controlMenu(int value)
 		printf("luce direzionale della luna = %d\n", enable_lunar_light);
 
 	break;
+	
+	case VIEW_LIGHTS:
+		enable_light_spheres=1-enable_light_spheres;
+		printf("switch luci visibili = %d\n", enable_light_spheres);
+	break;
 
 	case M_WIREFRAME:draw_wireframe=1-draw_wireframe;
 		printf("switch wireframe\n");
@@ -803,6 +801,7 @@ void redraw(void)
 
 	glLoadIdentity();
 
+
 	gluLookAt(
 		position.x, position.y ,  position.z,		   
 		target.x  , target.y   ,  target.z,       
@@ -815,8 +814,8 @@ void redraw(void)
 
 	
 	
-	
-	/* luce 0, una luce del sole direzionale */
+
+/* luce 0, una luce del sole direzionale */
 
 	if (enable_light_directional)
 	{
@@ -827,7 +826,11 @@ void redraw(void)
 	{
 		glDisable(GL_LIGHT0);
 	}
+
 	
+		
+	
+if (enable_light_spheres) {
 	/* disegna sfera gialla dove si trova la luce solare (o da dove viene) */
 	glPushMatrix();
 	glTranslatef(light_position_directional[0],light_position_directional[1],light_position_directional[2]);
@@ -837,6 +840,8 @@ void redraw(void)
 		else
 			glutWireSphere(0.2, 5, 5);
 	glPopMatrix();
+}
+
 
 
 
@@ -865,6 +870,7 @@ void redraw(void)
 	}
 
 
+if (enable_light_spheres) {
 	/* disegna sfera dove si trova la luce direzionale rossa 1 */
 	glPushMatrix();
 	glTranslatef(light_position_localONE[0],light_position_localONE[1],light_position_localONE[2]);
@@ -876,7 +882,7 @@ void redraw(void)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
-
+}
 
 
 
@@ -908,7 +914,7 @@ void redraw(void)
 		glDisable(GL_LIGHT2);
 	}
 
-
+if (enable_light_spheres) {
 	/* disegna sfera dove si trova la luce direzionale gialla 2 */
 	glPushMatrix();
 	glTranslatef(light_position_localTWO[0],light_position_localTWO[1],light_position_localTWO[2]);
@@ -920,7 +926,7 @@ void redraw(void)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
-
+}
 
 /* aggiorno la posizione della luce verde, secondo piano*/
 
@@ -957,7 +963,7 @@ void redraw(void)
 		glDisable(GL_LIGHT3);
 	}
 
-
+if (enable_light_spheres) {
 	/* disegna sfera dove si trova la luce direzionale verde 3 */
 	glPushMatrix();
 	glTranslatef(light_position_localTHREE[0],light_position_localTHREE[1],light_position_localTHREE[2]);
@@ -969,7 +975,7 @@ void redraw(void)
 			glutWireSphere(0.3, 10, 10);
 
 	glPopMatrix();
-
+}
 
 
 	//enable_lunar_light
@@ -1023,24 +1029,39 @@ void redraw(void)
 
 
 	if(enable_lunar_light) {
+	
+	
+	
+	/* metto la texture */
+	glEnable(GL_TEXTURE_2D);
+	//setTextureScaling(30);
+	setTexture(TEXTURE_MOON);
+	
+	
+	
 	/* disegna sfera dove si trova la luna */
 	glPushMatrix();
 	glTranslatef(light_position_lunar[0],light_position_lunar[1],light_position_lunar[2]);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_white);
 
 		glDisable(GL_LIGHTING);
-		if (!draw_wireframe)
-			glutSolidSphere(8.0, 10, 10);
+		
+		if (!draw_wireframe) {
+			drawSphere(15.0, 10, 10);
+			}
 		else
-			glutWireSphere(8.0, 10, 10);
+			glutWireSphere(15.0, 10, 10);
 		glEnable(GL_LIGHTING);
+		
 	glPopMatrix();
 	
+	//spengo le texture, dopo aver fatto la luna
+	glDisable(GL_TEXTURE_2D);
 	
 	}
 
 
-
+if (enable_light_spheres) {
 /* blocchetto dove si trova il faro */
 	glPushMatrix();
 	glTranslatef(faro_spotlight[0], faro_spotlight[1], faro_spotlight[2]);
@@ -1053,13 +1074,15 @@ void redraw(void)
 	GLdouble altezza = 0.5f;
 	
 		//glDisable(GL_LIGHTING);
-		if (!draw_wireframe)
-		gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
-		else
-		gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
+		if (!draw_wireframe) {
+		//gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
+		}
+		else {
+		//gluCylinder( faro, raggioBase, raggioTop, altezza, 5, 5 );
 		//glEnable(GL_LIGHTING);
+		}
 	glPopMatrix();
-	
+}
 
 
 
@@ -1112,7 +1135,7 @@ void redraw(void)
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 	/* luna */
-	glLightfv(GL_LIGHT4, GL_AMBIENT  , moon_color_esterni);
+	//glLightfv(GL_LIGHT4, GL_AMBIENT  , moon_color_esterni);
 	glLightfv(GL_LIGHT4, GL_DIFFUSE  , moon_color_esterni);
 	glLightfv(GL_LIGHT4, GL_SPECULAR , moon_color_esterni);
 	
@@ -1170,10 +1193,10 @@ void redraw(void)
 
 
 
-
+/*
 	printf("position: %f %f %f\n", position.x, position.y, position.z); 
 	printf("lookat:  %f %f %f\n", target.x, target.y, target.z); 
-
+*/
 
 
 
@@ -1227,8 +1250,8 @@ void motion(int x, int y)
 	}
 	else if (moving_on_plane)
 	{		
-		vector_scale(&direction_right, 0.1f*deltax);
-		vector_scale(&direction_up, 0.1f*deltay);
+		vector_scale(&direction_right, 0.9f*deltax);
+		vector_scale(&direction_up, 0.9f*deltay);
 
 		//printf("coeff deltax: %f\n", 0.1f * deltax);
 		//printf("coeff deltay: %f\n", 0.1f * deltay);

@@ -58,7 +58,9 @@ void drawGlass(Point3d* a, Point3d* b, Point3d* c, Point3d* d);
 void drawWallHighNew(Point3d* point1, Point3d* point2, Point3d* point3, Point3d* point4, GLfloat spessore, GLfloat spigolo_laterale_front, GLfloat spigolo_laterale_rear, GLfloat incl_frontale, GLfloat dettaglio, GLfloat differenza, GLfloat altezza);
 
 GLdouble* drawCircle(GLfloat radius, GLint dettaglio, GLfloat Start_angolo, GLfloat End_angolo);
+
 void setMaterial(GLfloat R,GLfloat G,GLfloat B);
+
 void setMaterialType(GLfloat R,GLfloat G,GLfloat B, unsigned char tipo);
 
 void drawShell(GLdouble* circle, GLint dettaglio, GLfloat profondita);
@@ -68,6 +70,10 @@ void drawShellInvertedNormals(GLdouble* circle, GLint numPoints, GLfloat profond
 void drawSingleColumn(GLfloat raggio, GLfloat altezzaColonne);
 
 void drawColumns(GLfloat raggio, GLfloat altezzaColonne);
+
+void getPointOnSphere(float dest[3],float radius,float u,float v);
+
+void drawSphere(float radius,int nx,int ny);
 
 
 

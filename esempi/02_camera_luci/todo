@@ -43,27 +43,22 @@ e da mouse, va troppo lento mentre gira
 attenuazione con distanza delle luci colorate (e del sole?)
 settare per bene i materiali dei componenti, con valori speculari etc
 il pavimento non deve essere speculare!!
+impostare i materiali degli oggetti interni
 
 
 
 da fare
 correggere i controlli da tastiera gira troppo lento (rimuovere la possibilita)
-impostare i materiali degli oggetti interni
 cambiare colore al pavimento, non rosso (texture?)
-parametri giusti dei materiali esterni
 materiale e illuminazione della parete interna quando e' giorno: troppo diversa dalla shell interna
-modificare i valori della luce del sole interna/esterna. i colori devono essere molto simili e + bianco
 problema di riflessioni che non vanno bene, sia interne che esterne
-problema della luce che gira in senso opposto al punto osservato
 sistemare faro esterno spotlight con orientamento della spotlight "sinusoidale"
 la luna é troppo finta (antialiasing)
 aggiungere lucetta vicino al divano
-parametri colore del vetro esterno, é troppo scuro?
 migliorare la texture di sfondo
 va in crash con valori piccoli/grandi di dettaglio
 piccoli problemi con le scale del primo piano, si ridisegnano una seconda volta
 disegnare le finiture delle scale
-perfezionare disegno cassa
 
 
 

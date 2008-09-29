@@ -5,7 +5,7 @@ INCDIR=
 LINKLIBS=-framework OpenGL -framework Glut -lm
 
 
-OBJECTS= camera clipping lighting subdivision vectors model lights mesh2d ply particles
+OBJECTS= camera clipping lighting subdivision vectors model lights mesh2d ply particles texture
 
 all: $(OBJECTS)
 	@echo "all done"
@@ -13,7 +13,7 @@ all: $(OBJECTS)
 #.c.o:
 #	$(CC)  -w -o $@  -c $(CFLAGS) $(INCDIR) $<
 
-camera: camera.o vectors.o model.o lights.o mesh2d.o ply.o simpleviewer.o particles.o
+camera: camera.o vectors.o model.o lights.o mesh2d.o ply.o simpleviewer.o particles.o texture.o
 	$(CC) -o $@ $^ $(LINKLIBS)
 
 #clipping: clipping.o
@@ -37,6 +37,9 @@ particles: particles.o
 subdivision: subdivision.o
 	$(CC) -o $@ $^ $(LINKLIBS)
 
+texture: texture.o
+	$(CC) -o $@ $^ $(LINKLIBS)
+
 
 #librerie incluse con i .h
 
@@ -48,6 +51,11 @@ lights.o: lights.c
 
 model.o: model.c vectors.o lights.o
 	$(CC) -c -o $@ $<
+
+texture.o: texture.c
+	$(CC) -c -o $@ $<
+#altro	$(CC) -c $< -o $@
+
 
 
 clean:

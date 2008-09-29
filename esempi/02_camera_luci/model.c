@@ -20,7 +20,7 @@ GLfloat lunghezza_inclinazione_frontale_ratio = 0.03f;
 GLfloat differenza_ratio = 0.3f;
 
 /* blending acceso/spento */
-GLuint  blend;
+GLuint  blend = 1;
 
 /* riceve i punti con cui costruire un triangolo */
 /* riceve i punti in senso ANTIORARIO */
@@ -803,6 +803,17 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 	GLfloat incl_frontale = lunghezza * 0.03f * segno_inclinazione;
 	GLfloat incl_frontale_w2 = incl_frontale * 1.35f;
 	
+	
+
+
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni_internalshell);
+	glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni_internalshell);
+	
+		
+			
+					
+	
 	/* prima parte */
 	drawWallOblique(&a1, &b1, &c1, &d1, spessore, spigolo_laterale_front_w1, spigolo_laterale_back_w1, incl_frontale, dettaglio, differenza_w1);
 
@@ -825,6 +836,18 @@ void drawRearWall(GLfloat lunghezza, GLfloat dettaglio, GLfloat segno_inclinazio
 
 	/* riscrivo la draw wall high */
 	drawWallHighNew(&a2, &b2, &c2, &d2, spessore, spigolo_laterale_front_w2_high, spigolo_laterale_back_w2_high, incl_frontale_w2, dettaglio, differenza_w2_high, altezzaL);
+
+
+
+
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
+	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+	
+
+
+
+
 
 /* parte alta laterale */
 
@@ -1241,8 +1264,8 @@ void drawBackCurveAndRoof() {
 
 		// rimetto il colore normale
 	//	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
-	//	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
-	//	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
+		glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 		
 			
 	glPopMatrix();	
@@ -2315,6 +2338,9 @@ void drawEsterni(){
 		glDisable(GL_LIGHT2);
 		glDisable(GL_LIGHT3);	
 		
+		
+		
+
 		drawFloor();
 		
 		if (enable_light_localTWO) {
@@ -2343,7 +2369,21 @@ void drawEsterni(){
 	drawFrontWall(lunghezza, dettaglio, segno_inclinazione, altezza);
 
 	//setMaterial(1,1,1);
+
+	//attutisco il sole, non é illuminato
+
+
+	
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE  , sun_color_interni_internalshell);
+	//glLightfv(GL_LIGHT0, GL_SPECULAR , sun_color_interni_internalshell);
+	
+					
 	drawRearWall(lunghezza, dettaglio, -segno_inclinazione, altezza);
+
+
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
+	//glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
+
 
 	//drawGriglia(1.5f, 5.0f, 0.5, 6);
 
@@ -2425,6 +2465,92 @@ void drawEsterni(){
 		
 	
 }
+
+
+void getPointOnSphere(float dest[3],float radius,float u,float v)
+
+{
+
+	u*=2*M_PI;
+
+	v=-1*(v-0.5)*M_PI;
+
+	dest[0]=radius*cos(u)*cos(v);
+
+	dest[1]=radius*sin(u)*cos(v);
+
+	dest[2]=radius*sin(v);
+
+}
+
+
+
+
+
+void drawSphere(float radius,int nx,int ny) {
+
+	int i,j;
+
+	GLfloat p0[3],p1[3],p2[3],p3[3];
+	GLfloat u0,u1,v0,v1;
+	GLfloat stepx=1/(float)nx;
+	GLfloat stepy=1/(float)ny;
+
+	//glDisable(GL_CULL_FACE);
+
+	glBegin(GL_TRIANGLES);
+	
+	for (j=0;j<ny;j++)
+	{
+		for (i=0;i<nx;i++)
+		{
+			u0=i*stepx;u1=(i+1)*stepx;
+			v0=j*stepy;v1=(j+1)*stepy;
+			
+			getPointOnSphere(p0,radius,u0,v0);
+			getPointOnSphere(p1,radius,u1,v0);
+			getPointOnSphere(p2,radius,u1,v1);
+			getPointOnSphere(p3,radius,u0,v1);
+
+			
+
+			glTexCoord2f(u0,v0);glNormal3fv(p0);glVertex3fv(p0);
+
+			glTexCoord2f(u1,v0);glNormal3fv(p1);glVertex3fv(p1);
+
+			glTexCoord2f(u1,v1);glNormal3fv(p2);glVertex3fv(p2);
+
+			
+
+			glTexCoord2f(u0,v0);glNormal3fv(p0);glVertex3fv(p0);
+
+			glTexCoord2f(u1,v1);glNormal3fv(p2);glVertex3fv(p2);
+
+			glTexCoord2f(u0,v1);glNormal3fv(p3);glVertex3fv(p3);
+
+		}
+
+	}
+
+		
+
+	glEnd();
+	//glEnable(GL_CULL_FACE);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2935,7 +3061,10 @@ void drawInterni()
 	
 	
 	// materiale delle colonne
-	setMaterialType(1, 1, 1, 'e');
+	
+	setMaterialType(0.2f, 0.2f, 0.2f, 'm');
+	
+	
 	drawColumns(raggio, altezzaColonne);
 	
 

@@ -80,7 +80,7 @@ GLfloat color_yellow_light[4]  = {0.7f, 0.7f, 0.7f, 1.0f};
 GLfloat sun_color_interni[4]  = {0.5f, 0.5f, 0.5f, 1.0f};
 GLfloat moon_color_esterni[4]  = {0.05f, 0.05f, 0.05f, 1.0f};
 GLfloat moon_color_interni[4]  = {0.005f, 0.005f, 0.005f, 1.0f};
-GLfloat sun_color_interni_internalshell[4]  = {0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat sun_color_interni_internalshell[4]  = {0.24f, 0.24f, 0.24f, 1.0f};
 GLfloat variableLight[4]  = {0.0f, 1.0f, 0.0f, 1.0f};
 /* direzioni */
 GLfloat direzioneLuceRossa[3]  = {0, -1, 0};
@@ -96,11 +96,10 @@ void setupLights() {
 	
 	/* migliora l'illuminazione */
 	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
-
 	
 
 	/* luce numero 0 direzionale, il sole  - giallo? */
-	//glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
+	glLightfv(GL_LIGHT0, GL_AMBIENT  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE  , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_SPECULAR , color_yellow_light);
 	glLightfv(GL_LIGHT0, GL_POSITION , light_position_directional);
@@ -111,14 +110,15 @@ void setupLights() {
 	//glLightfv(GL_LIGHT1, GL_AMBIENT  , color_red);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE  , color_red);
 	glLightfv(GL_LIGHT1, GL_SPECULAR , color_red);
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0f);
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direzioneLuceRossa);
 	glLightfv(GL_LIGHT1, GL_POSITION , light_position_localONE);
 	
 	// attenuazione con la distanza
 	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION,  1.0f);
-	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.035f);
-	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.02f);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0035f);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002f);
+	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 0.0f);
 
 
 
